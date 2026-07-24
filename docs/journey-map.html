@@ -1,0 +1,359 @@
+<style>
+  :root{
+    /* light (default) */
+    --bg:#EBEFEF;
+    --surface:#FBFCFC;
+    --surface-2:#F2F5F5;
+    --ink:#132220;
+    --ink-soft:#4E605D;
+    --ink-faint:#7E908C;
+    --line:#D6DEDC;
+    --accent:#B0640A;
+    --accent-ink:#8A4E07;
+    --accent-soft:rgba(176,100,10,.12);
+    --teal:#0B6E6C;
+    --teal-soft:rgba(11,110,108,.12);
+    --shadow:0 1px 2px rgba(19,34,32,.04), 0 8px 30px rgba(19,34,32,.06);
+    --radius:14px;
+    --maxw:820px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0B1211;
+      --surface:#121F1D;
+      --surface-2:#0F1A18;
+      --ink:#EAF1EF;
+      --ink-soft:#9FB2AE;
+      --ink-faint:#61716D;
+      --line:#213230;
+      --accent:#EBA23F;
+      --accent-ink:#F0B25E;
+      --accent-soft:rgba(235,162,63,.14);
+      --teal:#38B7B3;
+      --teal-soft:rgba(56,183,179,.15);
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 34px rgba(0,0,0,.34);
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#EBEFEF;--surface:#FBFCFC;--surface-2:#F2F5F5;--ink:#132220;--ink-soft:#4E605D;--ink-faint:#7E908C;--line:#D6DEDC;--accent:#B0640A;--accent-ink:#8A4E07;--accent-soft:rgba(176,100,10,.12);--teal:#0B6E6C;--teal-soft:rgba(11,110,108,.12);--shadow:0 1px 2px rgba(19,34,32,.04), 0 8px 30px rgba(19,34,32,.06);
+  }
+  :root[data-theme="dark"]{
+    --bg:#0B1211;--surface:#121F1D;--surface-2:#0F1A18;--ink:#EAF1EF;--ink-soft:#9FB2AE;--ink-faint:#61716D;--line:#213230;--accent:#EBA23F;--accent-ink:#F0B25E;--accent-soft:rgba(235,162,63,.14);--teal:#38B7B3;--teal-soft:rgba(56,183,179,.15);--shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 34px rgba(0,0,0,.34);
+  }
+
+  *{box-sizing:border-box;}
+  body,.page{background:var(--bg);color:var(--ink);}
+  .page{
+    font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    padding:clamp(28px,5vw,64px) 20px 72px;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;}
+  .serif{font-family:ui-serif,"New York",Georgia,"Times New Roman",serif;}
+  .mono{font-family:ui-monospace,"SF Mono","SFMono-Regular",Menlo,monospace;}
+
+  /* ---------- hero ---------- */
+  .eyebrow{
+    font-family:ui-monospace,"SF Mono",Menlo,monospace;
+    font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--accent-ink);margin:0 0 18px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--accent);display:inline-block;}
+  .hero-title{
+    font-family:ui-serif,"New York",Georgia,serif;
+    font-weight:600;letter-spacing:-.02em;line-height:1.02;
+    font-size:clamp(2.5rem,7vw,4.2rem);
+    margin:0 0 20px;text-wrap:balance;
+  }
+  .hero-title .zero{font-style:italic;color:var(--ink-soft);}
+  .hero-title .accent{color:var(--accent);}
+  .hero-lede{
+    font-size:clamp(1.02rem,2.2vw,1.2rem);color:var(--ink-soft);
+    max-width:56ch;margin:0 0 34px;
+  }
+
+  /* pipeline motif */
+  .pipeline{
+    display:flex;align-items:stretch;flex-wrap:wrap;gap:8px;
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:16px;box-shadow:var(--shadow);
+  }
+  .pnode{
+    flex:1 1 0;min-width:88px;text-align:center;padding:12px 8px;border-radius:9px;
+    background:var(--surface-2);
+  }
+  .pnode .picon{font-size:1.15rem;line-height:1;}
+  .pnode .plabel{
+    display:block;margin-top:8px;font-family:ui-monospace,Menlo,monospace;
+    font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);
+  }
+  .pnode .pname{display:block;font-size:.86rem;font-weight:600;margin-top:2px;color:var(--ink);}
+  .parrow{display:flex;align-items:center;color:var(--accent);font-weight:700;flex:0 0 auto;}
+  @media (max-width:560px){ .parrow{transform:rotate(90deg);} .pnode{min-width:0;} }
+
+  /* ---------- journey spine ---------- */
+  .section-label{
+    font-family:ui-monospace,Menlo,monospace;font-size:.72rem;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--ink-faint);margin:64px 0 8px;
+  }
+  .spine{list-style:none;margin:8px 0 0;padding:0;position:relative;}
+  .spine::before{
+    content:"";position:absolute;left:15px;top:8px;bottom:64px;width:2px;
+    background:linear-gradient(var(--teal),var(--accent));opacity:.5;
+  }
+  .station{
+    position:relative;padding:0 0 22px 52px;
+    opacity:0;transform:translateY(14px);
+    transition:opacity .6s ease,transform .6s ease;
+  }
+  .station.in{opacity:1;transform:none;}
+  .node{
+    position:absolute;left:4px;top:6px;width:24px;height:24px;border-radius:50%;
+    background:var(--bg);border:2px solid var(--line);display:flex;align-items:center;justify-content:center;
+    font-family:ui-monospace,Menlo,monospace;font-size:.72rem;font-weight:700;color:var(--ink-faint);
+    z-index:1;
+  }
+  .station.done .node{background:var(--teal);border-color:var(--teal);color:#fff;}
+  .station.current .node{border-color:var(--accent);color:var(--accent-ink);box-shadow:0 0 0 4px var(--accent-soft);}
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px 20px;box-shadow:var(--shadow);
+  }
+  .station.current .card{border-color:var(--accent);}
+  .khead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:4px;}
+  .kicker{
+    font-family:ui-monospace,Menlo,monospace;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--accent-ink);
+  }
+  .atoms{
+    font-family:ui-monospace,Menlo,monospace;font-size:.72rem;color:var(--ink-faint);
+    font-variant-numeric:tabular-nums;
+  }
+  .ktitle{font-family:ui-serif,"New York",Georgia,serif;font-size:1.28rem;font-weight:600;margin:2px 0 4px;letter-spacing:-.01em;}
+  .build{color:var(--ink-soft);margin:0 0 14px;font-size:.96rem;}
+  .build b{color:var(--ink);font-weight:600;}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;}
+  .chip{
+    font-family:ui-monospace,Menlo,monospace;font-size:.72rem;
+    padding:3px 9px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);
+    color:var(--ink-soft);white-space:nowrap;
+  }
+  .youare{
+    display:inline-flex;align-items:center;gap:8px;margin-top:12px;
+    font-family:ui-monospace,Menlo,monospace;font-size:.74rem;color:var(--accent-ink);
+    background:var(--accent-soft);border-radius:999px;padding:5px 12px;
+  }
+  .youare .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);}
+  .tagd{color:var(--teal);font-weight:600;}
+
+  /* goal */
+  .goal{
+    position:relative;margin:8px 0 0;padding:24px 52px 4px;
+    opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;
+  }
+  .goal.in{opacity:1;transform:none;}
+  .goal .node{background:var(--accent);border-color:var(--accent);color:#1a1205;top:24px;}
+  .goal-card{
+    background:linear-gradient(180deg,var(--accent-soft),transparent), var(--surface);
+    border:1.5px solid var(--accent);border-radius:var(--radius);padding:22px 22px;box-shadow:var(--shadow);
+  }
+  .goal-card .kicker{color:var(--accent-ink);}
+  .goal-card h3{font-family:ui-serif,"New York",Georgia,serif;font-size:1.5rem;margin:4px 0 6px;font-weight:600;}
+  .goal-card p{margin:0 0 14px;color:var(--ink-soft);}
+
+  /* footer */
+  .foot{
+    margin-top:56px;border-top:1px solid var(--line);padding-top:24px;
+    color:var(--ink-soft);font-size:.92rem;
+  }
+  .foot h4{font-family:ui-monospace,Menlo,monospace;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 10px;}
+  .beats{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px;}
+  .beat{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:.86rem;}
+  .beat b{color:var(--ink);}
+  .words{font-family:ui-monospace,Menlo,monospace;font-size:.82rem;color:var(--accent-ink);}
+
+  @media (prefers-reduced-motion:reduce){
+    .station,.goal{opacity:1;transform:none;transition:none;}
+  }
+</style>
+
+<div class="page">
+  <div class="wrap">
+
+    <header class="hero">
+      <p class="eyebrow">The Learning Path · guided by Acharya</p>
+      <h1 class="hero-title">From <span class="zero">Zero</span> to<br><span class="accent">AI Engineer</span></h1>
+      <p class="hero-lede">One voice assistant, built end to end. Ten phases of <b>build-while-learn</b> — tiny atoms you type yourself, opening the hood 🔧 on every concept the moment you use it. All AI-engineer foundations, covered by the finish line.</p>
+
+      <div class="pipeline" aria-label="What we build: voice to speech-to-text to language model to text-to-speech to voice">
+        <div class="pnode"><div class="picon">🎤</div><span class="pname">Voice</span><span class="plabel">you speak</span></div>
+        <div class="parrow">→</div>
+        <div class="pnode"><div class="picon">👂</div><span class="pname">Ears</span><span class="plabel">STT</span></div>
+        <div class="parrow">→</div>
+        <div class="pnode"><div class="picon">🧠</div><span class="pname">Brain</span><span class="plabel">LLM</span></div>
+        <div class="parrow">→</div>
+        <div class="pnode"><div class="picon">💬</div><span class="pname">Mouth</span><span class="plabel">TTS</span></div>
+        <div class="parrow">→</div>
+        <div class="pnode"><div class="picon">🔊</div><span class="pname">Voice</span><span class="plabel">it replies</span></div>
+      </div>
+    </header>
+
+    <p class="section-label">The 8 phases · one atom at a time</p>
+
+    <ol class="spine">
+
+      <li class="station done">
+        <div class="node">✓</div>
+        <div class="card">
+          <div class="khead"><span class="kicker">Phase 0 · Foundations</span><span class="atoms">done</span></div>
+          <h3 class="ktitle">Your teacher &amp; the map</h3>
+          <p class="build"><b>Built:</b> the repo, Acharya, and the full atomized syllabus — the system you're looking at now.</p>
+          <div class="chips"><span class="chip">git</span><span class="chip">project setup</span><span class="chip">learning system</span><span class="chip">references</span></div>
+        </div>
+      </li>
+
+      <li class="station current">
+        <div class="node">1</div>
+        <div class="card">
+          <div class="khead"><span class="kicker">Phase 1 · The Brain</span><span class="atoms">9 atoms · 1.0–1.8</span></div>
+          <h3 class="ktitle">Text chat with an LLM</h3>
+          <p class="build"><b>Build:</b> a terminal chatbot you type line by line. <b>🔧 Hood:</b> tokens, probability, softmax — coded by hand.</p>
+          <div class="chips"><span class="chip">LLM API</span><span class="chip">tokens</span><span class="chip">softmax 🔧</span><span class="chip">temperature</span><span class="chip">streaming</span><span class="chip">chat memory</span></div>
+          <span class="youare"><span class="dot"></span>you are here · next → Atom 1.0</span>
+        </div>
+      </li>
+
+      <li class="station">
+        <div class="node">2</div>
+        <div class="card">
+          <div class="khead"><span class="kicker">Phase 2 · Memory &amp; RAG</span><span class="atoms">10 atoms · 2.0–2.9</span></div>
+          <h3 class="ktitle">Answers from your own data</h3>
+          <p class="build"><b>Build:</b> an assistant that knows <em>your</em> documents. <b>🔧 Hood:</b> vectors &amp; cosine similarity, by hand.</p>
+          <div class="chips"><span class="chip">NumPy 🔧</span><span class="chip">embeddings</span><span class="chip">cosine 🔧</span><span class="chip">vector store</span><span class="chip">RAG</span></div>
+        </div>
+      </li>
+
+      <li class="station">
+        <div class="node">3</div>
+        <div class="card">
+          <div class="khead"><span class="kicker">Phase 3 · The Ears</span><span class="atoms">7 atoms · 3.0–3.6</span></div>
+          <h3 class="ktitle">Speech → text</h3>
+          <p class="build"><b>Build:</b> a <span class="mono">listen()</span> — hosted first, then free &amp; local with Whisper. <b>🔧 Hood:</b> audio as numbers; meet a transformer live.</p>
+          <div class="chips"><span class="chip">audio 101 🔧</span><span class="chip">Whisper</span><span class="chip">local inference</span><span class="chip">cost math</span></div>
+        </div>
+      </li>
+
+      <li class="station">
+        <div class="node">4</div>
+        <div class="card">
+          <div class="khead"><span class="kicker">Phase 4 · The Mouth</span><span class="atoms">7 atoms · 4.0–4.6</span></div>
+          <h3 class="ktitle">Text → voice</h3>
+          <p class="build"><b>Build:</b> a <span class="mono">say()</span> that speaks — hosted, then open &amp; free with Piper, plus a peek at voice cloning.</p>
+          <div class="chips"><span class="chip">TTS 🔧</span><span class="chip">SSML</span><span class="chip">Piper</span><span class="chip">voice cloning</span></div>
+        </div>
+      </li>
+
+      <li class="station">
+        <div class="node">5</div>
+        <div class="card">
+          <div class="khead"><span class="kicker">Phase 5 · The Loop</span><span class="atoms">7 atoms · 5.0–5.6</span></div>
+          <h3 class="ktitle">Real-time conversation</h3>
+          <p class="build"><b>Build:</b> ears → brain → mouth wired live. The moment it becomes a real <span class="tagd">voice assistant</span>.</p>
+          <div class="chips"><span class="chip">pipeline</span><span class="chip">VAD</span><span class="chip">latency 🔧</span><span class="chip">streaming</span></div>
+        </div>
+      </li>
+
+      <li class="station">
+        <div class="node">6</div>
+        <div class="card">
+          <div class="khead"><span class="kicker">Phase 6 · Tools &amp; Agents</span><span class="atoms">9 atoms · 6.0–6.8</span></div>
+          <h3 class="ktitle">It acts, not just talks</h3>
+          <p class="build"><b>Build:</b> an assistant that checks, searches, and does — via tools. <b>🔧 Hood:</b> function calling &amp; the agent loop.</p>
+          <div class="chips"><span class="chip">function calling 🔧</span><span class="chip">tools</span><span class="chip">agent loop 🔧</span><span class="chip">guardrails</span></div>
+        </div>
+      </li>
+
+      <li class="station">
+        <div class="node">7</div>
+        <div class="card">
+          <div class="khead"><span class="kicker">Phase 7 · Under the Hood ★</span><span class="atoms">15 atoms · 7.0–7.14</span></div>
+          <h3 class="ktitle">The deep dive — build a mini-LLM</h3>
+          <p class="build"><b>Build:</b> neurons → backprop → PyTorch → attention, Q·K·V, causal masking → <b>train a tiny LLM from scratch.</b> The "become the engineer" phase.</p>
+          <div class="chips"><span class="chip">backprop 🔧</span><span class="chip">PyTorch 🔧</span><span class="chip">attention · Q·K·V 🔧</span><span class="chip">masking 🔧</span><span class="chip">mini-LLM</span></div>
+        </div>
+      </li>
+
+      <li class="station">
+        <div class="node">8</div>
+        <div class="card">
+          <div class="khead"><span class="kicker">Phase 8 · Fine-tuning</span><span class="atoms">9 atoms · 8.0–8.8</span></div>
+          <h3 class="ktitle">Train your own, with Hugging Face</h3>
+          <p class="build"><b>Build:</b> a model fine-tuned on your data — <span class="mono">transformers</span>, <span class="mono">datasets</span>, LoRA/PEFT, evaluated before vs after.</p>
+          <div class="chips"><span class="chip">Hugging Face</span><span class="chip">fine-tuning</span><span class="chip">LoRA · PEFT 🔧</span><span class="chip">evaluation</span></div>
+        </div>
+      </li>
+
+      <li class="station">
+        <div class="node">9</div>
+        <div class="card">
+          <div class="khead"><span class="kicker">Phase 9 · The Product: API + SDK</span><span class="atoms">10 atoms · 9.0–9.9</span></div>
+          <h3 class="ktitle">Integratable anywhere — your MERN turf</h3>
+          <p class="build"><b>Build:</b> the assistant as a clean API with keys + an npm SDK any app can drop in — your React "hold to talk" app is just its first consumer.</p>
+          <div class="chips"><span class="chip">API design</span><span class="chip">auth keys</span><span class="chip">SDK</span><span class="chip">React</span><span class="chip">Express</span><span class="chip">MongoDB</span></div>
+        </div>
+      </li>
+
+      <li class="station">
+        <div class="node">10</div>
+        <div class="card">
+          <div class="khead"><span class="kicker">Phase 10 · Cheap &amp; Sellable</span><span class="atoms">10 atoms · 10.0–10.9</span></div>
+          <h3 class="ktitle">Turn it into a business</h3>
+          <p class="build"><b>Build:</b> a deployed, measured product with healthy margins. <b>🔧 Hood:</b> evals &amp; guardrails — proving it's good.</p>
+          <div class="chips"><span class="chip">cost modeling 🔧</span><span class="chip">open models</span><span class="chip">evals 🔧</span><span class="chip">guardrails 🔧</span><span class="chip">deploy</span><span class="chip">pricing</span></div>
+        </div>
+      </li>
+
+    </ol>
+
+    <div class="goal">
+      <div class="node">★</div>
+      <div class="goal-card">
+        <span class="kicker">The destination</span>
+        <h3 class="serif">You, an AI Engineer</h3>
+        <p>You can <b>build</b> AI products, <b>ship</b> them affordably, and <b>explain</b> exactly how they work — from the API call down to the attention math. All 17 foundations implemented by your own hands (<span class="mono">foundations-map.md</span>). Not a user of magic. An engineer who understands the machine.</p>
+        <div class="chips"><span class="chip">build</span><span class="chip">ship cheaply</span><span class="chip">understand internals</span><span class="chip">the math</span><span class="chip">an integratable SDK</span><span class="chip">a sellable product</span></div>
+      </div>
+    </div>
+
+    <footer class="foot">
+      <h4>How we travel it</h4>
+      <div class="beats">
+        <div class="beat"><b>💡 Idea</b> — one concept, plain words</div>
+        <div class="beat"><b>🛠️ You do</b> — one tiny hands-on step</div>
+        <div class="beat"><b>✅ See + check</b> — it runs, one question</div>
+      </div>
+      <p>One atom per turn. Nothing dumped. You set the pace — say the magic words anytime:
+      <span class="words">smaller · bigger · again · why? · reference</span></p>
+    </footer>
+
+  </div>
+</div>
+
+<script>
+  (function(){
+    var items = document.querySelectorAll('.station, .goal');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduce || !('IntersectionObserver' in window)){
+      items.forEach(function(el){ el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, {threshold:.15, rootMargin:'0px 0px -8% 0px'});
+    items.forEach(function(el){ io.observe(el); });
+  })();
+</script>

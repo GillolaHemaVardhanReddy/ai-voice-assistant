@@ -4,7 +4,7 @@ Tick each atom as you finish (`[ ]` → `[x]`). Acharya resumes from here each s
 
 **New rules (26 Jul 2026):** every phase ends with a **ship-it atom** (README + demo GIF + write-up → portfolio card on hemavardhanreddy.vercel.app). Classical ML/MLOps/vision/n8n live in **future projects P2–P4** — see `docs/project-roadmap.md`.
 
-**Currently at:** 🧩 **Phase 2, Atom 2.3 — embeddings** · ⚠️ but FIRST: student asked for a **revision** at next session start (softmax · temperature · vectors/normalizing)
+**Currently at:** 🧩 **Phase 2, Atom 2.4 — cosine similarity** · ⚠️ but FIRST: **RE-TEACH "cosine collapses to the dot product"** — student got lost in the algebra proof. Redo it **geometrically** (arrows on graph paper, angle → number) BEFORE any formula. Do not restart 2.4 until that lands.
 
 ## Phase 0 — Setup & foundations plan
 - [x] Repo + git + Acharya (teacher) built
@@ -36,7 +36,10 @@ Tick each atom as you finish (`[ ]` → `[x]`). Acharya resumes from here each s
 - [x] 2.2 🔧 Vectors + dot product in NumPy (`learn/phase2/vectors.py`; `a·b=32`, `a·a=14` by hand ✅)
 - [x] 2.2a 🔧 Magnitude / norm (`√(a·a)` = `np.linalg.norm` ≈ 3.742; saw dot-product's length bug)
 - [x] 2.2b 🔧 Normalizing → unit vectors (student proved it himself: `[1,2,3]` and `[4,8,12]` → same unit vector)
-- [ ] 2.3–2.9 ← **answers from your data**
+- [x] 2.3a Installed `sentence-transformers` (5.6.1) — pulled `torch` (Phase 7) + `transformers` (Phase 8) into the venv for free
+- [x] 2.3b First real embedding (`learn/phase2/embeddings.py` — `all-MiniLM-L6-v2`, ~90MB one-time download; `vec.shape == (384,)` for ANY length text)
+- [x] 2.3c Callback: `np.linalg.norm(vec) == 1.0` → the model already returns **unit vectors** ⇒ cosine collapses to plain dot product **ATOM 2.3 DONE**
+- [ ] 2.4–2.9 ← **answers from your data**
 
 ## Phase 3 — The EARS
 - [ ] 3.0–3.6 ← **speak → text**

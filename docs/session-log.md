@@ -4,6 +4,15 @@ One short entry per session, newest on top. Acharya appends this at session end 
 
 ---
 
+## 2026-07-26 — Session 4 (night): first real embeddings 🧬
+- **Did:** Atom 2.3a install `sentence-transformers` 5.6.1 → 2.3b `all-MiniLM-L6-v2`, `vec.shape == (384,)` for any text length → 2.3c `np.linalg.norm(vec) == 1.0` (model has a `Normalize` module ⇒ ships Atom 2.2b baked in). **Atom 2.3 DONE.**
+- **Skipped:** the revision he'd asked for ("not even been 3hrs, let's start next") — softmax/temperature never re-checked, still un-quizzed.
+- **Decision:** student chose **no naive text→vector detour** — building an embedder by hand is **deferred to Phase 7** (7.7/7.13). Do not re-offer it in Phase 2.
+- **⚠️ STOPPED MID-EXPLANATION — resume here:** he understood *unit vector* and correctly guessed cosine collapses to `a·b`, then **got lost in my algebra proof** of it (`a·b/(|a||b|)` → `/1×1`, plus the "you choose *when* to divide" point). **Re-teach geometrically first:** draw arrows, angle → number, 1/0/−1 by picture; formula only after. Then start 2.4 (`learn/phase2/cosine.py`, predict-then-run on `[1,0]`/`[0,1]`/`[2,0]`).
+- **Teaching note:** the loss came from a **dense multi-part block** (proof + worked example + "you cannot skip it" aside, all at once). Symbols-before-intuition is his failure mode — one idea per beat, picture before algebra.
+- **Student state:** engaged and pushing back well (challenged "aren't we building text→vector ourselves?" — good instinct, answered honestly with the Phase 7 dependency chain). Tired at the end; asked to wrap and continue on another machine.
+- **Still owed:** Phase 1 demo GIF.
+
 ## 2026-07-26 — Session 3 (evening): Phase 2 opened 🧮
 - **Did:** Atom 2.0a–e (Python OOP via JS mapping: `class`/`__init__`/`self` → methods → imports + `__main__` guard → constructor args → refactored chatbot to `Memory`; student added `pop()` unprompted). 2.1 + 2.1c: felt the failure. 2.2 vectors + dot product, 2.2a norm, 2.2b normalizing.
 - **Surprise:** the bot did **not** hallucinate about the student (Haiku 4.5 refuses on unknown private people, even to leading questions). Real failure = *confidently useless, deflects recruiters off-site*. Model's own words named the fix: "not in my context."

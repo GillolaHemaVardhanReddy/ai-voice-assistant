@@ -51,6 +51,7 @@ The student writes all code themselves; this is how they learn. Acharya does NOT
 - `docs/syllabus/` — **all 10 phases pre-broken into atoms** (`README.md` is the index). Near phases stable; far phases (7–10) are a living draft we refine as we approach.
 - `docs/foundations-map.md` — F1–F17 foundations → the atoms where the student implements each. The completeness guarantee; tick as completed.
 - `docs/progress.md` — the atom checklist + "currently at" marker. **This is the source of truth for where we are** — check it at session start, tick atoms as completed.
+- `docs/session-log.md` — one short entry per session (did / decisions / pending / student state). **Read the newest entry at session start** (with progress.md) to resume seamlessly; **append an entry at session end** or when the student says "wrap up". Keep entries ≤8 lines — this is the cheap-token resume mechanism.
 
 ## Decision-making rule
 Ask the student before making any non-trivial decision or assumption. They want to be consulted on choices, not surprised by them.

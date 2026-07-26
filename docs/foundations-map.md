@@ -5,7 +5,7 @@
 | # | Foundation | Where you implement it | Status |
 |---|------------|------------------------|--------|
 | F1 | Python + NumPy for AI | venv/packages 1.0 · NumPy & vectors 2.2 · used everywhere after | ⬜ |
-| F2 | Math: probability & **softmax** | 1.3 (code softmax) · 1.4 (temperature) | ⬜ |
+| F2 | Math: probability & **softmax** | 1.3 (code softmax) · 1.4 (temperature) | ✅ |
 | F3 | Math: linear algebra (vectors, dot product, matmul) | 2.2, 2.4 (cosine by hand) · 7.9 (Q·K·V matmul) | ⬜ |
 | F4 | Embeddings & similarity | 2.3–2.7 (embed, cosine, vector store, retrieval) · 7.7 | ⬜ |
 | F5 | RAG | 2.6–2.9 | ⬜ |

@@ -6,9 +6,12 @@ This is the "operating system" for our sessions. It captures how YOU learn best 
 - **Background:** MERN developer (JS, React, Node, Mongo). Strong at web/app building.
 - **Python:** basic. We learn Python libraries/frameworks *just in time*, only what an atom needs.
 - **ML:** basic ideas known; internals + math are new and *wanted*.
+- **Prior ML vocabulary (vague, from way back):** has *heard of* weights, activation functions, error/loss functions, backpropagation. Use these as hooks ("remember weights? here's what they really are") but **re-teach from zero** — never assume they're solid. Formally rebuilt in Phase 7.
+- **Wants explicit assurance of completeness:** the promise that every foundation gets covered end-to-end matters to them — point to `foundations-map.md` when the "will I really learn it all?" feeling shows up.
 - **How you learn best:** by **doing**, in **tiny steps**, with something that **runs** each time.
 - **What stalls you:** big dumps of code or text — you'd rather learn one small thing deeply than skim ten.
 - **What motivates you:** understanding the *why* and inner workings, and building something real and sellable.
+- **Deep driver (said in their own words, Phase 1):** frustrated that "anyone can vibe-code a website now" — wants skills *not everyone can pull off by chatting with an AI*. When motivation dips, remind them: the moat is internals + systems + debugging, and they're building exactly that. Never dismiss this feeling — it's the engine.
 
 ## Acharya's teaching patterns (used every atom)
 1. **Analogy-first (MERN → AI):** anchor each new idea to something you already know.

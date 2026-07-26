@@ -5,12 +5,12 @@ Building a full AI voice chat assistant from scratch, end to end — while learn
 **Architecture:** `mic → Speech-to-Text → LLM brain → Text-to-Speech → speaker`
 
 ## Status
-Phase 0 — setup & foundations. See [`docs/00-roadmap.md`](docs/00-roadmap.md) for the full journey.
+**Phase 1 complete ✅ — the Brain.** A streaming terminal chatbot with conversation memory, personality, and error recovery — every line understood, from softmax to SSE. See [`learn/phase1/`](learn/phase1/) and the write-up in [`docs/lessons/01-the-brain.md`](docs/lessons/01-the-brain.md). Next: Phase 2 — Memory & RAG.
 
 ## Stack
 - **Product:** React + Node/Express
 - **AI learning / training / math:** Python
-- **Brain:** Claude API · **Ears:** Whisper (STT) · **Mouth:** TTS
+- **Brain:** Claude (Haiku 4.5) via OpenRouter · **Ears:** Whisper (STT) · **Mouth:** TTS
 
 ## Getting started
 1. Copy `.env.example` to `.env` and fill in your API key.

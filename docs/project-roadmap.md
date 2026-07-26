@@ -19,6 +19,30 @@ Status: Phase 1 ✅ → syllabus in `docs/syllabus/`, progress in `docs/progress
 
 ---
 
+## P1.5 — Recruiter Bot *(rides along with P1 — student's call, 26 Jul 2026)*
+**The product:** a chatbot on hemavardhanreddy.vercel.app that knows the student end-to-end and answers recruiter questions from his real documents (resume, project READMEs, story). Later: replies to recruiter emails.
+
+**Not a side-track** — it *is* P1 Phase 2 (RAG) pointed at the student's own data instead of toy text. Ships in 3 gated versions:
+
+| Ver | Gate | Adds | Why that gate |
+|-----|------|------|---------------|
+| **v1** | after **Phase 2** (+2–3 sessions) | RAG over his docs + React widget + Express endpoint, deployed | Phase 2 is the engine; the MERN half is the student's existing strength, so it's cheap to pull forward |
+| **v2** | after **Phase 6** | reads + drafts email replies | Email replying = agent with tools. Before Phase 6 it's a hack. |
+| **v3** | after **Phase 10** | voice (recruiters *talk* to it), evals, cost caps | needs the full loop + guardrails |
+
+**Timing rationale:** the student has an active job search — a live bot in ~3 weeks beats a perfect one in 6 months.
+
+**What makes it postworthy (aim Phase 2 atoms at these):**
+1. **Says "I don't know"** instead of inventing experience — *hard honesty requirement*, this bot represents a real person to people who may hire him. Must never fabricate credentials.
+2. **Cites its source** ("from his 2024 project README")
+3. **Published retrieval eval** — 20 real recruiter questions, hit-rate measured and stated in the README
+4. **Cost + rate limiting** — recruiters can't run up the API bill; cost/conversation in the README
+5. **Write-up of chunking decisions** — why the resume was split that way, what broke first
+
+Items 1–3 & 5 are free byproducts of Phase 2. Item 4 is an afternoon of Express middleware.
+
+---
+
 ## P2 — Insight Engine *(next after P1)*
 **The product:** an ML analytics & intelligence platform that eats **P1's real usage data** (users, conversations, costs) and makes business decisions from it. Portfolio story: *"I built an AI product, then built the ML platform that runs its business."* The two feed each other — Insight Engine's models get deployed back INTO the assistant (e.g., the cost router).
 

@@ -4,7 +4,7 @@ Tick each atom as you finish (`[ ]` → `[x]`). Acharya resumes from here each s
 
 **New rules (26 Jul 2026):** every phase ends with a **ship-it atom** (README + demo GIF + write-up → portfolio card on hemavardhanreddy.vercel.app). Classical ML/MLOps/vision/n8n live in **future projects P2–P4** — see `docs/project-roadmap.md`.
 
-**Currently at:** 🎓 **PHASE 1 COMPLETE** (quiz passed 5.5/6) · next up → **Phase 2, Atom 2.0a — Python class basics** (2.0 split into sub-atoms; OOP taught via JS mapping)
+**Currently at:** 🧩 **Phase 2, Atom 2.3 — embeddings** · ⚠️ but FIRST: student asked for a **revision** at next session start (softmax · temperature · vectors/normalizing)
 
 ## Phase 0 — Setup & foundations plan
 - [x] Repo + git + Acharya (teacher) built
@@ -26,7 +26,17 @@ Tick each atom as you finish (`[ ]` → `[x]`). Acharya resumes from here each s
 - [x] 1.9 🚢 Ship-it: READMEs written, pushed to GitHub. Recall quiz done ✅ (5.5/6). Pending: demo GIF · portfolio card deferred by choice
 
 ## Phase 2 — MEMORY & RAG
-- [ ] 2.0–2.9 ← **answers from your data**
+- [x] 2.0a Python class skeleton (`learn/phase2/memory_class.py` — `class` / `__init__` / `self`, mapped from JS)
+- [x] 2.0b Methods on a class (`add()`, self auto-passed, per-instance state proved)
+- [x] 2.0c Imports + `if __name__ == "__main__":` guard (`learn/phase2/try_import.py`)
+- [x] 2.0d Constructor arguments + defaults (`Memory(system_prompt="...")`, seeds history)
+- [x] 2.0e Refactor: `Memory` drives the chat loop (`learn/phase2/chat_bot_v2.py`) — student added `pop()` unprompted ✅ **ATOM 2.0 DONE**
+- [x] 2.1 Felt the failure — bot knows nothing about the student. Surprise: it did NOT hallucinate (Haiku 4.5 refuses on unknown private people); real failure = **confidently useless + deflects recruiters off-site**. Model's own words named the fix: *"not in my context."*
+- [x] 2.1c Leading-question probe (yrs of React / hardest project) — refused both. **Haiku 4.5 = strong honesty baseline, good default for P1.5.** Still build the guardrail (cheaper models later may fabricate).
+- [x] 2.2 🔧 Vectors + dot product in NumPy (`learn/phase2/vectors.py`; `a·b=32`, `a·a=14` by hand ✅)
+- [x] 2.2a 🔧 Magnitude / norm (`√(a·a)` = `np.linalg.norm` ≈ 3.742; saw dot-product's length bug)
+- [x] 2.2b 🔧 Normalizing → unit vectors (student proved it himself: `[1,2,3]` and `[4,8,12]` → same unit vector)
+- [ ] 2.3–2.9 ← **answers from your data**
 
 ## Phase 3 — The EARS
 - [ ] 3.0–3.6 ← **speak → text**

@@ -13,6 +13,11 @@ This is the "operating system" for our sessions. It captures how YOU learn best 
 - **What motivates you:** understanding the *why* and inner workings, and building something real and sellable.
 - **Deep driver (said in their own words, Phase 1):** frustrated that "anyone can vibe-code a website now" — wants skills *not everyone can pull off by chatting with an AI*. When motivation dips, remind them: the moat is internals + systems + debugging, and they're building exactly that. Never dismiss this feeling — it's the engine.
 
+- **Detects hand-waving and says so (Session 3, his words):** *"are you really going to teach me in-depth, or am I going to just keep on guessing?"* Root cause that day: he'd learned softmax as a formula but was never told **what the probabilities are over** (every token in the vocabulary). Procedure without meaning feels like guessing to him — and he's right.
+  - **Rule this creates: name every black box out loud, and say which atom opens it.** e.g. "2.3 hands you a trained embedder as a black box; you build one at 7.7 and train it at 7.13." Never let him discover a black box on his own.
+  - When he pushes back, **demonstrate immediately** (worked example, right now) — don't promise future depth.
+- **Answers checks in his own words and often runs his own variant** of the experiment rather than the given one (Session 3: normalized `[1,2,3]` vs `[4,8,12]` unprompted). Encourage this — it's the strongest signal a concept landed.
+
 ## Acharya's teaching patterns (used every atom)
 1. **Analogy-first (MERN → AI):** anchor each new idea to something you already know.
 2. **One atom, three beats:** 💡 Idea → 🛠️ You do → ✅ See + check. One per turn.

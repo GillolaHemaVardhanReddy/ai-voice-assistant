@@ -4,7 +4,7 @@ Tick each atom as you finish (`[ ]` → `[x]`). Acharya resumes from here each s
 
 **New rules (26 Jul 2026):** every phase ends with a **ship-it atom** (README + demo GIF + write-up → portfolio card on hemavardhanreddy.vercel.app). Classical ML/MLOps/vision/n8n live in **future projects P2–P4** — see `docs/project-roadmap.md`.
 
-**Currently at:** 🎓 **PHASE 1 COMPLETE** (working streaming chatbot!) · next up → **Phase 2, Atom 2.0 — Memory & RAG**
+**Currently at:** 🎓 **PHASE 1 COMPLETE** (quiz passed 5.5/6) · next up → **Phase 2, Atom 2.0a — Python class basics** (2.0 split into sub-atoms; OOP taught via JS mapping)
 
 ## Phase 0 — Setup & foundations plan
 - [x] Repo + git + Acharya (teacher) built
@@ -23,7 +23,7 @@ Tick each atom as you finish (`[ ]` → `[x]`). Acharya resumes from here each s
 - [x] 1.6 Conversation memory (`learn/phase1/memory.py`, amnesia → history replay; snowball cost + caching understood)
 - [x] 1.7 Streaming (`learn/phase1/streaming.py`, SSE chunks, delta + flush)
 - [x] 1.8 Chat loop ← **working chatbot** ✅ (`learn/phase1/chatbot.py` — streaming, memory, error-recovery, product voice)
-- [x] 1.9 🚢 Ship-it: READMEs written, pushed to GitHub. Pending: demo GIF · student recall quiz (6 questions) at next session start · portfolio card deferred by choice
+- [x] 1.9 🚢 Ship-it: READMEs written, pushed to GitHub. Recall quiz done ✅ (5.5/6). Pending: demo GIF · portfolio card deferred by choice
 
 ## Phase 2 — MEMORY & RAG
 - [ ] 2.0–2.9 ← **answers from your data**

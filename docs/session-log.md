@@ -4,6 +4,15 @@ One short entry per session, newest on top. Acharya appends this at session end 
 
 ---
 
+## 2026-07-27 — Session 5: cosine landed, math teaching contract rewritten 🧮
+- **Env:** new laptop — rebuilt from scratch. Python 3.10.12 system-wide, fresh `venv`, all packages reinstalled (numpy 2.2.6 / openai 2.48.0 / anthropic 0.120.0 / dotenv 1.2.2 / sentence-transformers 5.6.1 / torch 2.13.0). ⚠️ `.env` is gitignored — he must recreate it (OpenRouter key) on **every** new machine.
+- **Did:** re-taught 2.4 geometrically → **2.4 ✅** (`cosine.py`), **2.5 ✅** (`similarity.py`: `cat/kitten 0.788` vs `cat/car 0.463` — meaning beats spelling), **2.6a mostly** (cone/anisotropy proven with 5 unrelated words, floor `0.186`, nothing near 0).
+- **Rule earned:** absolute cosine lies, ranking tells the truth → **top-k, never a threshold.** Re-flag at 2.7; *measure* centering's value at 10.4 rather than arguing it.
+- **⚠️ RESUME HERE:** the centering block in `similarity.py` (`vecs.mean(axis=0)` → `centered = vecs - mean_vec` → reprint 10 pairs). He predicted the new floor = **−1** (correct). Run it, compare, then → **2.6 vector store**.
+- **BIG teaching change (his order):** *"don't throw LA resources at me — mine them and integrate into learn-by-doing; any math term becomes a clean sub-atom."* → new standing rule in `.claude/CLAUDE.md` (4 beats: 🖼️picture → 🔢numbers → ✏️formula → 💻code, then **back to text**), `math-map.md` rewritten with a take/skip table, 4 new 🧮 sub-atoms added (2.5a span/basis, 2.5b projection, 2.6a high-D, 2.7a search-as-matmul).
+- **Two failures of mine, both logged:** (1) algebra proof before the picture; (2) a full triangle derivation never connected back to text — his words: *"no dots connected between geometry and our text."* Fix that landed: dot product = **AND-gate agreement score** = a JS `for` loop of `a[i]*b[i]`.
+- **Student state:** frustrated mid-session, then flowing hard — asking foundation questions unprompted (*"why dot product?"*), correcting me, predicting well. Motivated by the countdown: **2 atoms to a vector store, 4 to working RAG.** Still owed: Phase 1 demo GIF.
+
 ## 2026-07-26 — Session 4 (night): first real embeddings 🧬
 - **Did:** Atom 2.3a install `sentence-transformers` 5.6.1 → 2.3b `all-MiniLM-L6-v2`, `vec.shape == (384,)` for any text length → 2.3c `np.linalg.norm(vec) == 1.0` (model has a `Normalize` module ⇒ ships Atom 2.2b baked in). **Atom 2.3 DONE.**
 - **Skipped:** the revision he'd asked for ("not even been 3hrs, let's start next") — softmax/temperature never re-checked, still un-quizzed.

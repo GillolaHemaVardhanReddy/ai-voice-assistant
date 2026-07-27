@@ -4,7 +4,7 @@ Tick each atom as you finish (`[ ]` → `[x]`). Acharya resumes from here each s
 
 **New rules (26 Jul 2026):** every phase ends with a **ship-it atom** (README + demo GIF + write-up → portfolio card on hemavardhanreddy.vercel.app). Classical ML/MLOps/vision/n8n live in **future projects P2–P4** — see `docs/project-roadmap.md`.
 
-**Currently at:** 🧩 **Phase 2, Atom 2.4 — cosine similarity** · ⚠️ but FIRST: **RE-TEACH "cosine collapses to the dot product"** — student got lost in the algebra proof. Redo it **geometrically** (arrows on graph paper, angle → number) BEFORE any formula. Do not restart 2.4 until that lands.
+**Currently at:** 🧩 **Phase 2, Atom 2.6a 🧮 — last beat: the centering experiment.** Student has NOT yet typed/run the `mean_vec` block in `similarity.py` (`vecs.mean(axis=0)` → `centered = vecs - mean_vec` → re-print the 10 pairs). He already predicted the new floor correctly: **−1**. Run it, compare to the un-centered numbers, then → **2.6 vector store**.
 
 ## Phase 0 — Setup & foundations plan
 - [x] Repo + git + Acharya (teacher) built
@@ -39,7 +39,12 @@ Tick each atom as you finish (`[ ]` → `[x]`). Acharya resumes from here each s
 - [x] 2.3a Installed `sentence-transformers` (5.6.1) — pulled `torch` (Phase 7) + `transformers` (Phase 8) into the venv for free
 - [x] 2.3b First real embedding (`learn/phase2/embeddings.py` — `all-MiniLM-L6-v2`, ~90MB one-time download; `vec.shape == (384,)` for ANY length text)
 - [x] 2.3c Callback: `np.linalg.norm(vec) == 1.0` → the model already returns **unit vectors** ⇒ cosine collapses to plain dot product **ATOM 2.3 DONE**
-- [ ] 2.4–2.9 ← **answers from your data**
+- [x] 2.4 🔧 Cosine similarity (`learn/phase2/cosine.py` — `np.dot(a,b)/(norm(a)*norm(b))`; 2D "dogs vs money" toy vectors → puppy/retriever `0.998`, puppy/stocks `0.165`). Re-taught geometrically after the algebra proof failed: arrows → angle → number; dot product = **AND-gate agreement score** (a JS `for` loop of `a[i]*b[i]`), lengths divided out so only direction counts. Text→geometry bridge finally landed.
+- [x] 2.5 Similarity on real text (`learn/phase2/similarity.py`, `cosine.py` now its own importable module — Atom 2.0c imports reused). `cat`/`kitten` **0.788** vs `cat`/`car` **0.463** ⇒ meaning beats spelling. ⚠️ Key catch: the floor is **NOT 0** (~0.3–0.5 for any two English words) ⇒ **never threshold on absolute cosine, only rank.** Revisit at 2.7.
+- [ ] 2.5a 🧮 Span/basis — "features are directions, a vector is a recipe"
+- [ ] 2.5b 🧮 Projection — "the dot product is a shadow" *(partly pre-taught at 2.4 via the adjacent-side picture)*
+- [~] 2.6a 🧮 **Anisotropy / the cone** — PULLED FORWARD (student's curiosity about the `0.46`). 10 pairs of wildly unrelated words (`cat/car/banana/democracy/hydrogen`) → **not one near 0**; floor `0.186`, ceiling `0.463`. Cone proven. Ranking is semantically real (`car/hydrogen 0.401` > `car/democracy 0.354` ⛽). **Rule earned: absolute cosine lies, ranking tells the truth → always top-k, never a threshold.** ⬜ Remaining: the centering block (`vecs.mean(axis=0)`) — not yet run.
+- [ ] 2.6–2.9 ← **answers from your data**
 
 ## Phase 3 — The EARS
 - [ ] 3.0–3.6 ← **speak → text**

@@ -31,6 +31,21 @@ The student learns by doing, one tiny piece at a time, and is easily stalled by 
 - **Never dump.** Big/reference material goes into `docs/` files the student reads at their own pace — not into chat.
 - The **student drives the pace.** They can say "smaller", "bigger", "slower", "again".
 
+## 🧮 The MATH SUB-ATOM rule (standing order, added 27 Jul 2026)
+Student's instruction: *"any time we get a mathematical term, automatically analyse the topic in maths and teach it in the best possible way as a sub-atom, cleanly."*
+
+- **Never link out instead of teaching.** Do NOT hand him a 3Blue1Brown/textbook link in place of an explanation. Mine those sources for the *insight*, then teach it here, by doing. Links are optional dessert at the END of a landed concept, never the meal.
+- **Auto-detect.** The moment a mathematical term appears in an atom (norm, projection, gradient, variance, rank, entropy…), stop and teach it as its own numbered **math sub-atom** (`2.4a`, `7.3b`, marked 🧮) before the code uses it.
+- **Every math sub-atom has 4 beats, IN THIS ORDER — order is the lesson:**
+  1. 🖼️ **Picture** — arrows/shapes/plots. No symbols at all.
+  2. 🔢 **Small real numbers** — 2D, single digits, computed by hand.
+  3. ✏️ **Formula** — only now, and read aloud as a sentence, each symbol named.
+  4. 💻 **Code** — NumPy confirms what he already believes.
+- **Never skip beat 1 to beat 3.** *Symbols-before-intuition is his documented failure mode* (Session 4: he got lost in an algebra proof of the same fact he'd already guessed correctly from the picture).
+- **One idea per beat.** Never a proof + a worked example + an aside in one block. That specific density is what lost him.
+- **Connect to text/product**, always. A geometry lesson that never returns to "…and this is why two sentences count as similar" is an incomplete sub-atom — he called this out explicitly (Session 5: *"no dots connected between geometry and our text"*).
+- `docs/math-map.md` is the live index of which math lands at which atom — update it as sub-atoms are added.
+
 ## Rules that still always apply
 - **Explain before building.** Say what code does and why, in plain language, before showing it.
 - **Teach the math when it matters** (tokens & probabilities, embeddings & cosine similarity, attention) — worked examples, not bare formulas.

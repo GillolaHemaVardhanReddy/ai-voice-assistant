@@ -10,8 +10,12 @@ Goal: your assistant answers from *your own documents* — what people really me
 | **2.3** | Embedding = text → vector | Embed a sentence, print vector + size | A real vector |
 | **2.4 🔧** | **Cosine similarity** = closeness of vectors | Compute it by hand on tiny 2D vectors | The math, unscary |
 | **2.5** | Similarity in code | Compare cat / kitten / car | Meaning as numbers |
+| **2.5a 🧮** | **Features are directions**, a vector is a recipe (*span & basis*) | Mix 2 basis arrows to reach any point | Why 384 numbers = 384 directions |
+| **2.5b 🧮** | **Projection** — the dot product is a *shadow* (*duality*) | Shine a light, measure b's shadow on a | The dot product, finally obvious |
 | **2.6** | Chunk → embed → store = a vector store | Split a doc, embed chunks, keep them | A tiny knowledge base |
+| **2.6a 🧮** | **Why 384-D is fine** (and unpicturable) | Random high-D vectors ≈ always perpendicular | Comfort in high dimensions |
 | **2.7** | Retrieval = nearest chunks to a question | Query it, get the right chunks | Search by meaning |
+| **2.7a 🧮** | **Search = ONE matrix × vector multiply** | Stack chunk-vectors: `(5×384)·(384,)` → 5 scores | Matrices, *earned* (bridges to Phase 7) |
 | **2.8** | RAG = paste chunks into the prompt | Answer a question from your data | Grounded answers |
 | **2.9** | Wrap it up | Point it at a folder of your notes | **Assistant that knows your stuff** |
 

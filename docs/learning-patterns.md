@@ -24,6 +24,9 @@ This is the "operating system" for our sessions. It captures how YOU learn best 
    - **YOU type every line of code.** Acharya gives tiny snippets with a plain "here's what this does" — never blocks to copy-paste. Syntax help, framework intros, and error-decoding happen live, as a pair-programmer.
    - **Build-while-learn with 🔧 "open the hood" atoms:** we build the assistant, and pause to understand + implement the concept underneath exactly when we first use it (softmax when we meet temperature, cosine when we meet RAG, backprop before fine-tuning...). No dry upfront theory block.
 3. **Math with real small numbers,** never bare symbols. We compute it, we don't just stare at it.
+   - 🧮 **Math sub-atom rule (his standing order, 27 Jul 2026):** every mathematical term that shows up becomes its own clean sub-atom, taught in 4 beats — **🖼️ picture → 🔢 small numbers → ✏️ formula → 💻 code** — then tied back to text/product. Full spec in `.claude/CLAUDE.md`; the per-atom index is `math-map.md`.
+   - **Never send him to an external course instead of teaching.** *"Don't throw LA resources at me — get the data from them and integrate the teachings into our learn-by-doing way."* Mine the good sources, rebuild the insight as an atom. Links only as optional dessert after it lands.
+   - ⚠️ **His documented failure mode: symbols before intuition.** Session 4 — he correctly *guessed* that cosine collapses to the dot product from the picture, then got lost when handed the algebra proof of that same fact. Session 5 — a triangle derivation landed as nothing because it was never connected back to text: *"no dots connected between geometry and our text."* Picture first. Always return to text.
 4. **Always something runs.** No atom ends without working output.
 5. **Understand-then-build (or build-tiny-then-understand)** — never copy-paste without knowing why.
 6. **Cost always visible:** every paid step names its price and its free/open alternative.

@@ -477,8 +477,101 @@ chunks = [c.strip() for c in text.split("\n\n") if c.strip()]   # ← old line, 
 
 ---
 
+## 2.9a — one file → a folder (+ `assert` as a tripwire)
+
+💡 **Idea:** A real knowledge base is a **folder**, not a file. Loop over it with `glob`, and carry a **third** parallel list — `sources` — so every chunk knows which file it came from. That's provenance, and it's what makes citations possible later.
+
+💻 **The lines that matter:**
+```python
+import glob
+files = sorted(glob.glob("learn/phase2/notes/*.txt"))   # sorted() = stable order every run
+
+for file in files:
+    text = open(file, "r").read()
+    section = ""
+    for block in text.split("\n\n"):
+        ...
+        else:
+            chunks.append(block)                        # → shown to the LLM
+            embed_texts.append(f"{section}: {block}")   # → what we embed
+            sources.append(file.split("/")[-1])         # → the citation
+
+assert len(chunks) == len(embed_texts) == len(sources)
+print(len(files), "files →", len(chunks), "chunks")     # 6 files → 127 chunks
+```
+
+⚠️ **Gotcha 1 — read the FIRST anomaly, not the traceback.** A `notes.*.txt` typo (dot for slash) matched nothing → `files` empty → `vecs` shape `(0,)` → the crash surfaced 26 lines later inside `vecs @ q` as a *matmul dimension error*. Line 35 was innocent. The actual diagnosis was the line you printed yourself: `0 files → 0 chunks`. **A crash happens downstream of where things went wrong.**
+
+⚠️ **Gotcha 2 — `assert` checks the invariant you named, nothing more.** With the empty folder it **passed**: `0 == 0 == 0` is perfectly consistent. It guards against *drift*, not against *wrong*.
+
+⚠️ **Gotcha 3 — parallel appends must live in the SAME block.** `sources.append(file)` sat in the outer (per-file) loop while the others sat in the inner (per-chunk) `else` → 6 vs 127. The `assert` fired instantly. **Compare to 2.8a, where the identical drift bug had no assert: no error, no crash, just nonsense answers and a whole debugging round lost.** One line converted a silent wrong answer into a loud, immediate crash.
+
+🏆 **`boundaries.txt` paid off:** *"does he know databases?"* → rank 1 `MySQL/ClickHouse/Redis` (0.544), rank 2 **`MongoDB only in college and side projects, not in production`** (0.531). The honest limit is retrieved *alongside* the strength, so the LLM physically cannot over-claim — the correction is in its context. **Negative facts are retrievable facts.**
+
+⚠️ **Scores rose again (0.5–0.58 vs 0.25–0.42) — fifth reminder: that is NOT "better."** Richer chunks + question-shaped headings lift the whole band. The proof is that *"what is he learning right now?"* finally ranks both AI chunks at #1/#2 instead of the *"eager to **learn**"* surface-form trap from 2.7.
+
+❓ **Self-test:** Your `assert` passes. Does that mean retrieval is working?
+<details><summary>answer</summary>No. It only means the three lists are the same <em>length</em>. They could be the same length and still be <em>misaligned</em> (e.g. built in the same loop but one appended in a different order), and they can all three be empty. <code>assert</code> proves consistency, never correctness — you still have to read the output and check the chunks make sense.</details>
+
+---
+
+## 2.9b — citations (+ the hang that had no cause)
+
+💡 **Idea:** Carry the source all the way to the answer. A claim with a receipt (`[boundaries.txt]`) is trustworthy to a recruiter — and for *you* it says instantly whether a bad answer was the **retriever's** fault or the **LLM's**.
+
+💻 **The three lines that matter:**
+```python
+# store.py
+return [(scores[i], chunks[i], sources[i]) for i in top]      # changed the return SHAPE → every caller breaks
+
+# rag.py
+context = "\n\n".join(f"[{src}] {chunk}" for score, chunk, src in hits)
+# + SYSTEM: "Each context block starts with its source file in square brackets. End your answer with the sources you used."
+```
+Result: *"does he know Kubernetes?"* → *"No, he has not worked with Kubernetes or container orchestration…"* **`[boundaries.txt, skills.txt]`** ✅
+
+⚠️ **Data ≠ instruction.** Line 22 was fixed for three whole runs before the SYSTEM line was — so the model *received* `[boundaries.txt] ...` and correctly ignored it. **Giving the model information and telling it what to do with the information are two separate jobs.** Neither one alone does anything.
+
+⚠️ **The citation is testimony, not evidence.** The model *claims* which sources it used; nothing verifies it. The ground truth is in your own hands: `print([src for score, chunk, src in hits])`. What you compute = evidence. What it writes = testimony.
+
+⚠️ **Changing a return shape breaks every caller silently.** TypeScript would go red instantly; Python waits for runtime and says `ValueError: too many values to unpack`. (Part of why Pydantic will feel good in Phase 9.)
+
+🏆 **The accidental experiment: `"what is his salary expectation?"`**
+At **2.8** it answered *"I don't have that information."* At **2.9** it answers *"10–16 LPA, open to discussion for the right role."* **Zero lines of logic changed** — `preferences.txt` just exists now.
+> **In RAG the bot's knowledge is a DATA problem, not a CODE problem.** New capability = a new line in a text file. No retraining, no fine-tune, no redeploy. That is the entire commercial argument for RAG, in one experiment run by accident.
+
+---
+
+### 🐛 The 30-second hang — a debugging case study (worth re-reading)
+
+**Symptom:** one question streamed nothing for 30–90s, no error, blank screen.
+
+**Diagnosis, in order:**
+1. `Ctrl+C` → traceback was **100% inside `httpx`/`httpcore`**, 0% inside `rag.py`. ⇒ *not stuck, **waiting*** — blocked on bytes from the network. **A hang is a stack you can't see until you interrupt it.**
+2. `timeout=30, max_retries=2` → **90s**, not 30. ⇒ **`timeout` is PER ATTEMPT, not total.**
+3. `timeout` still never fired. ⇒ **a read timeout protects you from silence, not from noise** — OpenRouter sends keep-alive filler while waiting on the upstream provider, and every byte resets the clock.
+4. In-loop watchdog (`if time.time() - start > 20`) also never fired. ⇒ **a watchdog on the blocked thread cannot fire** — the loop body only runs when a chunk arrives, and no chunk arriving *is* the bug. (Same trap as a health-check served by the wedged process: it can only report healthy.)
+
+**Hypotheses killed by experiment:**
+| Hypothesis | Test | Result |
+|---|---|---|
+| the question's *content* | run it alone | ❌ instant, perfect |
+| the *3rd-request position* (rate limit) | reorder the list | ❌ 3rd worked fine |
+
+**Verdict: intermittent upstream stall. No cause in his code, no fix in his code.**
+> **Not every bug has a findable cause. When the plausible hypotheses are dead and it still comes and goes, stop hunting a root cause and design for survival.** (Same reflex as dry-runs / rollbacks / go-no-go gates at work — different layer.)
+
+**What was kept:** `try/except` around the call. **What was deleted:** the watchdog — *dead safety code is worse than none, because it makes you believe you're protected.* **Real fix deferred to FastAPI**, where it's one idiomatic line: `await asyncio.wait_for(call(), timeout=20)` — async doesn't block a thread, so the deadline can actually fire.
+
+❓ **Self-test:** Your HTTP client has `timeout=20`. The server sends one meaningless byte every 5 seconds and never answers. How long do you wait?
+<details><summary>answer</summary>Forever. A read timeout measures the gap between <em>bytes</em>, not the time to a <em>useful answer</em>. Silence trips it; noise never does. You need a wall-clock deadline on the whole operation, enforced from somewhere the blocking can't reach.</details>
+
+---
+
 ## ⬜ Coming next
-- **2.9** — point it at a folder of real notes (LLM-based semantic chunking lands here)
+- ⬜ **owed:** follow-up questions — conversation history without re-sending CONTEXT every turn (the 1.6 snowball)
+- **2.9c/2.10** — LLM-based semantic chunking, when the data is messy enough to need it
+- **P1.5** — FastAPI service → React recruiter bot on the portfolio
 - ⬜ **owed:** conversation memory without the context snowball (currently stateless — no follow-ups)
 - **2.5a** 🧮 span/basis · **2.5b** 🧮 projection (deferred, not blocking)
 

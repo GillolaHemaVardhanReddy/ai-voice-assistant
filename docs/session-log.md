@@ -4,6 +4,18 @@ One short entry per session, newest on top. Acharya appends this at session end 
 
 ---
 
+## 2026-07-28 — Session 7: citations + a hang with no cause 🔍
+- **Did:** **2.9a ✅** folder loader (`glob` over `learn/phase2/notes/*.txt` → **6 files → 127 chunks**, third parallel list `sources`, `assert` tripwire) and **2.9b ✅** citations end-to-end — *"does he know Kubernetes?"* → honest no → **`[boundaries.txt, skills.txt]`**.
+- **🏆 The accidental headline experiment:** salary → *"I don't have that information"* at 2.8, → *"10–16 LPA"* at 2.9, **zero logic changed** — only `preferences.txt` now exists. **In RAG, knowledge is a DATA problem, not a CODE problem.**
+- **Concepts earned:** *data ≠ instruction* (the `[src]` tags were sent and correctly ignored for 3 runs until SYSTEM said to use them) · *a citation is testimony, not evidence* — verify with a plain `in` check against `hits`, **no embeddings** · *assert checks the invariant you named, not correctness* (it passed on `0 == 0 == 0`) · *read the FIRST anomaly you printed, not the traceback bottom.*
+- **🐛 The big one — an intermittent 30–90s silent hang.** Chain: `Ctrl+C` stack 100% in `httpx` ⇒ *waiting, not stuck* → `timeout` is **per attempt** (30×3 = 90s) → **a read timeout protects you from silence, not noise** (keep-alive filler resets the clock) → **an in-loop watchdog can't fire on the thread it's watching** (my design flaw, owned). Both hypotheses killed by experiment. **Verdict: transient upstream stall, no cause in his code.** Rule earned: *when the plausible hypotheses are dead and it still comes and goes, design for survival, stop hunting.* Real fix deferred to FastAPI's `await asyncio.wait_for(...)`.
+- **📌 `story.txt` DEFERRED by his call — after v1 deployment.** His reason: deciding behavioural material takes time and stalls the build. Not dropped; the 6 questions still stand, still must be **his words**.
+- **⚠️ Teaching correction he gave me twice — carry it:** *"you dumped something and never even considered if it landed"* and *"explain cleanly please."* I appended a new concept to a celebration with **no check-question**. **One idea, one check, every time — celebrations are not a loophole.**
+- **▶️ RESUME:** he stopped before reading the A/B/C options — **they are written out in `docs/progress.md` under "START NEXT SESSION HERE"**. Warm-up first, then re-offer them verbatim. (A = follow-up questions ⭐ · B = FastAPI P1.5 · C = semantic chunking, skip.) Continuing on a **different laptop** → `.env` (`OPENROUTER_API_KEY`) is gitignored and must be recreated, plus venv + `pip install`.
+- **Housekeeping still owed:** `cosine.py` needs a `__main__` guard (its demo prints on every import); the `from cosine import cosine` line in `store.py` is now dead since `@` replaced it. Phase 1 demo GIF still owed.
+
+---
+
 ## 2026-07-27/28 — Session 6: RAG WORKS 🎉 (the biggest session so far)
 - **Did:** closed **2.6a/2.6b** (centering: all 10 pairs negative, avg `−0.2484` vs theory `−1/(n−1) = −0.25` ✅), **2.6c** pooling, **2.6 vector store**, **2.7** retrieval on 27 real chunks, **2.7a 🧮** search = one matmul, **2.8 RAG** (guardrail proven: salary → *"I don't have that information"*), **2.8a contextual retrieval**. 2.9 knowledge base built but **code not wired — resume there.**
 - **The through-line, earned 4× on his own data:** *absolute cosine lies, ranking tells the truth → top-k, never a threshold.* His correct chunk scored `0.416` — **below** `cat/car 0.463` — so a `>0.45` filter would have silently returned nothing. Then deeper: **don't trust rank #1 either** (k=3 recovered what k=1 missed).

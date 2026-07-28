@@ -1,0 +1,27 @@
+# What kind of company he wants to join
+
+He is open across company stages and is more interested in the work than the label. Product startups, larger product companies and big tech, AI and developer-tooling companies, and fintech or payments companies all appeal to him.
+
+A product company appeals more than a services company, because he wants to own a system over time and watch it run, rather than hand work off at delivery.
+
+Fintech and payments is his clearest edge. He has run over 5.2 crore rupees through systems he designed with zero double-charges, so correctness under money is a domain he has already proven himself in.
+
+AI and developer tooling is where he is pointing his learning. He has already published two open-source developer tools for AI coding agents, and he is building an AI voice assistant from scratch to learn the internals properly.
+
+# What he is looking for in the role itself
+
+He wants to work on backend systems at real scale and go deeper into AI engineering, ideally at a company that ships to production quickly and cares about cost per user.
+
+He wants to keep end-to-end ownership: designing the data model, building the service, and operating it in production, rather than being handed isolated tickets.
+
+He would value working alongside stronger, more experienced engineers he can learn from. He has largely been the person setting the standards on his team, and he wants to be challenged.
+
+He is comfortable with responsibility and would like to keep growing technical leadership, including mentoring other engineers.
+
+# Practical preferences
+
+His preferred location is Hyderabad, and he is open to relocating within the southern parts of India for the right role.
+
+He is comfortable working fully remote, fully in office, or hybrid. Work mode is not a blocker.
+
+His salary expectation is 10 to 16 LPA depending on role and scope, and his notice period is 2 months.

@@ -1,0 +1,67 @@
+# Backend skills and technologies
+
+Node.js and Express are his strongest technologies. He uses them daily in production and considers himself expert level with them.
+
+He is expert level at REST API design and webhook design, including signature verification and idempotency for payment webhooks.
+
+He is strong with queues and background jobs, specifically BullMQ backed by Redis, plus node-cron scheduled workflows and PM2 for clustering and load balancing.
+
+He is strong with payments integrations — Cashfree, UPI and EMI mandates — with over 5.2 crore rupees of live payments running through the systems he built.
+
+He designs event-driven architectures, where work is queued and processed asynchronously rather than blocking the request.
+
+# Database and data modelling skills
+
+He is strong with MySQL for relational data, including schema design, indexing and safe migrations. He has run more than 50 safe production migrations.
+
+He is strong with ClickHouse for analytics at scale, using it as an event store for funnels and attribution.
+
+He is strong with Redis, used both for caching and as the backing store for queues.
+
+He is strong at safe schema changes, with rollbacks and deploy-order safety gates built into the process rather than improvised during incidents.
+
+# Frontend skills
+
+He is strong with Angular and Angular Universal with server-side rendering, which powers the customer-facing site he works on.
+
+He is proficient with React, including React 18, Vite, React Router and hooks. He built the internal admin console in React.
+
+He is strong with design systems and SCSS.
+
+He is proficient with data visualisation, particularly ECharts, used in the analytics Journey Explorer.
+
+# Cloud, DevOps and operations skills
+
+He is strong with AWS, particularly S3 and CloudFront for CDN delivery, page caching and automated cache invalidation.
+
+He handles day-to-day production operations, CI/CD pipelines and Git-hook gates.
+
+He treats engineering discipline as non-negotiable: code reviews, commit-message enforcement, pre-push drift checks and safety gates.
+
+# Testing and tooling
+
+He is proficient with testing, using Playwright, Vitest and Jest.
+
+He uses Postman and Swagger for API development and documentation, Git for version control, and npm including publishing his own packages.
+
+# Third-party integrations he has worked with
+
+He has integrated Cashfree for pay-now and pay-later EMI mandate payments.
+
+He has integrated WhatsApp Business via Pinnacle, plus SMS and RCS providers, used in the customer-recovery CRM.
+
+He has integrated Firebase Cloud Messaging for push notifications, Meta Pixel for ad attribution, and Google Places.
+
+# Programming languages
+
+The programming languages he works in are JavaScript and TypeScript as his primary languages, plus Python, C and C++.
+
+# AI and machine learning skills
+
+He works with large language model APIs, including the Claude API and OpenRouter, covering streaming responses, conversation memory, system prompt design, temperature control and token cost management.
+
+He has built a retrieval-augmented generation pipeline from primitives: chunking strategy, sentence-transformers embeddings, cosine similarity, matrix-based vector search, contextual retrieval and grounding guardrails — without using a RAG framework.
+
+He understands the internals rather than just the APIs, having implemented softmax by hand and worked through vector maths, norms, unit vectors, cosine similarity and embedding-space anisotropy from first principles.
+
+He builds AI developer tooling professionally, having published two npm packages that govern AI coding agents in a real engineering workflow.

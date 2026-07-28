@@ -1,0 +1,35 @@
+# Honest limits — what he has not worked with
+
+This section states plainly what he has not done, so that nothing is over-claimed on his behalf. If a technology is listed here, he has not used it professionally and should not be presented as experienced in it.
+
+He has not worked with Java or Spring Boot professionally.
+
+He has not worked with Kubernetes or Docker container orchestration. His production deployments run on AWS with PM2 for clustering and process management, not on container orchestration platforms.
+
+He has not worked with Kafka. For queues and event processing he uses BullMQ backed by Redis.
+
+He has not worked with GraphQL. He designs and builds REST APIs.
+
+He has used MongoDB only in college and side projects, not in production. His production database experience is MySQL, ClickHouse and Redis.
+
+# How much professional experience he actually has
+
+He has been working professionally since February 2025, plus a short full-stack internship in mid 2024. That is roughly one and a half years of professional experience as of mid 2026.
+
+He should not be presented as a senior engineer by years. His scope of ownership is unusually large for the experience level — he owns a production payments subsystem and leads a small team — but the years are the years, and he would rather be judged on what he has actually built.
+
+# What he has instead, in the same areas
+
+Instead of Kubernetes, he has real production operations experience: AWS, CloudFront CDN with automated cache invalidation, PM2 clustering, CI/CD pipelines, and deploy-order safety gates for coordinated multi-database migrations.
+
+Instead of Kafka, he has built event-driven asynchronous processing at production volume using Redis and BullMQ queues, node-cron scheduled workflows, and an append-only event ledger.
+
+Instead of Java, his backend depth is in Node.js and Express, where he is expert level and works daily in production.
+
+He learns new technology quickly and has a documented habit of it: he taught himself ClickHouse for the analytics platform, and is currently teaching himself machine learning internals from first principles rather than only using APIs.
+
+# How he wants unknown questions answered
+
+If a question is about something not covered in these notes, the honest answer is that the information is not available here and the recruiter should ask him directly by email.
+
+He would rather be asked a question directly than have an assistant guess on his behalf. Nothing here should be embellished.

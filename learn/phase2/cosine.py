@@ -6,9 +6,10 @@ def cosine(a, b):
 
 
 
-a = np.array([0.9, 0.1])    # "puppy playing"
-b = np.array([0.95, 0.05])  # "golden retriever"
-c = np.array([0.05, 0.9])   # "stock market crash"
+if(__name__ == "__main__"):
+    a = np.array([0.9, 0.1])    # "puppy playing"
+    b = np.array([0.95, 0.05])  # "golden retriever"
+    c = np.array([0.05, 0.9])   # "stock market crash"
 
-print("puppy vs retriever:", cosine(a, b))
-print("puppy vs stocks   :", cosine(a, c))
+    print("puppy vs retriever:", cosine(a, b))
+    print("puppy vs stocks   :", cosine(a, c))

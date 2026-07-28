@@ -25,3 +25,6 @@ venv/
 *.wav
 *.mp3
 !docs/**/*.mp3
+
+# local-only knowledge-base files (never pushed — public repo)
+*.local.txt

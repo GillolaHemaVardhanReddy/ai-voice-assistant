@@ -16,6 +16,7 @@ One short entry per session, newest on top. Acharya appends this at session end 
 - **📌 Deferred by his call:** follow-up questions (v1 ships **stateless**) and the proper `answer()` refactor + `asyncio.wait_for` — both after v1 is live. Also owed: reclaim the 2.7GB local CUDA install; Phase 1 demo GIF.
 - **▶️ RESUME:** ONNX/fastembed swap + precomputed embeddings, then re-measure image **and** RSS, then **re-verify retrieval quality with his known-good queries** (different embedder = different vectors). Then a free host, then the React widget. **Edit notes in `service/notes/` now, not `learn/phase2/notes/`.**
 - **Student state:** high momentum all session, repeatedly asking "what next" and choosing to push on; stopped and asked for slower pacing exactly twice, both times correctly. Strong on the concepts he engaged with; skipped a few check-questions when in flow.
+- **💻 CONTINUING ON A DIFFERENT LAPTOP — setup before anything runs:** `git pull` · `python3 -m venv venv && source venv/bin/activate` · `pip install -r requirements.txt` · **recreate `.env` with `OPENROUTER_API_KEY`** (gitignored, never travels) · install Docker if absent. Then `uvicorn service.main:app --reload` from the **repo root**. *(Tip for the new machine: install the CPU-only torch — `pip install torch --index-url https://download.pytorch.org/whl/cpu` — before `pip install -r requirements.txt`, and skip the 2.7GB of CUDA libs this laptop is carrying.)*
 
 ---
 

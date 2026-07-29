@@ -4,6 +4,21 @@ One short entry per session, newest on top. Acharya appends this at session end 
 
 ---
 
+## 2026-07-29 — Session 8: the bot became a service, and then a container 🐳
+- **Warm-up 2.5/3.** Data≠instruction ✅ · top-k rule ✅ (added centering unprompted) · decorators ✗ — he had the *definition* but couldn't write `greet = loud(greet)`. So **2.10a** taught it properly (closures via `__closure__`, JS `const old = greet` bridge, decorator **factories**: `@app.get("/ask")` ≡ `ask = app.get("/ask")(ask)`). Paid off twice later when import-time decorator errors appeared.
+- **Did: P1.5.0 → P1.5.5** — FastAPI + uvicorn (**ASGI vs WSGI ⇒ why async, why not Flask**) · Pydantic body (**"the class is a doorman with a checklist"**) · retriever over HTTP (`sys.path`, **imports execute**, JSON≠numpy) · **real grounded answers + citations over HTTP** 🎉 · honest **502** (never lie with a status code) · **CORS + slowapi rate limit + a $1/day OpenRouter cap on a separate prod key** · `service/` made a self-contained package · **Docker: image builds and runs, 1.95GB.**
+- **🏆 Headline: the container caught a bug the laptop hid.** `main.py` still had `sys.path.append("learn/phase2")`, so locally it silently loaded **two** copies of the store (RSS 938→994MB). In the container `learn/` doesn't exist ⇒ instant crash. *A container is a clean room.*
+- **📏 Measure, don't estimate — twice.** RSS is **938MB** (my 400–700MB guess was wrong, and the real number decided the host). His venv had **2.7GB of unused CUDA libs** (`cuda available: False`) — evidence for the CPU-torch line, not assertion. `.dockerignore` cut the build context from **5.0GB → 29.69kB**.
+- **❌ Blocked at the last step: Docker Spaces now require paid PRO.** My recommendation was out of date; owned. Account + Space already created. **His call: shrink the footprint first (ONNX + build-time embeddings, target ~400MB/~250MB), then any free host** — Phase 10 cost work pulled forward, rejecting both $9/mo and Cloud Run.
+- **⚠️ My teaching failure, logged:** dumped Pydantic + runtime annotations + a 5-step table + the joi comparison at once → *"I am totally confused."* **Recovery that worked: throw it all away, one picture (doorman), one action, one check.** Second time this density failure has hit (Session 4). Later he asked explicitly for **one Dockerfile line at a time** — that pace worked all the way through.
+- **His recurring bug, 3rd sighting:** types the fix but leaves the old line above/below it → last assignment wins, **silently**. Named the habit: *delete first, then type.*
+- **⚠️ Rule I gave him and had to correct:** not "read the *first* traceback line" — **"find the frame that names YOUR file and the message that names something YOU wrote."** (numpy case → first; slowapi case → last.)
+- **📌 Deferred by his call:** follow-up questions (v1 ships **stateless**) and the proper `answer()` refactor + `asyncio.wait_for` — both after v1 is live. Also owed: reclaim the 2.7GB local CUDA install; Phase 1 demo GIF.
+- **▶️ RESUME:** ONNX/fastembed swap + precomputed embeddings, then re-measure image **and** RSS, then **re-verify retrieval quality with his known-good queries** (different embedder = different vectors). Then a free host, then the React widget. **Edit notes in `service/notes/` now, not `learn/phase2/notes/`.**
+- **Student state:** high momentum all session, repeatedly asking "what next" and choosing to push on; stopped and asked for slower pacing exactly twice, both times correctly. Strong on the concepts he engaged with; skipped a few check-questions when in flow.
+
+---
+
 ## 2026-07-28 — Session 7: citations + a hang with no cause 🔍
 - **Did:** **2.9a ✅** folder loader (`glob` over `learn/phase2/notes/*.txt` → **6 files → 127 chunks**, third parallel list `sources`, `assert` tripwire) and **2.9b ✅** citations end-to-end — *"does he know Kubernetes?"* → honest no → **`[boundaries.txt, skills.txt]`**.
 - **🏆 The accidental headline experiment:** salary → *"I don't have that information"* at 2.8, → *"10–16 LPA"* at 2.9, **zero logic changed** — only `preferences.txt` now exists. **In RAG, knowledge is a DATA problem, not a CODE problem.**

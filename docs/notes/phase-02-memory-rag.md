@@ -568,6 +568,37 @@ At **2.8** it answered *"I don't have that information."* At **2.9** it answers 
 
 ---
 
+## Sub-atom 2.10a 🐍 — Decorators (the `@` is one assignment)
+
+💡 **Idea:** a decorator is **not syntax**. `@loud` above a `def` is *exactly* `greet = loud(greet)`, run by Python the instant it finishes reading the `def`. A decorator is just a function that takes a function and returns a replacement.
+
+💻 **The line that matters** (`learn/phase2/decorator_play.py`):
+```python
+def loud(fn):
+    def wrapper():
+        return fn().upper() + "!!!"
+    return wrapper      # the function itself — NO parentheses
+
+@loud                   # ≡ greet = loud(greet)
+def greet():
+    return "hi"
+```
+
+⚠️ **Gotcha 1 — the name moves, the object doesn't die.** After `greet = loud(greet)`, `greet.__name__` is `wrapper`. But the original function is *alive*, held in `fn` inside the wrapper — provable with `greet.__closure__[0].cell_contents`. That capture-your-birthplace-variables behaviour is a **closure**; identical to JS `const old = greet; greet = () => old().toUpperCase()`.
+
+⚠️ **Gotcha 2 — why some decorators have `()` and some don't.** `@` always takes exactly **one** thing: the function below. So `@app.get("/ask")` is not "a decorator with arguments" — `app.get("/ask")` is a **call that returns a decorator** (a *decorator factory*). It expands to:
+```python
+ask = app.get("/ask")(ask)
+```
+Same idea as Express `app.get('/ask', handler)` — hand your function to the framework so it can register it in the router table. Python just puts it on the line above instead of in the arguments.
+
+📌 **Why now:** FastAPI (P1.5) makes you *read* decorators constantly and *write* them never — so this would have stayed fuzzy forever. Killed it before the service work.
+
+❓ **Self-test:** `@app.get("/ask")` has parentheses; `@loud` doesn't. Why?
+<details><summary>answer</summary><code>@</code> only ever takes one argument — the function underneath. <code>loud</code> is already a decorator. <code>app.get("/ask")</code> is a <em>call</em> that runs first and returns a decorator built around that path. Expands to <code>ask = app.get("/ask")(ask)</code>.</details>
+
+---
+
 ## ⬜ Coming next
 - ⬜ **owed:** follow-up questions — conversation history without re-sending CONTEXT every turn (the 1.6 snowball)
 - **2.9c/2.10** — LLM-based semantic chunking, when the data is messy enough to need it

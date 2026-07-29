@@ -1,0 +1,79 @@
+# Identity, headline and how to contact him
+
+His name is Gillola Hema Vardhan Reddy, and he goes by Hema Vardhan Reddy or Hema. He is a Backend / Full-Stack Software Engineer based in Hyderabad, India.
+
+His one-line pitch is: payments, analytics and multi-tenant SaaS — systems that stay correct with real money on the line.
+
+The best way to reach him is by email at gillolahemavardhanreddy@gmail.com. His portfolio is at hemavardhanreddy.vercel.app, his GitHub is github.com/GillolaHemaVardhanReddy, and his LinkedIn is linkedin.com/in/hema-vardhan-reddy-gillola. Please contact him by email or LinkedIn rather than by phone.
+
+He is currently open to opportunities.
+
+# What kind of engineer he is
+
+He is a backend-focused engineer whose core strength is Node.js and Express — REST API design, event-driven architecture, webhook design, and building services that run in production and handle real money.
+
+He builds and operates live consumer-facing systems end to end, not just features in isolation. He owns a payments subsystem in production, designs the data models under it, builds the internal tools around it, and keeps it correct while it runs.
+
+He works across three datastores by design: MySQL for truth, ClickHouse for analytics, and Redis for speed. Choosing the right store for each job is a deliberate part of how he architects systems.
+
+He also ships frontend when the system needs it — Angular with server-side rendering for the customer-facing site, and React for the internal admin console — so he can carry a feature all the way from the database to the screen.
+
+# Working style, engineering discipline and personality
+
+He is eager to learn anything at any time and can adapt to any kind of technology. He might take a little longer to architect something up front, but once it is built you never have to fear that feature again.
+
+His engineering discipline is deliberate: code reviews, commit-message enforcement, pre-push drift checks, dry-runs, rollbacks and deploy-order safety gates. He builds the guard rails as part of the feature, not after an incident.
+
+He believes a metric should never be a black box. In the analytics platform he built, the team can drill from a headline number all the way down to the exact query that produced it.
+
+He uses AI-assisted development seriously and has published his own tooling for it, rather than treating AI as a novelty. He built in-house Claude Code tooling to automate code review, migrations and standards enforcement while keeping code quality high.
+
+# Current job and day-to-day responsibilities at Way2News, Backend / Full-Stack Software Engineer, February 2025 to present
+
+He currently works at Way2News in Hyderabad as a Backend / Full-Stack Software Engineer, and has done since February 2025. This is his current employer and his current job.
+
+At his current job his day-to-day work centres on Vedamandir, a live consumer booking platform used across India. He owns its payments system, built its customer-recovery CRM, designed its analytics platform, and extended it to multi-tenant.
+
+At his current job he is presently splitting the live system into separate admin and customer services, with zero disruption to the customer flow while the split happens.
+
+At his current job he built the migration framework his team uses to change two databases in lockstep, with dry-runs, rollbacks and deploy-order safety gates.
+
+# Ownership and leadership at his current job
+
+At Vedamandir he handles most of the client-side features and leads a small team of engineers delivering them. Client-side feature delivery on the platform runs through him.
+
+He leads a team of 4 engineers. His experience therefore includes real technical leadership: assigning and reviewing work, mentoring engineers, and being accountable for what the team ships, not only for his own code.
+
+Beyond writing the features himself, he sets the engineering standards the work follows — code review, commit-message enforcement, pre-push drift checks and migration safety gates — and built the in-house tooling that enforces them.
+
+# Languages he speaks
+
+He is fluent in English and Telugu, and is strong in both across reading, writing and speaking.
+
+He can understand Hindi, but struggles to speak it comfortably.
+
+# Previous work experience and internships
+
+Before Way2News he interned as a Full-Stack Developer at Brochill Internet Pvt Ltd in Hyderabad, from May 2024 to June 2024. He migrated a client's backend from PHP to Node.js with full feature parity, and built a secure admin dashboard with role-based access control.
+
+# Education and academic background
+
+He completed his B.Tech in Computer Science and Engineering at Rajiv Gandhi University of Knowledge Technologies in May 2025, with a CGPA of 8.75 out of 10.
+
+Before that he finished the Pre-University MPC course at RGUKT Basar in May 2021, with a CGPA of 9.45 out of 10.
+
+# Leadership roles and certifications
+
+He was Vice-President of the Sports Committee at RGUKT Basar from 2022 to 2023, leading a 20-member committee and organising university sports meets and festivals.
+
+He is a certified Full Stack Web Developer through Brochill Pvt Ltd, June 2024.
+
+# What he is learning right now and his side project
+
+He has a deep interest in AI and large language models, and that is his current learning focus. He builds the basics strong by doing real projects alongside the theory, rather than only reading about it.
+
+Right now he is building an AI voice assistant from scratch, end to end — speech-to-text for the ears, a large language model for the brain, and text-to-speech for the mouth — wired into a real-time loop and shipped as a web product with React and Node.
+
+# What kind of role he is looking for
+
+He is looking for a role where he can work on backend systems at real scale and go deeper into AI engineering, ideally somewhere that ships to production quickly and cares about cost per user.

@@ -1,0 +1,87 @@
+# Vedamandir — the live production platform he works on
+
+Vedamandir (vedamandir.com) is a live consumer platform for booking temple poojas and rituals online, serving daily bookings across India. It is the production system behind almost all of his payments, customer-recovery, analytics and multi-tenant work.
+
+The Vedamandir stack is Node.js and Express on the backend, MySQL for relational truth, ClickHouse as the analytical event store, Redis with BullMQ for queues and caching, React 18 for the internal admin console, and Angular Universal with server-side rendering for the public site, all running on AWS with CloudFront.
+
+# System 1 — Payments that never double-charge
+
+He owns the payments system of Vedamandir. It handles pay-now payments and EMI instalment payments through Cashfree, and keeps a permanent record of every payment event.
+
+The payments system has processed over 5.2 crore rupees across more than 74,000 payments, at roughly 19,000 transactions every month, with a peak of over 2,150 bookings in a single day. There have been zero double-charged bookings, ever.
+
+The hard part of the payments work was that payment confirmations can arrive twice, late, or out of order. Every one is verified and processed exactly once, using signature-verified idempotent webhooks and an append-only payment-event ledger. A mistake there charges a real customer twice, and that has never happened.
+
+# System 2 — A customer-recovery CRM that wins customers back
+
+He built a customer-recovery CRM that tracks verified customers who dropped off before paying, and re-engages them over WhatsApp and RCS.
+
+The recovery CRM tracks more than 48,000 verified drop-offs across 9 different stages of the funnel. About 69 percent of those customers come back to try again, and 16,520 of them became paying customers — a 34 percent paid-conversion rate on recovered users.
+
+The hard part of the recovery work was attribution: when a customer returns, which message deserves the credit? He built time-windowed attribution that keeps every channel honest — 7,942 recoveries credited to the call team and 10,874 to WhatsApp, never counted twice.
+
+# System 3 — One platform, many branded franchise sites (multi-tenant)
+
+He extended the platform to multi-tenant, so the same system powers multiple franchise websites, each with its own domain, branding, payments and WhatsApp number. Launching a new franchise takes configuration, not code.
+
+The hard part of the multi-tenant work was that all franchises share one database. Strict tenant isolation guarantees no site can ever see another site's data, and the flagship site stays untouched as franchises come and go. The data model is tenant-scoped across bookings and payments, with per-tenant payment routing and per-tenant attribution.
+
+# System 4 — Analytics that explain every conversion
+
+He designed the analytics platform, which follows the full customer journey from ad click through to payment and shows where people drop off, step by step, in an animated Journey Explorer that the whole team can use.
+
+The hard part of the analytics work was making it explainable. The Journey Explorer drills from the big picture down to the exact query behind every number, so no metric is ever a black box. It is built on ClickHouse funnels with data visualisation in ECharts.
+
+# Service split and migration tooling at his current job
+
+He is currently splitting the live Vedamandir system into separate admin and customer services, with zero disruption to the customer flow while the split is in progress.
+
+He built the migration framework his team uses to change two databases in lockstep, with dry-runs, rollbacks and deploy-order safety gates. He has run more than 50 safe MySQL migrations.
+
+# Acharya — published open source npm package
+
+Acharya is an open-source npm package he wrote and published, available at npmjs.com/package/acharya, released in 2026. It is a multi-agent development framework.
+
+Acharya turns an AI coding assistant into a governed engineering team: 14 specialist sub-agents covering features, bugs, code review, migrations and query building, coordinated by a four-phase, human-gated decision contract.
+
+Acharya also includes a file-glob routing system that decides which specialist agent handles which files, and Git-hook gates that enforce commit-message standards and run pre-push drift checks.
+
+He uses Acharya in his own daily engineering work to automate code review, migrations and standards enforcement. It began as in-house tooling that he chose to open source.
+
+# Kira — published open source npm package
+
+Kira is his second open-source npm package, published as kira-multi-repo-bridge on npm in 2026. It is a cross-repo migration bridge, a safety net for splitting a live system into services without breaking it.
+
+Kira supervises splitting a service out of a live monolith across multiple repositories, and guards a failure class that single-repo tooling cannot see: a change that is completely correct in the repository you edited, but which breaks production through the repository you did not.
+
+Kira encodes a shared-datastore hazard matrix covering double-firing cron jobs, double-consumed queues and racing DDL changes, and enforces an independent production go / no-go gate before a migration is allowed to proceed.
+
+Kira is built as an overlay on the Acharya kit, so the two packages are designed to work together: Acharya governs the day-to-day engineering workflow, and Kira adds the cross-repo migration safety layer on top of it.
+
+# Details of his published npm packages
+
+Both of his npm packages are MIT licensed and were published on 7 July 2026, currently at version 1.0.0. They are listed under keywords including claude-code, ai-agents, multi-agent, agent-framework, developer-tools, migration and monolith-to-microservices.
+
+The official description of Acharya is: a disciplined multi-agent dev team for Claude Code — a guild of specialist agents, a four-phase decision contract, and token-budget discipline, for complex multi-feature codebases.
+
+The official description of Kira is: a cross-repo bridge engineer for Claude Code, providing safe service-split migrations with shared-datastore hazard gating and an independent go / no-go production gate, built as an overlay on the Acharya kit.
+
+# His public GitHub activity
+
+His GitHub profile is github.com/GillolaHemaVardhanReddy and he has 21 public repositories. He holds the Pull Shark and YOLO achievement badges.
+
+His public repositories show continuous self-directed learning alongside his job: repositories for data structures and algorithms in C++, system design, data science notebooks in Jupyter, Python, and the AI voice assistant he is currently building.
+
+He also published swagger-autogen, a tool that generates automated Swagger documentation, and job-alerts, a personal tool that alerts him when jobs matching his requirements appear. His portfolio site source is also public.
+
+His earlier public work includes a college e-commerce mini project with separate client and server repositories, an employee registration admin and server system, and a weather app.
+
+# AI voice assistant — his current side project
+
+He is building a full AI voice assistant from scratch, end to end: speech-to-text for the ears, a large language model for the brain, and text-to-speech for the mouth, wired into a real-time loop and shipped as a web product with React and Node.
+
+The voice assistant is deliberately built the hard way, learning the internals rather than gluing APIs together. He has implemented softmax by hand, temperature sampling, streaming, conversation memory, vector maths, cosine similarity, embeddings, chunking and a complete retrieval-augmented generation pipeline from primitives, without using any RAG framework.
+
+The roadmap for the voice assistant runs through transformers built from scratch, including attention and a small trained language model, then fine-tuning, then shipping it as an API-first product with an SDK so it can be embedded in any application.
+
+Cost per user is a first-class design constraint on the voice assistant. Every paid API in the stack has a cheaper open-source alternative planned, such as local Whisper for speech-to-text and Piper or Coqui for text-to-speech.

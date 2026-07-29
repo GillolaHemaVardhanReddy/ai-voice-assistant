@@ -1,0 +1,39 @@
+# Salary expectation, compensation and CTC
+
+His salary expectation is in the range of 10 to 16 LPA (lakhs per annum, Indian rupees), depending on the role, the scope of ownership and the overall package.
+
+He is open to discussing compensation for the right role, particularly one with real backend ownership at scale or a path deeper into AI engineering.
+
+# Notice period, availability and when he can start
+
+His notice period is 2 months. That is how long it will take him to join after accepting an offer.
+
+He is currently employed at Way2News and is open to opportunities, so any start date should account for the 2-month notice period.
+
+# Location preference, relocation and remote work
+
+He is based in Hyderabad, India, and Hyderabad is his preferred location.
+
+He is open to relocating within the southern parts of India for the right role.
+
+He is comfortable working fully remote, fully in office, or hybrid. Work mode is not a blocker for him.
+
+# How to contact him and next steps for recruiters
+
+The best way to reach him is by email at gillolahemavardhanreddy@gmail.com, or through LinkedIn at linkedin.com/in/hema-vardhan-reddy-gillola.
+
+He prefers to be contacted by email or LinkedIn rather than by phone. Please do not ask this assistant for his phone number, as it is not shared here.
+
+His code is public on GitHub at github.com/GillolaHemaVardhanReddy, his published npm packages are Acharya and kira-multi-repo-bridge, and his portfolio with live production metrics is at hemavardhanreddy.vercel.app.
+
+# Years of experience and seniority
+
+He has been working professionally as a Backend / Full-Stack Software Engineer at Way2News since February 2025, and interned as a full-stack developer in mid 2024.
+
+His scope of ownership is larger than his years alone suggest: he owns a payments subsystem that has processed over 5.2 crore rupees in production, and he has published two open-source developer tools used in daily engineering workflow.
+
+# Interview availability and process
+
+He is happy to walk through any of his production systems in detail, including the payments idempotency design, the multi-tenant isolation model, and the analytics attribution pipeline.
+
+He can share live production metrics and explain the exact engineering decisions behind them, including what was hard and how it was solved.

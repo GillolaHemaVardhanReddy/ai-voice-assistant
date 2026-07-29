@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from openai import OpenAI
-from store import search
+from .store import search
 from dotenv import load_dotenv
 import time
 

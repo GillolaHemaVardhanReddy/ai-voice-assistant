@@ -26,7 +26,8 @@ Each atom is one card with four parts:
 | Phase | Notes | Status |
 |---|---|---|
 | 1 — The BRAIN | [`phase-01-brain.md`](phase-01-brain.md) | ✅ complete (1.0 → 1.9) |
-| 2 — MEMORY & RAG | [`phase-02-memory-rag.md`](phase-02-memory-rag.md) | 🔄 in progress (2.0 → 2.6b) |
+| 2 — MEMORY & RAG | [`phase-02-memory-rag.md`](phase-02-memory-rag.md) | ✅ RAG end-to-end + citations (2.0 → 2.10a) |
+| **P1.5 — Recruiter Bot service** | [`p1.5-recruiter-bot-service.md`](p1.5-recruiter-bot-service.md) | 🔄 in progress (FastAPI, P1.5.0 → P1.5.1) |
 | 3 — The EARS | — | not started |
 | 4 — The MOUTH | — | not started |
 | 5 — The LOOP | — | not started |

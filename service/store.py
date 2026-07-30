@@ -1,36 +1,14 @@
-from sentence_transformers import SentenceTransformer
 import numpy as np
 from pathlib import Path
+from .embedder import encode
 
-NOTES_DIR = Path(__file__).parent / "notes"
-files = sorted(str(p) for p in NOTES_DIR.glob("*.txt"))
-print(files)
+_data = np.load(Path(__file__).parent / "index.npz", allow_pickle=False)
+vecs = _data["vecs"]
+chunks = _data["chunks"]
+sources = _data["sources"]
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
-
-chunks = []
-embed_texts = []
-sources=[]
-for file in files:
-    text = open(file, "r").read()
-    section = ""
-    for block in text.split("\n\n"):
-        block = block.strip()
-        if not block:
-            continue
-        if block.startswith("#"):
-            section = block.lstrip("# ").strip()
-        else:
-            chunks.append(block)
-            embed_texts.append(f"{section}: {block}")
-            sources.append(file.split("/")[-1])
-
-assert len(chunks) == len(embed_texts) == len(sources)
-print(len(files), "files →", len(chunks), "chunks")
-
-vecs = model.encode(embed_texts)
 def search(query, k=2):
-    q = model.encode(query)
+    q = encode(query)
     scores = vecs @ q
     top = np.argsort(scores)[::-1][:k]
     return [(scores[i], chunks[i], sources[i]) for i in top]

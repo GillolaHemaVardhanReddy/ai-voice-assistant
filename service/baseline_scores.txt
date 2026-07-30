@@ -1,0 +1,52 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+['/home/sys2233/Desktop/learning/ai-voice-assistant/service/notes/about.txt', '/home/sys2233/Desktop/learning/ai-voice-assistant/service/notes/boundaries.txt', '/home/sys2233/Desktop/learning/ai-voice-assistant/service/notes/faq.txt', '/home/sys2233/Desktop/learning/ai-voice-assistant/service/notes/preferences.txt', '/home/sys2233/Desktop/learning/ai-voice-assistant/service/notes/projects.txt', '/home/sys2233/Desktop/learning/ai-voice-assistant/service/notes/skills.txt']
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 5627.44it/s]
+6 files → 127 chunks
+query:  how does he approach building features? source:  about.txt 
+score:  0.588  |  He is eager to learn anything at any time and can adapt to any kind of technology. He might take a little longer to architect something up front, but once it is built you never have to fear that feature again.
+
+
+query:  how does he approach building features? source:  about.txt 
+score:  0.510  |  He builds and operates live consumer-facing systems end to end, not just features in isolation. He owns a payments subsystem in production, designs the data models under it, builds the internal tools around it, and keeps it correct while it runs.
+
+
+query:  how does he approach building features? source:  about.txt 
+score:  0.501  |  Beyond writing the features himself, he sets the engineering standards the work follows — code review, commit-message enforcement, pre-push drift checks and migration safety gates — and built the in-house tooling that enforces them.
+
+
+query:  has he handled payments at scale? source:  skills.txt 
+score:  0.507  |  He is strong with payments integrations — Cashfree, UPI and EMI mandates — with over 5.2 crore rupees of live payments running through the systems he built.
+
+
+query:  has he handled payments at scale? source:  skills.txt 
+score:  0.478  |  He has integrated Cashfree for pay-now and pay-later EMI mandate payments.
+
+
+query:  has he handled payments at scale? source:  about.txt 
+score:  0.457  |  His one-line pitch is: payments, analytics and multi-tenant SaaS — systems that stay correct with real money on the line.
+
+
+query:  what is he learning right now? source:  boundaries.txt 
+score:  0.581  |  He learns new technology quickly and has a documented habit of it: he taught himself ClickHouse for the analytics platform, and is currently teaching himself machine learning internals from first principles rather than only using APIs.
+
+
+query:  what is he learning right now? source:  about.txt 
+score:  0.571  |  He has a deep interest in AI and large language models, and that is his current learning focus. He builds the basics strong by doing real projects alongside the theory, rather than only reading about it.
+
+
+query:  what is he learning right now? source:  about.txt 
+score:  0.490  |  He is eager to learn anything at any time and can adapt to any kind of technology. He might take a little longer to architect something up front, but once it is built you never have to fear that feature again.
+
+
+query:  does he know databases? source:  about.txt 
+score:  0.544  |  He works across three datastores by design: MySQL for truth, ClickHouse for analytics, and Redis for speed. Choosing the right store for each job is a deliberate part of how he architects systems.
+
+
+query:  does he know databases? source:  boundaries.txt 
+score:  0.531  |  He has used MongoDB only in college and side projects, not in production. His production database experience is MySQL, ClickHouse and Redis.
+
+
+query:  does he know databases? source:  boundaries.txt 
+score:  0.501  |  He learns new technology quickly and has a documented habit of it: he taught himself ClickHouse for the analytics platform, and is currently teaching himself machine learning internals from first principles rather than only using APIs.
+
+

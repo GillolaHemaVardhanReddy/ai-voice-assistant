@@ -4,14 +4,16 @@ Tick each atom as you finish (`[ ]` → `[x]`). Acharya resumes from here each s
 
 **New rules (26 Jul 2026):** every phase ends with a **ship-it atom** (README + demo GIF + write-up → portfolio card on hemavardhanreddy.vercel.app). Classical ML/MLOps/vision/n8n live in **future projects P2–P4** — see `docs/project-roadmap.md`.
 
-**Currently at:** 🧩 **Phase 2 — RAG works end-to-end with source citations (through 2.9b ✅).**
+**Currently at:** 🧩 **P1.6 — shrinking the service so it fits a free host (through P1.6.4 ✅).**
 
-### ▶️ START NEXT SESSION HERE — student must pick A, B, or C
-He stopped before reading these. **Open the session with the recall warm-up, then re-offer this choice verbatim.**
+### ▶️ START NEXT SESSION HERE — P1.6.5, the swap + the diff
+**Continuing on a different machine.** Setup first: `git pull` · `python3 -m venv venv && source venv/bin/activate` · `pip install -r requirements.txt` · **recreate `.env` with `OPENROUTER_API_KEY`** (gitignored, never travels).
 
-- **A) Follow-up questions ⭐ (Acharya's recommendation, ≈1 atom).** Right now every question is a cold start — a recruiter can't ask *"and what about his notice period?"*. Fix = conversation-only history (keep the Q/A turns, retrieve **fresh** context every turn). This is the **owed memory-snowball fix** from Phase 1, finally applied. Small, and it makes the demo feel like a product.
-- **B) Straight to P1.5 v1 — FastAPI service → React widget** on hemavardhanreddy.vercel.app. Taught by building the real thing, starting from his own `flask SELFLEARN/app.py` (it already has his Express→Flask comparison comments). Carries the proper hang fix: `await asyncio.wait_for(call(), timeout=20)`. **Before it goes public: CORS + rate limit + spend cap**, or his OpenRouter key funds strangers.
-- **C) LLM-based semantic chunking.** Honest advice: **skip for now.** His notes are already clean and hand-sectioned; build this when the data actually needs it, not before.
+1. **P1.6.5 — point `store.py` at the seam.** Delete the `SentenceTransformer` import + `model = ...` line; `from .embedder import encode`; change both call sites `model.encode(...)` → `encode(...)`. ⚠️ **His recurring bug, 4th watch:** *delete the old line first, then type the new one* — last assignment wins, silently.
+2. **Re-run the 4 queries and diff against `service/baseline_scores.txt`.** Pass bar, agreed **before** running: scores match to ~3 decimals and the ranking is identical ⇒ engine swap verified. Ranking changes or scores move by 0.1+ ⇒ **something is genuinely broken** — first suspect is `np.allclose(np.linalg.norm(vecs, axis=1), 1.0)`.
+3. Then: precompute the 127 vectors at **build** time (`.npy`), drop `sentence-transformers` + `torch` from `requirements.txt`, **re-measure image size AND RSS**, then pick a free host (Render free = 512MB is now in reach), then the React widget.
+
+**Open decision, deliberately parked:** the seam means the **OpenRouter `/api/v1/embeddings`** route is now a drop-in third implementation, not a rewrite. Verified it exists (their FAQ is stale; the model catalog is right). Costs ~$0.00024 per 1,000 questions — **cost is not the deciding factor**; latency (+100–300ms/question) and a hard uptime dependency are. Local ONNX is the current path.
 
 **Unanswered thread he raised (answered in chat, worth re-stating):** *how can a model cite a file it was never given?* → because a filename is just predicted tokens. The realistic failure isn't an invented file, it's **mis-attribution among files it WAS given** — and the `issubset` check does not catch that. Risk rises with bigger `k` and with conversation memory (option A adds old filenames to the context).
 
@@ -131,6 +133,17 @@ Notes: [`notes/p1.5-recruiter-bot-service.md`](notes/p1.5-recruiter-bot-service.
   - **Target:** drop `torch` + `sentence-transformers` for an **ONNX** embedder (e.g. `fastembed`) and **precompute the 127 note embeddings at build time** (they never change at runtime — only the *query* needs encoding).
   - **Expected:** image **1.95GB → ~400MB**, RAM **938MB → ~250MB** ⇒ fits free 512MB tiers, no card required. Bonus: cold start ~30s → a few seconds.
   - ⚠️ **Must verify, not assume:** re-measure image size *and* RSS after, and re-check retrieval quality — a different embedding model means **different vectors**, so re-run his known-good queries (Kubernetes → `[boundaries.txt, skills.txt]`, "current job" → payments chunks, "what is he learning" → both AI chunks). **If ONNX MiniLM is the same model, scores should match closely; if they don't, that's a finding, not a rounding error.**
+
+### P1.6 — SHRINK: swap the engine, keep the brain
+- [x] **P1.6.0 ✅ Baseline captured before touching anything.** `python service/store.py > service/baseline_scores.txt 2>&1` — 6 files → 127 chunks, 4 queries × 3 hits. **Ground truth for every embedder we try.** *Measure-don't-estimate applied BEFORE the change, not after.*
+- [x] **P1.6.1 ✅ The map: a model is not a runtime.** Model (`all-MiniLM-L6-v2`, ~90MB of weights) ≠ runtime (`sentence-transformers` + torch, ~1.8GB). **The 938MB RSS was 90MB of model and the rest engine — the model was never the problem.** Shortlist: MiniLM-L6 (384d/90MB) · `bge-small-en-v1.5` (384d/**67MB**, better retrieval) · `bge-base-en-v1.5` (768d/210MB) · `nomic-embed-text` (768d, 8k context). ⚠️ `bge` models want an **asymmetric query prefix** (`"Represent this sentence for searching relevant passages: "`) — forget it and retrieval quietly degrades. ⚠️ Rank on the **Retrieval** sub-leaderboard, not the MTEB average.
+- [x] **P1.6.2 ✅ `pip install fastembed`** — pulled `onnxruntime` at **17.4MB**, **no torch**. He spotted that himself.
+- [x] **P1.6.3 ✅ First ONNX embedding** — `learn/phase2/onnx_test.py`, `(384,)`, same shape as sentence-transformers. ⚠️ `model.embed()` returns a **generator** (his own `week2/7.itergendecorator` material in real library design) → wrap in `list()`. 🐛 His print "vanished" — tqdm writes to **stderr with `\r`**; fix `2>/dev/null`.
+- [x] **P1.6.3a 🧮 ✅ Floating point has a grid.** `norm: 0.9999999999999999` — he read it as "not a unit vector, must divide". **It IS 1.0**: `float64` ticks are `2⁻⁵³ ≈ 1.11e-16` apart near 1.0, so that is *one single step* below — the closest representable number to 1.0. Same thing as JS `0.1+0.2 !== 0.3`. Source: `sqrt` of 384 rounded additions. **Rule: never `==` on floats — `np.isclose` / `np.allclose(..., axis=1)`.** ⇒ fastembed **does** normalize, `vecs @ q` stays valid cosine, **do not divide**.
+- [x] **P1.6.4 ✅ The seam (`service/embedder.py`).** One `encode()` function; the store asks for vectors and never learns who made them (≡ Node's `db.js` exporting `query()`). Returns **1D for a string, 2D for a list** — a drop-in twin of `model.encode`, so `store.py` needs no change to *how* it calls. **This is what makes the OpenRouter-API embedder a swap rather than a rewrite.**
+- [ ] **P1.6.5** Point `store.py` at the seam → re-run the 4 queries → **diff vs `baseline_scores.txt`** (pass bar set in advance).
+- [ ] **P1.6.6** Precompute the 127 vectors at build time (`.npy`); drop `sentence-transformers` + `torch`; **re-measure image AND RSS**.
+- [ ] **P1.6.7** Pick a free host with the new footprint (Render free 512MB back in play).
 - [ ] **P1.5.6** React widget on hemavardhanreddy.vercel.app → **v1 LIVE** 🚢
 
 ## Phase 3 — The EARS

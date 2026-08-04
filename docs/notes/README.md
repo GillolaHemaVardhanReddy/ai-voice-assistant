@@ -36,6 +36,7 @@ Each atom is one card with four parts:
 | 8 — FINE-TUNING | — | not started |
 | 9 — The WEB PRODUCT | — | not started |
 | 10 — CHEAP & SELLABLE | — | not started |
+| 🔁 **Python recall** (old repos) | [`python-recall.md`](python-recall.md) | 🔄 rolling — one old-repo topic per session |
 
 🧮 = a math sub-atom. Those cards carry the picture *first*, then the formula — same order you learned them in.
 

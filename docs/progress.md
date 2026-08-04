@@ -4,17 +4,46 @@ Tick each atom as you finish (`[ ]` → `[x]`). Acharya resumes from here each s
 
 **New rules (26 Jul 2026):** every phase ends with a **ship-it atom** (README + demo GIF + write-up → portfolio card on hemavardhanreddy.vercel.app). Classical ML/MLOps/vision/n8n live in **future projects P2–P4** — see `docs/project-roadmap.md`.
 
-**Currently at:** 🚢 **P1.5 v1 IS LIVE — https://ai-voice-assistant-su60.onrender.com** (Render free tier). Next: the React widget on the portfolio.
+**Currently at:** 🕷️ **Spidy v1 is LIVE and on the portfolio** — API https://ai-voice-assistant-su60.onrender.com · widget https://hemavardhanreddy.vercel.app. **v2 has begun:** `/v2/ask` exists (P1.7.0 ✅). Next: **P1.7.1, conversation memory.**
 
-### ▶️ START NEXT SESSION HERE — P1.5.6, the React widget
-The API is public and answering. What's left to make it a *product* the recruiter actually sees:
+### ▶️ START NEXT SESSION HERE — P1.7.1, memory (nothing typed yet)
 
-1. **P1.5.6 — the React widget** on hemavardhanreddy.vercel.app: a chat box that POSTs to `/ask` and renders the answer + its citations. ⚠️ **First: add the Vercel origin to `CORSMiddleware`'s allowed origins in `service/main.py`** — it's currently locked to the origins set in P1.5.4, so the widget will fail CORS before it fails anything else.
-2. **⚠️ Cold start.** Render free sleeps after ~15 min idle. First recruiter of the day waits for a container boot. Mitigation he already knows how to build: a **cron ping every 10 min** (he writes node-cron at work). Decide whether it's worth it *after* measuring the real cold-start time.
-3. **✅ RESOLVED — the `boundaries.txt` "regression" was not real.** I flagged it from `store.py`'s **demo** `k=3`; production calls `answer()` with **`k=5`**. Tested live: *"does he know MongoDB?"* → *"Yes, but only in college and side projects — not in production."* `[boundaries.txt]`. The guardrail works, and it surfaces exactly when the question asks for it. **Lesson worth keeping: don't judge production behaviour from a script's demo settings.**
-4. **⚠️ Index staleness footgun (new, introduced today):** editing anything in `service/notes/` does nothing until `python -m service.build_index` is re-run and `index.npz` re-committed. No guard exists yet. Worth a checksum tripwire or a CI step later.
+💻 **Different machine.** First: `git pull` · `python3 -m venv venv && source venv/bin/activate` · `pip install -r requirements.txt` · **recreate `.env` with `OPENROUTER_API_KEY`** (gitignored, never travels).
+⚠️ On Ubuntu there is no bare `python` — it comes from the venv. Activate first.
 
-**Also owed:** `P1.5.3b` refactor (`answer()` should raise, not swallow; `await asyncio.wait_for(...)`) · `story.txt` in his own words · the Phase 1 demo GIF · reclaim ~2.7GB of unused CUDA libs on the old laptop.
+**The full step-by-step for P1.7.1 is written out in [`docs/notes/p1.5-recruiter-bot-service.md`](notes/p1.5-recruiter-bot-service.md) under "Coming next" — copy from there, it's exact.** Shape of it:
+1. New file `service/rag_v2.py` — reuses `SYSTEM`, `client`, `search`; **only message-building forks.** `answer(question, history=None, k=5)` splices history between the system prompt and the CONTEXT+QUESTION turn.
+2. `main.py` — `Turn` + `AskV2Request` models, `from .rag_v2 import answer as answer_v2`, and point `/v2/ask` at it. ⚠️ **Delete the two old lines before typing the new ones.**
+3. Prove it with a curl carrying `history` and asking *"what about at scale?"*
+4. **Owed check-question:** `role` is `Literal["user","assistant"]`, not `str`. The browser composes the `messages` array now — **what could someone send if it were `str`?**
+
+### 🗺️ v2 = Spidy that remembers and can act (student's pick over evals)
+| Atom | What lands |
+|---|---|
+| P1.7.0 ✅ | `/v2/ask` exists, same brain, `"version":"v2"` in the response |
+| **P1.7.1 ◀️** | Memory — client sends history, server stays stateless |
+| P1.7.2 | 🔴 **Break it on purpose** — ask a follow-up, watch retrieval search for nothing |
+| P1.7.3 | **Query rewriting** — the fix |
+| P1.7.4 | Prove the fix with a number *(his first eval, smuggled in)* |
+| P1.7.5 | **Tool calling** — the LLM decides to send an email |
+| P1.7.6 | It actually sends |
+| P1.7.7 | 🚢 Ship v2 |
+| P1.7.8 | *(parked)* transcript log in Mongo + a "what did people ask" view |
+
+**Architecture decided:** versioned routes on **one** service (`/ask` + `/v2/ask`) — one container, one `index.npz`, one cold start, one spend cap, and v1 provably intact because it isn't touched. **Memory is client-held** (browser sends the conversation): the browser already has those messages on screen, and Render's free tier sleeps, so an in-memory server dict would evaporate anyway. *The argument is operational, not latency — a Mongo read is 5ms against a 3,400ms LLM call.*
+
+**Also owed:** **P1.5.7 fake-streaming fix** (see below) · `P1.5.3b` refactor (`answer()` should raise, not swallow; `await asyncio.wait_for(...)`) · `story.txt` in his own words · the Phase 1 demo GIF · **evals / a golden question set (Q6 — the named gap)** · reclaim ~2.7GB of unused CUDA libs on the old laptop.
+
+### 📏 Measured 4 Aug 2026 — three numbers from the live product
+| What | Measured |
+|---|---|
+| Cold start (`/health`, container asleep) | **22.5s** ← the keep-warm cron ping is now justified by a number |
+| Warm `/ask` — retrieval + LLM | **3.4s** |
+| The widget rendering that same answer | **~24s** ← **P1.5.7** |
+
+⚠️ **P1.5.7 — the widget is slower than the backend.** `/ask` returns one JSON blob, so the browser has the whole answer in 3.4s and then spends ~20s typing it out character by character. *Fake* streaming. **Perceived latency is a product decision, and you can make yourself slower than your own API.** Fix = speed the reveal up, drop it, or make it honest with real SSE (Atom 1.7 material). **Deferred by his call — v1 ships as is.**
+
+⚠️ **Index staleness footgun:** editing anything in `service/notes/` does nothing until `python -m service.build_index` is re-run and `index.npz` re-committed. No guard exists yet.
 
 **Unanswered thread he raised (answered in chat, worth re-stating):** *how can a model cite a file it was never given?* → because a filename is just predicted tokens. The realistic failure isn't an invented file, it's **mis-attribution among files it WAS given** — and the `issubset` check does not catch that. Risk rises with bigger `k` and with conversation memory (option A adds old filenames to the context).
 
@@ -155,7 +184,19 @@ Notes: [`notes/p1.5-recruiter-bot-service.md`](notes/p1.5-recruiter-bot-service.
 - [x] **P1.6.10 ✅ `store.py` loads instead of builds.** `np.load(...)`, `allow_pickle=False` (**`.npz` can carry pickled objects and unpickling executes code** — door slammed shut explicitly). **All 12 scores identical** to the compute-at-startup run ⇒ precompute verified. Startup work is now: open one file.
 - [x] **P1.6.11 ✅ Container: RSS 63.4MB, build 1.8s.** ⚠️ **Render port gotcha:** Render assigns `$PORT`; a hardcoded `--port 8000` builds fine then fails health checks with no obvious cause. ⚠️ **Exec vs shell form:** `CMD ["sh","-c","exec uvicorn ... --port ${PORT:-8000}"]` — shell form for variable expansion, **`exec`** so uvicorn becomes PID 1 and actually receives SIGTERM instead of being hard-killed mid-request.
 - [x] **P1.6.12 🚢 ✅ LIVE ON RENDER FREE — https://ai-voice-assistant-su60.onrender.com** `/health` → `{"status":"ok"}`, `/ask` → grounded answer + `[skills.txt, preferences.txt, faq.txt]`. Region Singapore, health check `/health`, `OPENROUTER_API_KEY` set in the dashboard (rotated — the old one leaked into chat). **938MB → 63MB RSS, 91% cut, in one session.**
-- [ ] **P1.5.6** React widget on hemavardhanreddy.vercel.app → **v1 in front of recruiters** 🚢
+- [x] **P1.5.6 🚢 ✅ THE WIDGET IS LIVE — Spidy is on hemavardhanreddy.vercel.app.** Built solo in the `hema-portfolio` repo (Vite + React + Framer Motion), with a version dropdown (`v1 · Grounded Q&A`) and citations rendered as source chips. Verified live end-to-end: *"does he know Kubernetes?"* → honest **no**, third person, `SOURCES boundaries.txt`. **v1 is in front of recruiters.**
+- [ ] **P1.5.7** Fix the fake typewriter — ~20s of self-inflicted wait on top of a 3.4s answer. *Deferred by his call.*
+
+## P1.7 — Spidy v2 (memory · follow-ups · email)
+- [x] **P1.7.0 ✅ Two doors, one building.** `/v2/ask` added beside `/ask`, same brain, `{"answer":..., "version":"v2"}`. Both verified. **Only `rag.py` forks — `embedder.py` and `store.py` are shared**, the same seam that made the P1.6.5 engine swap cost 4 lines. ⚠️ **Two route handlers with the same function name do NOT crash** — measured: both routes served correctly, zero warnings, and the module name pointed at the *second* function while `/ask` still ran the first. **The decorator ran at import time and handed FastAPI the function _object_, not its name.** The real cost is human: every log line and traceback says `ask`. ⚠️ **Non-determinism caught live** — same code, same context, same question, two runs, different wording. That's temperature (Atom 1.4). *You cannot eyeball a system whose output changes every run.*
+- [ ] **P1.7.1 ◀️ NEXT** Conversation memory — client-held history, server stays stateless
+- [ ] **P1.7.2** Break it on purpose — a follow-up question, and watch retrieval search for nothing
+- [ ] **P1.7.3** Query rewriting — the fix
+- [ ] **P1.7.4** Prove the fix with a number
+- [ ] **P1.7.5** Tool calling — the LLM decides to send an email
+- [ ] **P1.7.6** It actually sends
+- [ ] **P1.7.7** 🚢 Ship v2
+- [ ] **P1.7.8** *(parked)* Transcript log in Mongo + a "what did people ask" view. ⚠️ Personal data — question + sources + timestamp only, no raw IPs, and one line in the widget saying conversations are logged. **The log doubles as the eval set Q6 wants.**
 
 ## Phase 3 — The EARS
 - [ ] 3.0–3.6 ← **speak → text**

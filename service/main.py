@@ -34,3 +34,12 @@ def ask(request: Request, body: AskRequest):
     if result is None:
             raise HTTPException(status_code=502, detail="Upstream model unavailable. Try again.")
     return {"answer": result}
+
+
+@app.post("/v2/ask")
+@limiter.limit("20/minute")
+def ask_v2(request: Request, body: AskRequest):
+     result = answer(body.question)
+     if result is None:
+        raise HTTPException(status_code=502, detail="Upstream model unavailable. Try again")
+     return {"answer": result, "version": "v2"}

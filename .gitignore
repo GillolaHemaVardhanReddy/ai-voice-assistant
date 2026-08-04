@@ -28,3 +28,6 @@ venv/
 
 # local-only knowledge-base files (never pushed — public repo)
 *.local.txt
+
+# throwaway from learn/python-recall/with_demo.py
+note.txt

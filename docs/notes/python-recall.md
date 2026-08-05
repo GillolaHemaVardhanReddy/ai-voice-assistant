@@ -15,7 +15,8 @@ Warm-up question 3 each session comes from the sweep list below.
 | OOP — class / `__init__` / `self` | `week2/4.class_objects`, `5.inheritance`, `6.oops` | ✅ swept (Atom 2.0a–e, Session 3) |
 | Iterators & generators | `week2/7.itergendecorator` | ✅ swept (Session 10 — `list(g)` one-shot) |
 | Decorators (incl. factories) | `week2/7.itergendecorator` | ✅ swept (Atom 2.10a S8, factory recalled clean S9) |
-| **Context managers — `with`** | `week2/7.itergendecorator` (`@open_file`) | 🟡 **half swept (S11 — the guarantee ✅; `__enter__`/`__exit__` PARKED → next session)** |
+| **Context managers — `with`** | `week2/7.itergendecorator` (`@open_file`) | ✅ **swept (S11 the guarantee; S12 recalled clean — closes AND still raises).** `__enter__`/`__exit__` still untaught — teach only when we *write* one. |
+| **Default arguments / mutability** | (new — not from the old repo) | ✅ swept S12 — `bag=[]` leaks across calls; see the card below |
 | NumPy / Pandas | `week3/1.numpypandas`, repo `datascience` | ⬜ not swept |
 | SQLite module | `week3/2.Module_SQLite3` | ⬜ not swept |
 | Flask routes | `flask SELFLEARN/app.py` | 🟡 partly used as the FastAPI bridge (S8) |
@@ -50,8 +51,44 @@ Without `with`, the same print gives `False` — he ran both, saw `False` → `T
 
 ---
 
+## Session 12 — mutable default arguments: the bag is nailed to the function
+
+💡 **Idea:** a default value is created **once, when `def` runs** (import time), and stapled to the function object. Every call reaches for that same object. `k=5` is safe — you can't mutate `5`. `bag=[]` is not.
+
+💻 **The line that matters:**
+```python
+def add(item, bag=[]):
+    bag.append(item)
+    return bag
+
+print(add("a"))   # ['a']
+print(add("b"))   # ['a', 'b']   ← the SAME bag, not a new one
+```
+The fix, and the reason `rag_v2.py` reads the way it does:
+```python
+def answer(question, history=None, k=5):
+    history = history or []     # the [] now runs per CALL, not per import
+```
+
+⚠️ **Gotchas:**
+- On a **public endpoint** this is a data leak, not a curiosity: recruiter A's history splices into recruiter B's prompt, silently, until the container restarts.
+- **`history: list[Turn] = []` in a Pydantic model is SAFE** — Pydantic deep-copies field defaults per instance. Same syntax, opposite behaviour, because a different machine is building the object.
+- Same import-time fact as P1.7.0's decorator: **`def` builds an object; a name is just a sticky label on it.**
+
+<details>
+<summary>❓ self-test</summary>
+
+1. When is the `[]` in `def add(item, bag=[])` created — at import, or on each call?
+2. Why is `k=5` immune to the same bug?
+3. `history = history or []` — what does the `or` actually do here, and what does it treat the same as `None`?
+4. Pydantic's `history: list[Turn] = []` looks identical and is safe. Why?
+</details>
+
+---
+
 ## Warm-up scoreboard
 
 | Session | Q1 (last) | Q2 (~3 back) | Q3 (old repo) | Score |
 |---|---|---|---|---|
 | 11 | two kinds of "not 1" ✅ | per-attempt timeout ✗ | `with` / context managers ✗ → taught | 1/3 |
+| 12 | two `ask` handlers ✗ *(had the FastAPI half, missed names-vs-objects)* | Pydantic ✗ **backwards** — said missing fields are dropped; it's **422 at the door** | `with` + exception ✅ **both halves** — S11's park closed | 1.5/3 |

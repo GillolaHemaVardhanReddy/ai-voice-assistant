@@ -17,7 +17,7 @@ Warm-up question 3 each session comes from the sweep list below.
 | Decorators (incl. factories) | `week2/7.itergendecorator` | ✅ swept (Atom 2.10a S8, factory recalled clean S9) |
 | **Context managers — `with`** | `week2/7.itergendecorator` (`@open_file`) | ✅ **swept (S11 the guarantee; S12 recalled clean — closes AND still raises).** `__enter__`/`__exit__` still untaught — teach only when we *write* one. |
 | **Default arguments / mutability** | (new — not from the old repo) | ✅ swept S12 — `bag=[]` leaks across calls; see the card below |
-| NumPy / Pandas | `week3/1.numpypandas`, repo `datascience` | ⬜ not swept |
+| NumPy / Pandas | `week3/1.numpypandas`, repo `datascience` | 🟡 **half swept (S13)** — `list*2` vs `array*2`, `*` is `__mul__` on the type, `@` = dot product (`140`), `vecs @ q` → 127 scores. **Pandas untouched**, and NumPy indexing/slicing/`argsort`/broadcasting-with-shapes still owed. |
 | SQLite module | `week3/2.Module_SQLite3` | ⬜ not swept |
 | Flask routes | `flask SELFLEARN/app.py` | 🟡 partly used as the FastAPI bridge (S8) |
 | PyTorch tensors / autograd / NNs | `pytorch_selflearn/0–5` | ⬜ not swept — **check depth before Phase 7** |
@@ -92,3 +92,4 @@ def answer(question, history=None, k=5):
 |---|---|---|---|---|
 | 11 | two kinds of "not 1" ✅ | per-attempt timeout ✗ | `with` / context managers ✗ → taught | 1/3 |
 | 12 | two `ask` handlers ✗ *(had the FastAPI half, missed names-vs-objects)* | Pydantic ✗ **backwards** — said missing fields are dropped; it's **422 at the door** | `with` + exception ✅ **both halves** — S11's park closed | 1.5/3 |
+| 13 | Pydantic **half** — has the bouncer now, posted him at the wrong door (said *both* bodies 422; extra fields are silently dropped, only the missing one bounces) | index staleness — **outcome ✅, mechanism ✗** (didn't have *`store.py` loads `index.npz`, never the `.txt`*) | **NumPy ✗** — had the types (`list`/`array`), not the values → taught as a sub-atom, `@` landed | 1/3 |

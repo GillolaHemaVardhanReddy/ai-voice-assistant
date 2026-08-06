@@ -4,7 +4,7 @@ Tick each atom as you finish (`[ ]` → `[x]`). Acharya resumes from here each s
 
 **New rules (26 Jul 2026):** every phase ends with a **ship-it atom** (README + demo GIF + write-up → portfolio card on hemavardhanreddy.vercel.app). Classical ML/MLOps/vision/n8n live in **future projects P2–P4** — see `docs/project-roadmap.md`.
 
-**Currently at:** 🕷️ **Spidy v1 is LIVE and on the portfolio** — API https://ai-voice-assistant-su60.onrender.com · widget https://hemavardhanreddy.vercel.app. **v2:** `/v2/ask` exists (P1.7.0 ✅) and **memory is written but NOT YET RUN** (P1.7.1, code complete, curl not executed).
+**Currently at:** 🕷️ **Spidy v1 is LIVE and on the portfolio** — API https://ai-voice-assistant-su60.onrender.com · widget https://hemavardhanreddy.vercel.app. **v2:** `/v2/ask` exists (P1.7.0 ✅) · **P1.7.1 memory is WIRED and runs** — he rewrote `rag_v2.py` from a spec, blank file (6 Aug 2026). ⚠️ **Not yet PROVEN:** the A/B test was badly designed and both arms passed. A decisive test is the first thing next session.
 
 ### 🖊️ NEW TEACHING RULE — SPEC-FIRST (his call, 5 Aug 2026)
 **His words:** *"all i did till now all rag related just pasted ur code since you give always in chat direct code so i am not satisfied."* He is right — every atom so far ended with Acharya handing him finished lines to type. He learned the ideas but has never faced a blank editor.
@@ -19,36 +19,28 @@ Tick each atom as you finish (`[ ]` → `[x]`). Acharya resumes from here each s
 
 ### ▶️ START NEXT SESSION HERE
 
-💻 **Different machine (office Ubuntu desktop).** First: `git pull` · `python3 -m venv venv && source venv/bin/activate` · `pip install -r requirements.txt` · **recreate `.env` with `OPENROUTER_API_KEY`** (gitignored, never travels).
-⚠️ On Ubuntu there is no bare `python` — it comes from the venv. Activate first.
+💻 Still on the **Mac** (`.env` + `venv` both present, nothing to rebuild). Ubuntu desktop would need: `git pull` · venv · `pip install -r requirements.txt` · **recreate `.env`** (gitignored) · no bare `python`, activate first.
 
-**1. FIRST THING — rewrite `rag_v2.py` from scratch, spec-first.** He asked for this himself. `git rm`/delete the file (it's committed, so it's recoverable), give him only the spec below, and let him write all 20 lines. **Do not show the old file until his runs.**
+**🔴 1. FIRST — re-teach the two traps he explicitly asked for depth on.** He stopped the session on *"i didnt understand here what are those 2 traps"*. **Do not patch this with a paragraph** — one picture at a time, his documented recovery pattern.
 
-> **Spec for `service/rag_v2.py`:** one function, `answer(question, history=None, k=5)` → returns the answer string.
-> - Import `SYSTEM` and `client` from `rag.py` and `search` from `store.py` — **do not** re-create them, and **do not** import v1's `answer`.
-> - Guard the default so no list is ever shared between two calls.
-> - Build `messages` in this order: system prompt · every turn of history · one final `user` turn containing the retrieved `CONTEXT` and the new `QUESTION`.
-> - Retrieve `k` chunks for `question`; each context block is prefixed with its source file in square brackets.
-> - Call the model (`anthropic/claude-haiku-4.5`), **no streaming**, return the text.
-> - **Must not** catch exceptions — the endpoint decides what a failure means.
+The experiment we ran (`"and what about SQL?"`, with vs. without history) produced **near-identical answers**, and I wrongly called it proof-shaped. The two traps:
+- **Trap 1 — temperature is noise.** Two *identical* requests already come back worded differently (he measured this himself, S11). So differing wording between arm A and arm B proves **nothing**. He needs to see this again empirically: run the *same* call twice, no variable changed, watch it differ.
+- **Trap 2 — the question didn't need memory.** *"and what about SQL?"* carries the keyword **SQL**, so retrieval lands on `skills.txt` and the model answers fine with zero history. Both arms passed ⇒ **the experiment had no discriminating power.**
+- The one real signal, worth teaching as the *method*: retrieval is **deterministic**, so both arms saw identical chunks ⇒ any difference came from the model. The with-history arm cited `boundaries.txt`; the other didn't. Faint, not demo-grade.
 
-**2. Then run the experiment P1.7.1 stopped at** — same question twice, one variable changed:
-```bash
-uvicorn service.main:app --reload
-curl -s -X POST localhost:8000/v2/ask -H 'Content-Type: application/json' \
-  -d '{"question": "and what about SQL?"}'
-curl -s -X POST localhost:8000/v2/ask -H 'Content-Type: application/json' \
-  -d '{"question": "and what about SQL?",
-       "history": [{"role":"user","content":"does he know MongoDB?"},
-                   {"role":"assistant","content":"Only from college projects, not in production."}]}'
-```
-A ≠ B ⇒ memory is real ⇒ tick P1.7.1. Then **P1.7.2, break it on purpose.**
+**Then he designs the decisive question himself** (spec-first): a follow-up to *"does he know MongoDB?"* → *"Only college and side projects, not production."* that the retriever **cannot** embed — pure pronoun, e.g. *"was that in production?"* / *"and is he good at it?"*. No-history arm must visibly fall over. **That is the tick for P1.7.1.**
+
+**2. Then P1.7.2 — break it on purpose** (the retriever is blind to history; he half-saw this already). Then P1.7.3 query rewriting → P1.7.4 the number.
+
+**🎯 His stated goal: v2 complete by EOD next session.** Realistic path: P1.7.1 proof → 7.2 → 7.3 → 7.4 in the morning, tool-calling (7.5/7.6) after. Say up front if 7.5–7.7 won't fit; don't silently drop them.
+
+**🗓️ SUNDAY 9 AUG 2026 — his own commitment: rewrite the ENTIRE RAG project from scratch, solo, blank folder.** *"so its better as making it my own."* Protect this. Everything taught before then should be aimed at making that rebuild possible from understanding, not memory. Offer a checklist-only (no code) scaffold if he wants one.
 
 ### 🗺️ v2 = Spidy that remembers and can act (student's pick over evals)
 | Atom | What lands |
 |---|---|
 | P1.7.0 ✅ | `/v2/ask` exists, same brain, `"version":"v2"` in the response |
-| **P1.7.1 ◀️** | Memory — client sends history, server stays stateless |
+| **P1.7.1 🟡** | Memory — client sends history, server stays stateless. **Wired + running** (his code, spec-first). **Proof owed** — the A/B test was weak, both arms passed. |
 | P1.7.2 | 🔴 **Break it on purpose** — ask a follow-up, watch retrieval search for nothing |
 | P1.7.3 | **Query rewriting** — the fix |
 | P1.7.4 | Prove the fix with a number *(his first eval, smuggled in)* |

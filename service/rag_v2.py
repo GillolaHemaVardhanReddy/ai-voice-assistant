@@ -2,7 +2,6 @@ from .rag import SYSTEM, client
 from .store import search
 
 
-
 def answer(question, history=None, k=5):
     history = history or []
     messages = [{"role": "system", "content": SYSTEM}]

@@ -40,19 +40,26 @@ The experiment we ran (`"and what about SQL?"`, with vs. without history) produc
 
 **🗓️ SUNDAY 9 AUG 2026 — his own commitment: rewrite the ENTIRE RAG project from scratch, solo, blank folder.** *"so its better as making it my own."* Protect this. Everything taught before then should be aimed at making that rebuild possible from understanding, not memory. Offer a checklist-only (no code) scaffold if he wants one.
 
-### 🔀 DECIDED 9 Aug 2026 — **"go wide" (A), with F18 interleaved, not deferred**
+### 🔀 DECIDED 9 Aug 2026 — **GO DEEP (B). Finish RAG before adding ears.**
 
-His call: breadth first (ears → mouth → loop), because *the project is a voice assistant* and a talking demo beats a better reranker. His follow-up question — *"i hope we can cover B while we go in correct order right?"* — is answered here, **as a schedule rather than an intention.** F18 does **not** run as a block after A; it dissolves into A at the points where voice creates the failure each atom fixes.
+He first chose "wide" (ears → mouth → loop), then reversed it within the hour with a better argument than mine: ***"lets go deep into RAG and not widen into ears because atleast we have to finish one topic fully."*** **Accepted, and it is the stronger call** — breadth leaves two half-finished subsystems; depth leaves one he can actually claim. *(Acharya had recommended wide. He was outreasoned. Log it that way.)*
 
-| F18 atom | Runs during | Why exactly there |
+**The order — Phase 2 gets finished, properly:**
+
+| # | Atom | Why it is in this position |
 |---|---|---|
-| **2.10 golden question set** | **BEFORE Phase 3 — moved *earlier*, not later** | It is the safety net for everything A changes. Voice forces shorter answers, a different citation format, local Whisper, and (at 10.1) local embeddings. **Every one of those can silently break retrieval.** Without a score he is back to eyeballing — the exact failure of the first memory A/B test. Cheap to build: 20 real questions + the file that should answer each. |
-| **2.12 hybrid search (BM25)** | **Phase 3 — Ears** | Whisper will mishear `ClickHouse` as *"click house"* and the retriever will faithfully embed the wrong thing. A keyword index degrades far more gracefully under transcription noise than a pure embedding. **Do it when he can *hear* the bug**, not as theory. |
-| **2.11 reranking** | **Phase 4/5 — Mouth & Loop** | A spoken answer has room for 2–3 chunks, not 5. Precision at the top of the list stops being a nicety and becomes the constraint. Reranking earns its keep exactly here. |
-| **2.13 chunking strategy** | **Phase 5 — Loop** | Index-time change, needs `index.npz` rebuilt and 2.10 to score it. Natural to batch with the local-embedding swap. |
-| **2.14 ANN & vector databases** | **Phase 9/10 — Product & Cheap** | Only a *number* justifies it. It arrives when the corpus is other people's data (Phase 9 SDK) or when RAM/latency say so (Phase 10). At 127 chunks, `vecs @ q` is correct and a vector DB would be cargo cult. |
+| **0** | 🗓️ **Solo RAG rebuild** — blank folder, no help | His own commitment for 9 Aug. Consolidates 80 atoms before any new material. Checklist only from Acharya — **no code.** |
+| **1** | **2.10 golden question set** | 🔴 **Non-negotiably first.** 20 real questions + the file that should answer each. Without a score, 2.11–2.14 are guesses — and "both arms passed" is exactly how the memory A/B test failed. This atom is what makes every atom after it *provable*. |
+| **2** | **2.11 reranking** | Retrieve 50, cross-encoder reorders to 5. Usually the single biggest quality jump in RAG. First thing 2.10 gets pointed at. |
+| **3** | **2.12 hybrid search (BM25)** | Embeddings blur exact tokens — `ClickHouse`, `Cashfree`, version numbers. Keyword index beside the vectors, scores merged. |
+| **4** | **2.13 chunking strategy** | **Index-time** change: overlap + parent-document retrieval, `index.npz` rebuilt, re-scored on 2.10. |
+| **5** | **2.14 ANN & vector databases** | Grow the corpus until `vecs @ q` hurts, *then* add FAISS/HNSW. Meet filtered search and incremental updates. **He adds a vector DB because a number said so** — that was the F18 lesson. |
 
-**Rule this encodes:** each B atom runs at the moment A produces the failure it fixes. Nothing is parked on trust.
+**→ Phase 2 is then genuinely COMPLETE (F4 + F5 + F18), and Phase 3 (Ears) starts from a retrieval system that is measured, not hoped-for.**
+
+**Deferred by this decision, deliberately:** P1.7.5/7.6 tool calling + email (that's Phase 6 territory, not RAG) · the latency ladder (stream v2, keep-warm, local embeddings — still owed, see P1.5.7) · Phases 3–5.
+
+**Parallel track, not blocking:** the `/spidy` article series on the portfolio — **Design D (pipeline map)** chosen 9 Aug. Input for each version lives in `docs/prompts/`. v1 first.
 
 ### 🗺️ v2 = Spidy that remembers and can act (student's pick over evals)
 | Atom | What lands |

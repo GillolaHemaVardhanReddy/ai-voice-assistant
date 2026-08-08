@@ -1,7 +1,8 @@
-# Spidy v1 — article figures
+# Spidy — article figures (v1 + v2)
 
-Five hand-authored SVGs for `/spidy/v1`. **Paste them inline** (not as `<img>`) so `currentColor`
-picks up your article's text colour in both themes.
+Seven hand-authored SVGs. **Paste them inline** (not as `<img>`) so `currentColor` picks up your
+article's text colour in both themes. For LinkedIn, use the PNGs in `~/Desktop/spidy-figures/`
+instead — LinkedIn wants image files.
 
 **One thing to set**, once, anywhere in your stylesheet:
 
@@ -13,19 +14,19 @@ picks up your article's text colour in both themes.
 :root[data-theme="dark"]               { --fig-accent: #6D8CF0; }
 ```
 
-Both accents were validated for lightness band and contrast against their surfaces. Everything
-else in the figures is `currentColor`, so it themes itself.
+Both accents were validated for contrast and lightness band against their own surfaces.
+Everything else is `currentColor`, so it themes itself. Each `<svg>` already carries `role="img"`
+and an `aria-label`.
 
-Each `<svg>` already carries `role="img"` and an `aria-label`. Wrap in `<figure>` with the caption
-given, and give the svg `max-width:100%; height:auto`. Figures 2 and 5 are charts — they carry
-their own value labels, so no legend and no axis ticks are needed.
-
+> **Figures 2 and 6 were rebuilt after rendering them to PNG revealed layout collisions the
+> source did not show** — an orphaned value label and a clipped footer in fig 2; a footer
+> overlapping the noise-floor labels in fig 6. Always render and look.
 
 ---
 
 ## Figure 1 — The ratio
 
-**Caption:** <b>190 kilobytes of data behind 1.8 gigabytes of machinery.</b> The grey bar is what the container shipped in order to produce the vectors. At the same scale the vectors themselves would be <b>0.09 pixels wide</b> — so they are not drawn as a bar, because drawing them would be a lie.
+**Caption:** 190 KB of data behind 1.8 GB of machinery. At the same scale the data would be 0.09 px wide, so it isn't drawn as a bar.
 
 ```html
 <svg viewBox="0 0 900 212" role="img" aria-label="A full-width grey bar represents 1.8 gigabytes of runtime and libraries. The 190 kilobytes of actual vector data would be 0.09 pixels wide at the same scale, marked by a hairline at the far left.">
@@ -47,38 +48,38 @@ their own value labels, so no legend and no axis ticks are needed.
 
 ## Figure 2 — The shrink
 
-**Caption:** Two measures, two panels, two scales — <b>never one chart with two axes.</b> Disk size fell 5.6&#215;; runtime memory fell 9.9&#215; and, crucially, crossed under the ceiling that made the free tier possible at all. Same 127 chunks, same answers — all 12 retrieval scores verified identical to three decimals first.
+**Caption:** Two measures, two panels, two scales. The dashed line is the ceiling the first build could not get under.
 
 ```html
-<svg viewBox="0 0 900 268" role="img" aria-label="Two panels. Left: container image on disk falls from 1.95 gigabytes to 751 megabytes to 347 megabytes. Right: runtime memory falls from 625 megabytes to 63.4 megabytes, crossing under Render's 512 megabyte limit.">
+<svg viewBox="0 0 900 300" role="img" aria-label="Two panels. Left: container image on disk falls from 1.95 gigabytes to 751 megabytes to 347 megabytes. Right: runtime memory falls from 625 megabytes to 63.4 megabytes, crossing under Render's 512 megabyte limit.">
   <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="currentColor">
+    <text x="20" y="28" font-size="12" opacity="0.6">IMAGE ON DISK</text>
+    <line x1="160" y1="58" x2="160" y2="228" stroke="currentColor" stroke-width="1" opacity="0.25"/>
+    <text x="150" y="94" text-anchor="end" font-size="11.5" opacity="0.6">first build</text>
+    <rect x="160" y="72" width="224" height="34" rx="3" fill="currentColor" opacity="0.26"/>
+    <text x="394" y="95" font-size="13.5" font-weight="600" opacity="0.85">1.95 GB</text>
+    <text x="150" y="149" text-anchor="end" font-size="11.5" opacity="0.6">torch dropped</text>
+    <rect x="160" y="127" width="86" height="34" rx="3" fill="currentColor" opacity="0.26"/>
+    <text x="256" y="150" font-size="13.5" font-weight="600" opacity="0.85">751 MB</text>
+    <text x="150" y="204" text-anchor="end" font-size="11.5" opacity="0.6">model removed</text>
+    <rect x="160" y="182" width="40" height="34" rx="3" fill="var(--fig-accent, #2B4FD4)"/>
+    <text x="210" y="205" font-size="13.5" font-weight="700" fill="var(--fig-accent, #2B4FD4)">347 MB</text>
 
-    <text x="20" y="26" font-size="12" opacity="0.6">IMAGE ON DISK</text>
-    <line x1="110" y1="44" x2="110" y2="228" stroke="currentColor" stroke-width="1" opacity="0.25"/>
-    <text x="100" y="76" text-anchor="end" font-size="11.5" opacity="0.6">first build</text>
-    <rect x="110" y="56" width="292" height="30" rx="3" fill="currentColor" opacity="0.28"/>
-    <text x="412" y="76" font-size="13" font-weight="600" opacity="0.85">1.95 GB</text>
-    <text x="100" y="131" text-anchor="end" font-size="11.5" opacity="0.6">torch dropped</text>
-    <rect x="110" y="111" width="113" height="30" rx="3" fill="currentColor" opacity="0.28"/>
-    <text x="233" y="131" font-size="13" font-weight="600" opacity="0.85">751 MB</text>
-    <text x="100" y="186" text-anchor="end" font-size="11.5" opacity="0.6">model removed</text>
-    <rect x="110" y="166" width="52" height="30" rx="3" fill="var(--fig-accent, #2B4FD4)"/>
-    <text x="172" y="186" font-size="13" font-weight="700" fill="var(--fig-accent, #2B4FD4)">347 MB</text>
+    <line x1="460" y1="20" x2="460" y2="250" stroke="currentColor" stroke-width="1" opacity="0.18"/>
 
-    <line x1="452" y1="20" x2="452" y2="240" stroke="currentColor" stroke-width="1" opacity="0.18"/>
+    <text x="490" y="28" font-size="12" opacity="0.6">MEMORY AT RUNTIME (RSS)</text>
+    <line x1="630" y1="58" x2="630" y2="228" stroke="currentColor" stroke-width="1" opacity="0.25"/>
+    <text x="620" y="94" text-anchor="end" font-size="11.5" opacity="0.6">measured</text>
+    <rect x="630" y="72" width="179" height="34" rx="3" fill="currentColor" opacity="0.26"/>
+    <text x="819" y="95" font-size="13.5" font-weight="600" opacity="0.85">625 MB</text>
+    <text x="620" y="149" text-anchor="end" font-size="11.5" opacity="0.6">shipped</text>
+    <rect x="630" y="127" width="18" height="34" rx="3" fill="var(--fig-accent, #2B4FD4)"/>
+    <text x="658" y="150" font-size="13.5" font-weight="700" fill="var(--fig-accent, #2B4FD4)">63.4 MB</text>
+    <line x1="776" y1="60" x2="776" y2="196" stroke="currentColor" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.65"/>
+    <text x="772" y="216" text-anchor="end" font-size="11" opacity="0.65">Render free tier</text>
+    <text x="772" y="231" text-anchor="end" font-size="11" opacity="0.65">512 MB ceiling</text>
 
-    <text x="482" y="26" font-size="12" opacity="0.6">MEMORY AT RUNTIME (RSS)</text>
-    <line x1="590" y1="44" x2="590" y2="228" stroke="currentColor" stroke-width="1" opacity="0.25"/>
-    <text x="580" y="76" text-anchor="end" font-size="11.5" opacity="0.6">measured</text>
-    <rect x="590" y="56" width="268" height="30" rx="3" fill="currentColor" opacity="0.28"/>
-    <text x="850" y="46" text-anchor="end" font-size="13" font-weight="600" opacity="0.85">625 MB</text>
-    <text x="580" y="131" text-anchor="end" font-size="11.5" opacity="0.6">shipped</text>
-    <rect x="590" y="111" width="27" height="30" rx="3" fill="var(--fig-accent, #2B4FD4)"/>
-    <text x="627" y="131" font-size="13" font-weight="700" fill="var(--fig-accent, #2B4FD4)">63.4 MB</text>
-    <line x1="810" y1="48" x2="810" y2="176" stroke="currentColor" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.6"/>
-    <text x="806" y="196" text-anchor="end" font-size="11" opacity="0.65">Render free tier</text>
-    <text x="806" y="211" text-anchor="end" font-size="11" opacity="0.65">512 MB ceiling</text>
-    <text x="590" y="256" font-size="11.5" opacity="0.6">The first build did not fit. That is the whole story of this version.</text>
+    <text x="490" y="274" font-size="11.5" opacity="0.6">The first build did not fit.</text>
   </g>
 </svg>
 ```
@@ -86,9 +87,9 @@ their own value labels, so no legend and no axis ticks are needed.
 
 ---
 
-## Figure 3 — Pipeline strip — v1
+## Figure 3 — Pipeline strip - v1
 
-**Caption:** Design D's own component, for v1. <b>Three of five stages lit, two dark.</b> Don't let anyone &ldquo;fix&rdquo; the dark ones — a v1 whose empty stages get filled in by later versions is exactly what makes the series read as one system growing rather than twelve unrelated posts.
+**Caption:** Design D's component for v1: three of five stages lit, two dark. Later versions fill them in.
 
 ```html
 <svg viewBox="0 0 1000 142" role="img" aria-label="Five pipeline stages. Question, Retrieve and Generate are lit as built in version 1. Rerank and Context are dark, arriving in later versions.">
@@ -134,7 +135,7 @@ their own value labels, so no legend and no axis ticks are needed.
 
 ## Figure 4 — v1 architecture
 
-**Caption:** The half most RAG diagrams leave out is the top one. <b>Chunking and embedding happen offline, once</b> — changing them means rebuilding <code>index.npz</code>, not editing a request handler. The two halves touch at exactly one point: the index is loaded into memory at startup, and every question reads it.
+**Caption:** The half most RAG diagrams leave out is the top one. Chunking and embedding happen offline, once.
 
 ```html
 <svg viewBox="0 0 1000 320" role="img" aria-label="Version 1 architecture in two halves. Index time, offline: notes are chunked, embedded and written to index.npz. Query time, online: question, encode, search, LLM, answer. The index is loaded once at startup.">
@@ -209,7 +210,7 @@ their own value labels, so no legend and no axis ticks are needed.
 
 ## Figure 5 — What retrieval actually returns
 
-**Caption:** Real measured output for <b>&ldquo;Does he have experience in MongoDB?&rdquo;</b> — the five nearest chunks and their cosine scores. The right chunk doesn't just win, <b>it wins by 0.128 while the runners-up sit within 0.02 of each other.</b> That gap is the signal; without it you have five plausible chunks and no way to tell.
+**Caption:** Real scores for "Does he have experience in MongoDB?" The right chunk wins by 0.128 while the runners-up sit within 0.02.
 
 ```html
 <svg viewBox="0 0 900 296" role="img" aria-label="Bar chart of the five nearest chunks for the question does he have experience in MongoDB. The MongoDB chunk from boundaries.txt scores 0.620; the next four score 0.492, 0.483, 0.474 and 0.472.">
@@ -245,55 +246,56 @@ their own value labels, so no legend and no axis ticks are needed.
 </svg>
 ```
 
+
 ---
 
-## Figure 6 — The retriever going blind (v2 article)
+## Figure 6 — The retriever going blind - v2
 
-**Caption:** Same 127 chunks, same retriever, two questions one turn apart. Drop the keyword and the best match lands nearer the measured noise floor than the answer.
+**Caption:** Same chunks, same retriever, two questions one turn apart. The MongoDB chunk doesn't appear at all on the follow-up.
 
 ```html
-<svg viewBox="0 0 900 250" role="img" aria-label="A cosine similarity scale. The keyword question scores 0.620 and finds the right chunk. The pronoun follow-up scores 0.344 on the wrong chunk. The measured noise floor for unrelated words is 0.186.">
+<svg viewBox="0 0 900 276" role="img" aria-label="A cosine similarity scale. The keyword question scores 0.620 and finds the right chunk. The pronoun follow-up scores 0.344 on the wrong chunk, with MongoDB absent from the top five. The measured noise floor for unrelated words is 0.186.">
   <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="currentColor">
-    <text x="40" y="34" font-size="12" opacity="0.6">BEST MATCH FOUND, SAME 127 CHUNKS, SAME RETRIEVER</text>
+    <text x="40" y="32" font-size="12" opacity="0.6">BEST MATCH FOUND &#8212; SAME 127 CHUNKS, SAME RETRIEVER</text>
     <line x1="60" y1="150" x2="840" y2="150" stroke="currentColor" stroke-width="2" opacity="0.3"/>
-    <text x="60" y="176" font-size="11" opacity="0.5">0.0</text>
-    <text x="840" y="176" text-anchor="end" font-size="11" opacity="0.5">0.7</text>
+    <text x="60" y="174" font-size="11" opacity="0.5">0.0</text>
+    <text x="840" y="174" text-anchor="end" font-size="11" opacity="0.5">0.7</text>
 
     <g opacity="0.55">
       <line x1="267" y1="140" x2="267" y2="160" stroke="currentColor" stroke-width="2" stroke-dasharray="3 3"/>
-      <text x="267" y="200" text-anchor="middle" font-size="11.5">0.186</text>
-      <text x="267" y="217" text-anchor="middle" font-size="10.5">noise floor</text>
-      <text x="267" y="232" text-anchor="middle" font-size="10.5">(unrelated words)</text>
+      <text x="267" y="200" text-anchor="middle" font-size="12">0.186</text>
+      <text x="267" y="216" text-anchor="middle" font-size="10.5">noise floor</text>
+      <text x="267" y="231" text-anchor="middle" font-size="10.5">(unrelated words)</text>
     </g>
 
     <g>
-      <line x1="443" y1="122" x2="443" y2="160" stroke="currentColor" stroke-width="2.5"/>
+      <text x="443" y="84" text-anchor="middle" font-size="12" opacity="0.75">&#8220;so he knows it?&#8221;</text>
+      <text x="443" y="114" text-anchor="middle" font-size="17" font-weight="700">0.344</text>
+      <line x1="443" y1="124" x2="443" y2="160" stroke="currentColor" stroke-width="2.5"/>
       <circle cx="443" cy="150" r="6" fill="currentColor"/>
-      <text x="443" y="112" text-anchor="middle" font-size="15" font-weight="700">0.344</text>
-      <text x="443" y="92" text-anchor="middle" font-size="11.5" opacity="0.75">&#8220;so he knows it?&#8221;</text>
-      <text x="443" y="76" text-anchor="middle" font-size="10.5" opacity="0.6">&#8212; and it is the WRONG chunk.</text>
-      <text x="443" y="60" text-anchor="middle" font-size="10.5" opacity="0.6">MongoDB is not in the top 5 at all.</text>
+      <text x="443" y="200" text-anchor="middle" font-size="11" opacity="0.7">and it is the WRONG chunk</text>
+      <text x="443" y="216" text-anchor="middle" font-size="11" opacity="0.7">MongoDB absent from the top 5</text>
     </g>
 
     <g>
-      <line x1="751" y1="122" x2="751" y2="160" stroke="var(--fig-accent, #2B4FD4)" stroke-width="2.5"/>
+      <text x="751" y="84" text-anchor="middle" font-size="12" fill="var(--fig-accent, #2B4FD4)" opacity="0.85">&#8220;does he know MongoDB?&#8221;</text>
+      <text x="751" y="114" text-anchor="middle" font-size="17" font-weight="700" fill="var(--fig-accent, #2B4FD4)">0.620</text>
+      <line x1="751" y1="124" x2="751" y2="160" stroke="var(--fig-accent, #2B4FD4)" stroke-width="2.5"/>
       <circle cx="751" cy="150" r="7" fill="var(--fig-accent, #2B4FD4)"/>
-      <text x="751" y="112" text-anchor="middle" font-size="16" font-weight="700" fill="var(--fig-accent, #2B4FD4)">0.620</text>
-      <text x="751" y="92" text-anchor="middle" font-size="11.5" fill="var(--fig-accent, #2B4FD4)" opacity="0.85">&#8220;does he know MongoDB?&#8221;</text>
-      <text x="751" y="76" text-anchor="middle" font-size="10.5" fill="var(--fig-accent, #2B4FD4)" opacity="0.7">the right chunk, rank 1</text>
+      <text x="751" y="200" text-anchor="middle" font-size="11" fill="var(--fig-accent, #2B4FD4)" opacity="0.75">the right chunk, rank 1</text>
     </g>
 
-    <text x="40" y="224" font-size="11.5" opacity="0.6">Drop one keyword and the search lands nearer to</text>
-    <text x="40" y="240" font-size="11.5" opacity="0.6">random noise than to the answer.</text>
+    <text x="40" y="264" font-size="11.5" opacity="0.6">Drop one keyword and the best match lands nearer to noise than to the answer.</text>
   </g>
 </svg>
 ```
 
+
 ---
 
-## Figure 7 — What query rewriting changes (v2 article)
+## Figure 7 — What query rewriting changes - v2
 
-**Caption:** The same follow-up down two pipelines. The user types four identical words either way; one extra call before retrieval decides whether the system can answer at all.
+**Caption:** The same follow-up down two pipelines. The user types four identical words either way.
 
 ```html
 <svg viewBox="0 0 980 300" role="img" aria-label="Two paths for the same follow-up question. Without the rewriter, the search misses and the bot says it lacks context. With the rewriter, the question is rewritten to name MongoDB, the search hits, and the answer is correct.">

@@ -40,6 +40,20 @@ The experiment we ran (`"and what about SQL?"`, with vs. without history) produc
 
 **🗓️ SUNDAY 9 AUG 2026 — his own commitment: rewrite the ENTIRE RAG project from scratch, solo, blank folder.** *"so its better as making it my own."* Protect this. Everything taught before then should be aimed at making that rebuild possible from understanding, not memory. Offer a checklist-only (no code) scaffold if he wants one.
 
+### 🔀 DECIDED 9 Aug 2026 — **"go wide" (A), with F18 interleaved, not deferred**
+
+His call: breadth first (ears → mouth → loop), because *the project is a voice assistant* and a talking demo beats a better reranker. His follow-up question — *"i hope we can cover B while we go in correct order right?"* — is answered here, **as a schedule rather than an intention.** F18 does **not** run as a block after A; it dissolves into A at the points where voice creates the failure each atom fixes.
+
+| F18 atom | Runs during | Why exactly there |
+|---|---|---|
+| **2.10 golden question set** | **BEFORE Phase 3 — moved *earlier*, not later** | It is the safety net for everything A changes. Voice forces shorter answers, a different citation format, local Whisper, and (at 10.1) local embeddings. **Every one of those can silently break retrieval.** Without a score he is back to eyeballing — the exact failure of the first memory A/B test. Cheap to build: 20 real questions + the file that should answer each. |
+| **2.12 hybrid search (BM25)** | **Phase 3 — Ears** | Whisper will mishear `ClickHouse` as *"click house"* and the retriever will faithfully embed the wrong thing. A keyword index degrades far more gracefully under transcription noise than a pure embedding. **Do it when he can *hear* the bug**, not as theory. |
+| **2.11 reranking** | **Phase 4/5 — Mouth & Loop** | A spoken answer has room for 2–3 chunks, not 5. Precision at the top of the list stops being a nicety and becomes the constraint. Reranking earns its keep exactly here. |
+| **2.13 chunking strategy** | **Phase 5 — Loop** | Index-time change, needs `index.npz` rebuilt and 2.10 to score it. Natural to batch with the local-embedding swap. |
+| **2.14 ANN & vector databases** | **Phase 9/10 — Product & Cheap** | Only a *number* justifies it. It arrives when the corpus is other people's data (Phase 9 SDK) or when RAM/latency say so (Phase 10). At 127 chunks, `vecs @ q` is correct and a vector DB would be cargo cult. |
+
+**Rule this encodes:** each B atom runs at the moment A produces the failure it fixes. Nothing is parked on trust.
+
 ### 🗺️ v2 = Spidy that remembers and can act (student's pick over evals)
 | Atom | What lands |
 |---|---|

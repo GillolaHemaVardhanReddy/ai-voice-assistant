@@ -6,6 +6,9 @@ Goal: make it cost little per user, prove it's good, and deploy — the phase th
 |------|-------------------|----------------|--------------------|
 | **10.0 🔧** | Cost model per conversation | Sum STT + LLM + TTS $ per chat, in code | Your true unit cost |
 | **10.1** | Swap paid → open where it saves | Local Whisper + Piper + open LLM (Ollama) | Big cost drop |
+| **10.1a 🔧** | **Quantization** — the same weights in fewer bits | Run one local model at fp16 vs int8/4-bit; measure RAM, speed and quality drift | Models that fit on hardware you can afford (**F20**) |
+| **10.1b 🔧** | **KV cache** — why generation is sequential, and the fix | Generate with the cache off, then on; watch tokens/sec | The core inference optimisation of every LLM |
+| **10.1c** | **Runtimes & batching** — `llama.cpp` / ONNX / vLLM | Serve one local model properly; batch concurrent requests | Local models that are actually usable |
 | **10.2** | Right-size the model | Cheaper tier (e.g. Haiku) where quality allows | Balanced cost/quality |
 | **10.3** | Caching | Cache prompts/responses | Cheaper repeats |
 | **10.4 🔧** | **Evals** — measuring if AI is *good* | Build a small eval set + score it | Quality you can prove |

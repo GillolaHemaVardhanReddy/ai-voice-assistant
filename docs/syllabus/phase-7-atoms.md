@@ -22,6 +22,7 @@ Because it's the big one, it's grouped into three runs. Still one atom per turn.
 ### Run C — Transformers from scratch
 | Atom | Idea | You implement |
 |------|------|---------------|
+| **7.6a 🔧** | **Tokenization** — text → integers, *before* any model sees it | Train a tiny **BPE** merge loop by hand on one paragraph; then compare your vocab to a real tokenizer on the same text | Why cost, spelling and non-English behave the way they do (**F19**) |
 | **7.7** | Embeddings = a lookup table | Build one |
 | **7.8 🔧** | **Attention** intuition — who looks at whom | Trace it on a 4-word sentence |
 | **7.9 🔧** | Self-attention math (**Q·K·V**) | Work one head by hand, small numbers |

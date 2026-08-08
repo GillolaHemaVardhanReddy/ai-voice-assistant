@@ -18,5 +18,12 @@ Goal: your assistant answers from *your own documents* — what people really me
 | **2.7a 🧮** | **Search = ONE matrix × vector multiply** | Stack chunk-vectors: `(5×384)·(384,)` → 5 scores | Matrices, *earned* (bridges to Phase 7) |
 | **2.8** | RAG = paste chunks into the prompt | Answer a question from your data | Grounded answers |
 | **2.9** | Wrap it up | Point it at a folder of your notes | **Assistant that knows your stuff** |
+| **2.10** | 📏 **Golden question set** — retrieval you can *score* | 20 real questions + the file that should answer each; measure `recall@k` | Evals, not vibes |
+| **2.11** | **Reranking** — a cross-encoder reads question *with* chunk | Retrieve 50, rerank to 5, score the delta on 2.10 | The biggest quality jump in RAG |
+| **2.12** | **Hybrid search** — BM25 keyword beside the vectors | Add a keyword index, merge scores, find where each one wins | Exact terms stop getting blurred |
+| **2.13** | **Chunking strategy** — an *index-time* decision | Overlap + parent-document retrieval; rebuild `index.npz`, re-score on 2.10 | Answers stop straddling boundaries |
+| **2.14** | **ANN & vector databases** — when `vecs @ q` stops being enough | Grow the corpus until brute force hurts; add FAISS/HNSW; meet filtered search & incremental updates | You add a vector DB because a *number* said so |
 
 > Framework: `sentence-transformers` (free, local embeddings). Cost note vs paid embedding APIs included.
+
+> **2.10–2.14 added 8 Aug 2026 (F18).** He spotted that 2.6–2.9 stops at *naive* RAG. These five are the rungs above it — the difference between a demo and a retrieval system. **2.10 comes first on purpose:** without a score, 2.11–2.14 are guesses.

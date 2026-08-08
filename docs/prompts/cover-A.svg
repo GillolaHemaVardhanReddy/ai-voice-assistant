@@ -1,0 +1,19 @@
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1920" height="1080" fill="#12141A"/>
+  <text x="160" y="176" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="30" fill="#8B94A6" letter-spacing="5">SPIDY &#183; A RETRIEVAL ASSISTANT, REBUILT TWICE</text>
+
+  <text x="160" y="396" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="72" fill="#EDF0F6">&#8220;does he know MongoDB?&#8221;</text>
+  <text x="1760" y="396" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="72" font-weight="700" fill="#7C9BFF">0.620</text>
+  <text x="1760" y="440" text-anchor="end" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif" font-size="27" fill="#8B94A6">right chunk, rank 1</text>
+
+  <text x="160" y="556" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="72" fill="#EDF0F6">&#8220;so he knows it?&#8221;</text>
+  <text x="1760" y="556" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="72" font-weight="700" fill="#8B94A6">0.344</text>
+  <text x="1760" y="600" text-anchor="end" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif" font-size="27" fill="#8B94A6">not even in the top 5</text>
+
+  <line x1="160" y1="676" x2="1760" y2="676" stroke="#2A2F3A" stroke-width="2"/>
+
+  <text x="160" y="812" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif" font-size="84" font-weight="800" fill="#EDF0F6" letter-spacing="-2">The model had the conversation.</text>
+  <text x="160" y="920" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif" font-size="84" font-weight="800" fill="#7C9BFF" letter-spacing="-2">The search didn&#8217;t.</text>
+
+  <text x="160" y="1006" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif" font-size="27" fill="#8B94A6">Hemavardhan Reddy Gillola</text>
+</svg>

@@ -1,152 +1,140 @@
-# LinkedIn **article** — Spidy v1 → v2
+<!-- Spidy v1->v2 LinkedIn article. Rendered copy: paste from the artifact page, not from here. -->
 
-**Format notes before you paste:** LinkedIn articles handle headings, bold, and images well.
-They handle **tables and code blocks badly** — so there are none here. Images go where marked;
-sources are in `spidy-v1-figures.md`. Screenshot each SVG (or export from the preview page) —
-LinkedIn wants image files, not markup.
+# My AI assistant worked great. Until someone asked a follow-up question.
 
-**Publish tonight, share as a post Tuesday or Wednesday 9–10 AM IST.**
+I'm a MERN developer. For the last few months I've been learning AI by actually building something instead of watching tutorials.
 
-**Suggested title:** *I built an AI assistant that answers questions about me. Then I found out it couldn't hear a follow-up.*
+The thing is **Spidy**, an assistant on my portfolio that answers questions about my work. It's live now. Getting there took two versions and I got a lot wrong on the way, which is most of what this post is about.
 
-**Subtitle / first line:** *What two versions of a retrieval-augmented assistant taught me about measuring things I couldn't see.*
 
----
+## Why I built it
 
-## The article
+First I just asked a normal LLM some questions about myself, to see what would happen.
 
-I built an assistant for my portfolio. It answers questions about my work — my skills, my projects, what I have and haven't done in production. It's called Spidy, it's live, and getting it there took two versions and a lot of being wrong in public.
+It didn't make up a fake resume. That's what I expected and it didn't do it. What it actually did was politely say it didn't know, and then tell the visitor to go check my LinkedIn.
 
-This is what happened, and what I'd tell anyone building the same thing.
+So it wasn't lying. It just had nothing to work with. Its own answer said it: **"not in my context."**
 
-### It started with a polite failure
+That's the whole problem. The model didn't need to be smarter. It needed my notes.
 
-I asked a language model questions about myself and watched it fail — but not the way I expected. It didn't invent a fake CV. It did something worse for a portfolio: it was **confidently useless**. It refused politely, then sent the visitor away — *"you should check his LinkedIn."*
 
-The model named its own problem in its own reply: **"not in my context."**
+## v1: giving it my files
 
-That sentence is the reason v1 exists. The model didn't need to be smarter. It needed to be handed my notes.
+The technique is called **RAG**, retrieval-augmented generation. The name sounds heavier than the idea.
 
-### Version 1: teaching it to read my files
+I wrote six plain text files about my work. A script cuts them into 127 short pieces and turns each piece into a list of numbers that represents what it means. When someone asks a question, the question becomes numbers the same way, and I find the pieces whose numbers point in a similar direction. Those pieces go into the prompt with one instruction: answer only from this, and say so if the answer isn't here.
 
-The technique is called **RAG** — retrieval-augmented generation — and underneath the acronym it is simpler than it sounds.
+That's it. **The search itself is one matrix multiply.** No framework, no library, around forty lines.
 
-I wrote six plain text files about my work. A script splits them into 127 short pieces, and turns each piece into a list of numbers that represents its meaning. When a visitor asks a question, the question gets turned into numbers the same way, and the system finds the pieces whose numbers point in the most similar direction. Those pieces get pasted into the prompt, with an instruction: *answer only from this, and say so when the answer isn't here.*
 
-That's it. **Retrieval is one matrix multiply.** No framework, no library — about forty lines.
+![The top half is the part most RAG diagrams skip. Chunking and embedding happen offline, once. Only the bottom row runs when someone asks something.](~/Desktop/spidy-figures/04-arch.png)
+*The top half is the part most RAG diagrams skip. Chunking and embedding happen offline, once. Only the bottom row runs when someone asks something.*
 
-> **[IMAGE 1 — Figure 4, "v1 architecture"]**
-> *Caption: The half most RAG diagrams leave out is the top one. Chunking and embedding happen offline, once. Only the bottom row runs per question.*
+Every answer ends with the files it used, like `[boundaries.txt]`. I wanted people to be able to check where an answer came from instead of trusting it.
 
-Every answer ends with the files it used, like `[boundaries.txt]`, so a visitor can see where it came from. That mattered more than I expected: it's the difference between a chatbot and a source.
 
-> **[IMAGE 2 — Figure 5, "What retrieval actually returns"]**
-> *Caption: Real scores for "Does he have experience in MongoDB?" The right chunk wins by 0.128, while the four runners-up sit within 0.02 of each other. That gap is the signal.*
+![Real scores for "Does he have experience in MongoDB?" The right piece wins by 0.128. The next four are all within 0.02 of each other.](~/Desktop/spidy-figures/05-hits.png)
+*Real scores for "Does he have experience in MongoDB?" The right piece wins by 0.128. The next four are all within 0.02 of each other.*
 
-### The hard part wasn't the AI
 
-Retrieval was the easy bit. **The hard part was making it fit in 512 MB of memory**, which is what a free hosting tier gives you. My first container image was **1.95 GB**.
+## The hard part had nothing to do with AI
 
-Then I did the arithmetic that changed how I think about deployment:
+The retrieval was the easy part. The hard part was getting it to fit in **512 MB of memory**, which is what the free hosting tier gives you.
 
-**127 chunks × 384 dimensions × 4 bytes = 190 kilobytes.**
+My first Docker image was **1.95 GB**.
 
-The data was 190 kilobytes. The machinery I had shipped to produce it was 1.8 gigabytes. **I was deploying a factory in order to deliver one envelope.**
+At some point I sat down and did this multiplication:
 
-> **[IMAGE 3 — Figure 1, "The ratio"]**
-> *Caption: At the same scale, the actual data would be 0.09 pixels wide. So it isn't drawn as a bar — drawing it would be a lie.*
 
-Chasing that down taught me more than the retrieval did:
+> **127 chunks × 384 dimensions × 4 bytes = 190 kilobytes**
 
-**A model is not a runtime.** The weights were about 90 MB. The libraries wrapped around them were 1.8 GB. I had been thinking of them as one thing.
+190 KB. That's the actual data. I had shipped 1.8 GB of libraries to produce it. **Basically I built a whole factory to deliver one envelope.**
 
-**A dependency you removed once may not be removed.** I took a large library out of the requirements file and it came back in through the Dockerfile by a second route.
 
-**Look inside the container, not at the manifest.** I found a 57 MB symbolic-algebra library sitting in a web service that does no algebra, pulled in as somebody else's dependency. I only found it by running `du` inside the running image.
+![At this scale the real data would be 0.09 pixels wide, so I didn't draw it as a bar.](~/Desktop/spidy-figures/01-ratio.png)
+*At this scale the real data would be 0.09 pixels wide, so I didn't draw it as a bar.*
 
-**Build time is not run time.** The 127 chunks never change between requests, so chunking and embedding them at every boot was pure waste. That work moved offline into a file the server just loads.
+Fixing that taught me more than the AI part did.
 
-Final result: **1.95 GB down to 347 MB on disk, and 625 MB of runtime memory down to 63.4 MB.** Same 127 chunks, same answers — I verified all twelve retrieval scores matched my saved baseline to three decimals before trusting a single byte of it.
+**A model is not a runtime.** The weights were about 90 MB. Everything wrapped around them was 1.8 GB. In my head those had been one thing.
 
-> **[IMAGE 4 — Figure 2, "The shrink"]**
-> *Caption: Two measures, two scales, two panels. The first build simply did not fit under the ceiling.*
+**Removing a dependency once doesn't mean it's gone.** I took a big library out of `requirements.txt` and it came straight back in through the Dockerfile.
 
-### The bug that actually scared me
+**Check inside the container, not the manifest.** I found a 57 MB symbolic algebra library sitting in a web service that does no algebra. It came in as somebody else's dependency. I only found it by running `du` inside the running container.
 
-Early on, Spidy answered in the first person. *"I built the analytics platform."*
+**Build time is not run time.** Those 127 pieces never change between requests. I was re-cutting and re-embedding all of them every time the server started, for no reason. That moved offline into a file the server just loads.
 
-Nothing in the prompt had told it who it was, so it quietly assumed it was me. It was **impersonating me on my own website**, and it never once looked broken. The fix was one paragraph: *you are Spidy, you are not Hemavardhan, always speak in the third person.*
+Where it ended up: **1.95 GB down to 347 MB on disk, and 625 MB of memory down to 63.4 MB.** Same 127 pieces, same answers. I saved all twelve retrieval scores before I started and checked them again after, matching to three decimals, before I believed any of it.
 
-The lesson stuck harder than the 1.9 GB one. **The failure that scared me wasn't a crash. It was the system confidently doing the wrong thing with nobody noticing.**
 
-### Version 2: it couldn't hear a follow-up
+![Two different measurements, so two panels. The dashed line is the limit the first build couldn't get under.](~/Desktop/spidy-figures/02-shrink.png)
+*Two different measurements, so two panels. The dashed line is the limit the first build couldn't get under.*
 
-v1 answered every question as if it were the first thing you'd ever said. Ask *"does he know MongoDB?"* and it answers well. Ask *"so he knows it?"* and it has no idea what "it" means.
 
-The obvious fix is to send the conversation history along with the question, and that half works immediately — the model can now see the earlier turn.
+## The bug that actually worried me
 
-But there's a second half almost everyone misses, and I missed it too. **The search doesn't see the conversation.** It only ever gets the raw sentence you just typed. So on the follow-up, my system was searching 127 chunks for the literal phrase *"so he knows it?"*
+Early on, Spidy answered in first person. _"I built the analytics platform."_
 
-I measured what that costs.
+Nothing in the prompt had told it who it was, so it just assumed it was me. It was speaking as me, on my own site, and nothing about it looked broken. The fix was one paragraph in the system prompt saying you are Spidy, you are not Hemavardhan, always speak in third person.
 
-> **[IMAGE 5 — Figure 6, "The retriever going blind"]**
-> *Caption: Same chunks, same retriever, two questions one turn apart. The MongoDB chunk doesn't rank fifth on the follow-up — it doesn't appear at all.*
+That one stayed with me more than the 1.9 GB did. **It wasn't a crash. It ran perfectly and did the wrong thing**, and I could easily have not noticed.
 
-The best match for the follow-up scored **0.344**. The right question scored **0.620**. And when I measured what five completely unrelated words score against my notes, the floor was **0.186**. So the follow-up's best match was closer to random noise than to an answer.
 
-Worse: **the search still confidently returned five chunks.** Top-k always returns k. It has no way to say "I found nothing."
+## v2: it couldn't follow a conversation
 
-The fix is to rewrite the question before searching — turn *"so he knows it?"* into *"Does Hemavardhan have knowledge of MongoDB?"*, then search for that.
+v1 treated every question like it was the first thing you'd ever said. Ask _"does he know MongoDB?"_ and it answers properly. Ask _"so he knows it?"_ right after and it has no idea what "it" is.
 
-> **[IMAGE 6 — Figure 7, "What query rewriting changes"]**
-> *Caption: The user types the same four words either way. One extra call before retrieval decides whether the system can answer at all.*
+Obvious fix, send the conversation history along with the question. That half works straight away, the model can see the earlier turn now.
 
-It took four attempts. The first rewrite came back wrapped in *"Here's the rewritten question:"* plus an unsolicited answer — all of which got fed into the search. The second absorbed a fact from the previous answer and quietly changed what was being asked. I added a rule to the prompt saying *don't change the meaning.* **It still failed.**
+But there's a second half I completely missed. **The search doesn't get the conversation.** It only ever gets the sentence you just typed. So on that follow-up my system was searching 127 pieces of text for the phrase _"so he knows it?"_
 
-What actually fixed it was not a better instruction. It was **giving the input structure** — labelled sections, so the model could tell where the conversation ended and the question began. Three prompt rewrites lost to one heading.
+I measured how bad that is.
 
-**You cannot fix a structural problem with more adjectives.**
 
-### What I actually gained
+![Same 127 pieces, same search, two questions one turn apart. The MongoDB piece doesn't come fifth on the follow-up. It doesn't show up at all.](~/Desktop/spidy-figures/06-blind.png)
+*Same 127 pieces, same search, two questions one turn apart. The MongoDB piece doesn't come fifth on the follow-up. It doesn't show up at all.*
 
-The technical parts are learnable from any tutorial. These weren't.
+Best match on the follow-up: **0.344**. Best match on the proper question: **0.620**. And when I checked what five completely unrelated words score against my notes, that came out at **0.186**.
 
-**Measure your instrument before you measure your change.** Early on I "proved" the memory feature worked because the answers looked different with it on. Then I ran the identical question three times with nothing changed at all — and the wording differed every time. My proof had been noise. Now the first thing I build for any change is the measurement of doing nothing.
+So the follow-up landed closer to random noise than to the answer.
 
-**An experiment where both options pass is not evidence.** My first memory test used a follow-up that happened to contain its own keyword, so the search found the right answer without needing any history. Both versions passed. The test had no power to distinguish anything, and I nearly shipped on it.
+The part that bothered me more: **it still returned five results, confidently.** Top-k always returns k. There's no way for it to say "I found nothing."
 
-**Know the size of what you're actually shipping.** 190 kilobytes of value inside 1.8 gigabytes of packaging. Nobody's build log tells you that ratio. You have to go and divide.
+The fix is to rewrite the question before searching. Turn _"so he knows it?"_ into _"Does Hemavardhan have knowledge of MongoDB?"_ and search for that instead.
 
-**The dangerous failures don't crash.** An assistant speaking as me. A rewritten question that silently narrowed its own meaning. Retrieval returning five confident irrelevant results. Every one of them ran perfectly and returned a 200.
 
-### Where it goes next
+![Same four words typed by the user either way. One extra call before the search decides whether the thing can answer at all.](~/Desktop/spidy-figures/07-rewrite.png)
+*Same four words typed by the user either way. One extra call before the search decides whether the thing can answer at all.*
 
-v2 is live. It remembers, and it can follow a pronoun. It still can't tell an exact product name from a general topic, still returns whatever five chunks are nearest without checking whether they're any good, and still takes a few seconds to answer.
+Took me four tries.
 
-Each of those has a name and a known fix, and I'll write them up as I build them. The next one is the least glamorous and the most useful: a set of real questions with the file that should answer each — so that from here, every improvement gets a number instead of my opinion.
+First attempt came back as _"Here's the rewritten question:"_ followed by the question and then an unsolicited answer, and all of that went into the search. Second attempt quietly pulled a fact out of the previous answer and changed what was being asked. I added a line to the prompt telling it not to change the meaning. Still failed.
 
-Spidy is on my portfolio if you want to ask it something. It'll tell you what I haven't done, too — I wrote those notes deliberately.
+What finally fixed it wasn't a better instruction. It was giving the input **structure**, labelled sections so the model could see where the conversation ended and the question started. Three prompt rewrites, beaten by one heading.
 
----
 
-## The share-post (separate, Tuesday 9–10 AM IST)
+> **You can't fix a structural problem by adding adjectives.**
 
-> I built an AI assistant for my portfolio. It worked — until someone asked a follow-up question.
->
-> "Does he know MongoDB?" → perfect answer.
-> "So he knows it?" → no idea what "it" means.
->
-> The model had the conversation. **The search didn't.** It was looking through 127 documents for the literal phrase "so he knows it?"
->
-> I measured how badly that fails. The right question scores 0.620. The follow-up scores 0.344. Five completely unrelated words score 0.186.
->
-> The follow-up was closer to random noise than to the answer — and the system still returned five confident results, because that kind of search has no way to say "I found nothing."
->
-> I wrote up both versions: what RAG actually is under the acronym, why my first container was 1.95 GB to ship 190 KB of data, the bug where the bot started speaking as me, and the four attempts it took to fix the follow-up problem.
->
-> Link in comments 👇
->
-> #AI #RAG #LLM #SoftwareEngineering #MachineLearning
 
-**Why link in comments:** LinkedIn suppresses posts with external links in the body. Put the
-article link in the first comment, immediately after posting.
+## What I got out of it
+
+The technical stuff is in any tutorial. These weren't.
+
+**Measure your instrument before you measure your change.** Early on I decided the memory feature worked because the answers looked different with it turned on. Then I ran the same question three times with nothing changed at all, and the wording came out different every time. My proof was noise. Now the first thing I build for any change is the measurement of changing nothing.
+
+**If both options pass, you didn't test anything.** My first memory test used a follow-up that happened to contain its own keyword, so the search found the right answer without needing any history at all. Both versions passed. I nearly shipped on that.
+
+**Know what you're actually shipping.** 190 KB inside 1.8 GB. No build log tells you that ratio, you have to go and divide it yourself.
+
+**The failures that matter don't crash.** The bot speaking as me. A rewritten question that quietly narrowed itself. Search returning five confident wrong results. All of them returned 200.
+
+
+## What's next
+
+v2 is live. It remembers, and it can follow a pronoun.
+
+It still can't tell an exact product name from a general topic. It still takes whatever five pieces are nearest without checking if they're any good. It still takes a few seconds to answer.
+
+All of those have names and known fixes and I'll write them up as I build them. The next one is the least interesting and the most useful: a set of real questions with the file that should answer each one, so that from here every change gets a number instead of my opinion.
+
+Spidy is on my portfolio if you want to try it. It'll also tell you what I haven't done. I wrote those notes on purpose.

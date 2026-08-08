@@ -143,64 +143,32 @@ Spidy is on my portfolio if you want to try it. It'll also tell you what I haven
 
 ## The share-post (separate from the article)
 
-Post this Tuesday or Wednesday, 9–10 AM IST. **Article link goes in the first comment, not the
-post body** — LinkedIn suppresses posts with external links in them.
+Post Tuesday or Wednesday, 9–10 AM IST. **Article link goes in the first comment, not the post
+body** — LinkedIn suppresses posts with external links in them.
+
+Every technical term is glossed in the same sentence it appears in, so a non-technical reader
+can follow every line while a technical reader still sees the right vocabulary: *RAG*,
+*retriever*, *similarity score*, *top-k*, *query rewriting*.
 
 ```
-My portfolio assistant answered "does he know MongoDB?" perfectly.
+I built an assistant for my portfolio that answers questions about my work. It uses RAG, retrieval-augmented generation, meaning it searches my own notes before answering instead of guessing.
 
-Then: "so he knows it?"
+It handled "does he know MongoDB?" perfectly. Then someone asked "so he knows it?" and it fell apart.
 
-No idea what "it" meant.
+Sending the conversation history to the model fixed half of it. The model could see the earlier question. The retriever, the part that actually searches my notes, could not. It only ever gets the sentence you just typed, so it went hunting for documents about "so he knows it?"
 
-The obvious fix is to send the conversation history along. That's only half of it, and the other half took me a while to see:
+The similarity scores, on a 0 to 1 scale: proper question 0.620. Follow-up 0.344. Five random unrelated words 0.186.
 
-The model gets the conversation. The search doesn't.
+So the follow-up landed closer to noise than to the answer, and it still returned five documents, because top-k search always returns k results whether any of them are relevant or not.
 
-It only ever sees the sentence you just typed. So on that follow-up, my system was searching 127 documents for the literal phrase "so he knows it?"
+The fix is query rewriting: turning "so he knows it?" into "does Hemavardhan know MongoDB?" before the search runs.
 
-The numbers:
+The full write-up covers both versions, including why my first container was 1.95 GB in order to ship 190 KB of data.
 
-0.620 — the proper question
-0.344 — the follow-up
-0.186 — five completely unrelated words
-
-It landed closer to noise than to the answer. And it still returned five confident results, because this kind of search has no way to say "I found nothing."
-
-I wrote up both versions of the thing. What RAG actually is under the acronym, why my first container was 1.95 GB to ship 190 KB of data, the bug where it started speaking as me, and the four tries it took to fix the follow-up.
-
-Written for anyone learning this by building instead of watching tutorials.
-
-Link in comments 👇
+Link in comments.
 
 #RAG #AI #LLM #MachineLearning #SoftwareEngineering
 ```
 
-### Shorter variant
-
-```
-My portfolio assistant answered "does he know MongoDB?" perfectly.
-
-Then someone asked "so he knows it?" and it had no idea what "it" meant.
-
-I sent it the conversation history. Still broken. It took me a while to see why:
-
-The model gets the conversation. The search doesn't.
-
-It only ever sees the sentence you just typed — so it was searching 127 documents for the phrase "so he knows it?"
-
-Proper question: 0.620
-Follow-up: 0.344
-Five unrelated words: 0.186
-
-Closer to noise than to the answer.
-
-I wrote up how I found it and the four attempts it took to fix. For anyone learning this by building rather than watching tutorials.
-
-Link in comments 👇
-
-#RAG #AI #LLM #SoftwareEngineering
-```
-
-**First hour matters.** Reply to every comment — LinkedIn weights early engagement heavily, and
-replies count.
+**First hour matters.** Reply to every comment — LinkedIn weights early engagement heavily and
+your own replies count toward it.

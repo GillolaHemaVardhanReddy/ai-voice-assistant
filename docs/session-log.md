@@ -4,6 +4,19 @@ One short entry per session, newest on top. Acharya appends this at session end 
 
 ---
 
+## 2026-08-08 — Session 14: short one — warm-up, one picture, then a device switch 🔌
+
+- **Warm-up 2/3.** `with` + exception ✅✅ both halves, unprompted · Pydantic ✗ **third session wrong on the same half** (said extras are *rejected*; they're **silently dropped**) · two `ask` handlers ✗ **third miss** — *"routes are namespaces like C++"*.
+- **🏆 Fixed the 3-session miss by making him run it.** A 6-line `phonebook` proof, no FastAPI: append `ask`, redefine `ask`, call both. He predicted **v2 / v1** correctly, and the bridge landed — **`@app.post("/v2/ask")` ≡ `ask = app.post("/v2/ask")(ask)`; the decorator IS the `phonebook.append`.** Card written in `python-recall.md`. **Lesson for me: he'd been *told* this twice and it never stuck; 60 seconds of running it did.** Apply the same to Pydantic next time — don't re-explain the bouncer, make him **watch a 422**.
+- **⚠️ I resumed from a stale session log** — read S11 as newest and replayed S12/S13's warm-up questions before pulling. **Fix: `git pull` FIRST, then read `progress.md` + `session-log.md`.** Cost ~10 minutes. Told him plainly.
+- **Scope stated up front, as he asked:** v2 by EOD **will not fit** — P1.7.5/7.6 (tool calling + real email) is a session of its own. Target set: P1.7.1 *proven* → 7.2 → 7.3 → 7.4. He didn't push back.
+- **Atom P1.7.1b opened, nothing typed.** Trap 1 delivered as one picture — *timing a car at 8.2s, fitting a spring, timing 8.0s, never checking the variation with nothing changed*. **Spec given for `learn/phase2/noise_floor.py`** (same question ×3, no history, numbered prints, `python -m`), prediction owed. **Trap 2 deliberately withheld** until the noise floor is on screen — one picture at a time.
+- **Housekeeping:** his stale untracked `learn/noise_floor.py` (71 bytes, wrong path) + my scoreboard edit blocked the `git pull`; cleared. `rm`/`checkout` were run by him, not me (classifier blocked my Bash).
+- **Student state:** fine, no fatigue — he chose to stop for device reasons, mid-atom, and asked for a checkpoint push. **Clean self-management, 4th session running.** Delete-first bug: not sighted, 4th session clean. Still calls me **"kira"**.
+- **🗓️ TOMORROW (Sun 9 Aug) is his solo RAG rebuild-from-scratch commitment.** Unmoved. Offer the checklist-only scaffold before he starts.
+
+---
+
 ## 2026-08-06 — Session 13: spec-first, first run — he wrote it, and it hurt 🖊️😤
 
 - **Warm-up 1/3.** Pydantic **half** (has the bouncer, wrong door: said *both* bodies 422 — extra fields are silently dropped, only the missing one bounces) · index staleness **outcome ✅ mechanism ✗** (missing: `store.py` loads `index.npz`, the `.txt` is never opened at runtime — recipe vs cake) · **NumPy ✗** → taught as a sub-atom: `[1,2,3]*2` vs `array*2`, `*` is `__mul__` **on the type**, then `@` = dot product (`140`), then `vecs @ q` on his real **(127, 1536)** index → 127 scores. *(1536, not 384 — the OpenRouter swap; he may still think 384.)*

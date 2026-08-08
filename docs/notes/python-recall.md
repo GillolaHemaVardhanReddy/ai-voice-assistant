@@ -86,6 +86,41 @@ def answer(question, history=None, k=5):
 
 ---
 
+## Session 14 — a name is a sticky label; the decorator took the object
+
+💡 **Idea:** two `def ask()` in one file — the second **does** clobber the name. FastAPI doesn't care, because `@app.post(...)` ran at **import time** and filed away the **function object**, never the name. *Missed three sessions running (S12, S13, S14) — so this time he ran it.*
+
+💻 **The proof he typed (no FastAPI, plain Python):**
+```python
+phonebook = []
+
+def ask():
+    return "v1"
+
+phonebook.append(ask)      # stores the OBJECT
+
+def ask():
+    return "v2"            # the NAME now points elsewhere
+
+print("name says:", ask())          # v2
+print("phonebook says:", phonebook[0]())   # v1  ← still alive
+```
+He predicted **v2 / v1** correctly. Bridge: `@app.post("/v2/ask")` ≡ `ask = app.post("/v2/ask")(ask)` — **`app.post(...)(...)` IS the `phonebook.append`.**
+
+⚠️ **Gotchas:**
+- Same import-time fact as `bag=[]` in S12: **`def` builds an object once; the name is just a label on it.**
+- The real cost isn't a crash, it's **blindness** — every log line and traceback frame from *either* route says `ask`. Rename `ask_v2` before v2 ships.
+
+<details>
+<summary>❓ self-test</summary>
+
+1. Two `def ask()` in one file, both decorated with different routes. Which one does `ask()` call? Which one does `/ask` serve?
+2. When does `@app.post("/x")` actually run — at import, or on the first request?
+3. Rewrite `@app.post("/x")\ndef f(): ...` without the `@` syntax.
+</details>
+
+---
+
 ## Warm-up scoreboard
 
 | Session | Q1 (last) | Q2 (~3 back) | Q3 (old repo) | Score |
@@ -93,3 +128,4 @@ def answer(question, history=None, k=5):
 | 11 | two kinds of "not 1" ✅ | per-attempt timeout ✗ | `with` / context managers ✗ → taught | 1/3 |
 | 12 | two `ask` handlers ✗ *(had the FastAPI half, missed names-vs-objects)* | Pydantic ✗ **backwards** — said missing fields are dropped; it's **422 at the door** | `with` + exception ✅ **both halves** — S11's park closed | 1.5/3 |
 | 13 | Pydantic **half** — has the bouncer now, posted him at the wrong door (said *both* bodies 422; extra fields are silently dropped, only the missing one bounces) | index staleness — **outcome ✅, mechanism ✗** (didn't have *`store.py` loads `index.npz`, never the `.txt`*) | **NumPy ✗** — had the types (`list`/`array`), not the values → taught as a sub-atom, `@` landed | 1/3 |
+| 14 | two `ask` handlers ✗ **3rd miss** — *"routes are namespaces like C++"*. Fixed with a **6-line phonebook proof he ran himself** (see card below) | Pydantic ✗ **3rd session wrong, same half** — said extras are rejected; **extras are silently dropped**. Stop asking it and make him *watch* a 422 instead | `with` + exception ✅✅ crisp, unprompted | 2/3 |

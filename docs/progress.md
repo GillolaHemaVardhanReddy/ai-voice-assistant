@@ -4,7 +4,7 @@ Tick each atom as you finish (`[ ]` → `[x]`). Acharya resumes from here each s
 
 **New rules (26 Jul 2026):** every phase ends with a **ship-it atom** (README + demo GIF + write-up → portfolio card on hemavardhanreddy.vercel.app). Classical ML/MLOps/vision/n8n live in **future projects P2–P4** — see `docs/project-roadmap.md`.
 
-**Currently at:** 🕷️ **Spidy v1 is LIVE and on the portfolio** — API https://ai-voice-assistant-su60.onrender.com · widget https://hemavardhanreddy.vercel.app. **v2:** `/v2/ask` exists (P1.7.0 ✅) · **P1.7.1 memory is WIRED and runs** — he rewrote `rag_v2.py` from a spec, blank file (6 Aug 2026). ⚠️ **Not yet PROVEN:** the A/B test was badly designed and both arms passed. A decisive test is the first thing next session.
+**Currently at:** 🕷️ **Spidy v1 is LIVE and on the portfolio** — API https://ai-voice-assistant-su60.onrender.com · widget https://hemavardhanreddy.vercel.app. **v2:** `/v2/ask` exists (P1.7.0 ✅) · **P1.7.1 memory is WIRED and runs** — he rewrote `rag_v2.py` from a spec, blank file (6 Aug 2026). ⚠️ **Not yet PROVEN:** the A/B test was badly designed and both arms passed. A decisive test is the first thing next session. **S14 (8 Aug):** warm-up only + Trap 1 explained by picture; **`noise_floor.py` specced but NOT typed** — he switched devices mid-atom.
 
 ### 🖊️ NEW TEACHING RULE — SPEC-FIRST (his call, 5 Aug 2026)
 **His words:** *"all i did till now all rag related just pasted ur code since you give always in chat direct code so i am not satisfied."* He is right — every atom so far ended with Acharya handing him finished lines to type. He learned the ideas but has never faced a blank editor.
@@ -19,9 +19,13 @@ Tick each atom as you finish (`[ ]` → `[x]`). Acharya resumes from here each s
 
 ### ▶️ START NEXT SESSION HERE
 
-💻 Still on the **Mac** (`.env` + `venv` both present, nothing to rebuild). Ubuntu desktop would need: `git pull` · venv · `pip install -r requirements.txt` · **recreate `.env`** (gitignored) · no bare `python`, activate first.
+💻 **Device switch again (S14).** On any machine: `git pull` · venv · `pip install -r requirements.txt` · **recreate `.env`** (gitignored) · no bare `python` on Ubuntu, activate first.
+⚠️ **Leftover on the office Ubuntu box:** an untracked 71-byte `learn/noise_floor.py` (wrong path — the spec says `learn/phase2/noise_floor.py`). Delete it if it gets in the way; it also blocked a `git pull` once.
 
-**🔴 1. FIRST — re-teach the two traps he explicitly asked for depth on.** He stopped the session on *"i didnt understand here what are those 2 traps"*. **Do not patch this with a paragraph** — one picture at a time, his documented recovery pattern.
+**🔴 1. RESUME EXACTLY HERE — `learn/phase2/noise_floor.py`, specced in S14, not a line typed.**
+Spec as given: import `answer` from `service.rag_v2` · ask **`"does he know MongoDB?"` three times**, same question, **no history** · print each numbered · run `python -m learn.phase2.noise_floor` from the repo root. **He owes a prediction first** (identical / slightly different / completely different). This is Trap 1 made physical.
+
+**Trap 1's picture already landed (8 Aug), reuse it:** *timing a car at 8.2s, fitting a new spring, timing 8.0s — and never checking how much two runs vary with nothing changed at all.* **Before you can measure a change you must know your noise floor.** Trap 2 is still untaught — hold it until the noise floor is on screen; one picture at a time is his documented recovery pattern.
 
 The experiment we ran (`"and what about SQL?"`, with vs. without history) produced **near-identical answers**, and I wrongly called it proof-shaped. The two traps:
 - **Trap 1 — temperature is noise.** Two *identical* requests already come back worded differently (he measured this himself, S11). So differing wording between arm A and arm B proves **nothing**. He needs to see this again empirically: run the *same* call twice, no variable changed, watch it differ.

@@ -3,7 +3,7 @@ import numpy as np
 from openai import OpenAI
 from .store import search
 from dotenv import load_dotenv
-import time
+from .timing import timed
 
 load_dotenv()
 
@@ -24,6 +24,7 @@ If the CONTEXT does not contain the answer, say you don't have that information.
 Each context block starts with its source file in square brackets. End your answer with the sources you used, like: [about.txt, boundaries.txt]
 Never guess or invent details. Keep answers to 2-3 sentences."""
 
+@timed
 def answer(question, k = 5):
     try:
         hits = search(question, k)

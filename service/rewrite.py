@@ -1,4 +1,5 @@
 from .rag_v2 import client
+from .timing import timed
 
 SYSTEM = """
 you are a helpful assistant that rewrites questions to be self-contained and clear,
@@ -7,7 +8,7 @@ and you have to only return the rewritten question, no extra text in response.
 if the question is already self-contained, return the question as is.
 note: do not change the meaning of the question user asked or add any extra information, just rewrite it to be self-contained and clear.
 """
-
+@timed
 def rewrite(question, history = None):
     final_question = ""
     if history:

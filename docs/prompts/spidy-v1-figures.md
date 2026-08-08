@@ -244,3 +244,99 @@ their own value labels, so no legend and no axis ticks are needed.
   </g>
 </svg>
 ```
+
+---
+
+## Figure 6 — The retriever going blind (v2 article)
+
+**Caption:** Same 127 chunks, same retriever, two questions one turn apart. Drop the keyword and the best match lands nearer the measured noise floor than the answer.
+
+```html
+<svg viewBox="0 0 900 250" role="img" aria-label="A cosine similarity scale. The keyword question scores 0.620 and finds the right chunk. The pronoun follow-up scores 0.344 on the wrong chunk. The measured noise floor for unrelated words is 0.186.">
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="currentColor">
+    <text x="40" y="34" font-size="12" opacity="0.6">BEST MATCH FOUND, SAME 127 CHUNKS, SAME RETRIEVER</text>
+    <line x1="60" y1="150" x2="840" y2="150" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+    <text x="60" y="176" font-size="11" opacity="0.5">0.0</text>
+    <text x="840" y="176" text-anchor="end" font-size="11" opacity="0.5">0.7</text>
+
+    <g opacity="0.55">
+      <line x1="267" y1="140" x2="267" y2="160" stroke="currentColor" stroke-width="2" stroke-dasharray="3 3"/>
+      <text x="267" y="200" text-anchor="middle" font-size="11.5">0.186</text>
+      <text x="267" y="217" text-anchor="middle" font-size="10.5">noise floor</text>
+      <text x="267" y="232" text-anchor="middle" font-size="10.5">(unrelated words)</text>
+    </g>
+
+    <g>
+      <line x1="443" y1="122" x2="443" y2="160" stroke="currentColor" stroke-width="2.5"/>
+      <circle cx="443" cy="150" r="6" fill="currentColor"/>
+      <text x="443" y="112" text-anchor="middle" font-size="15" font-weight="700">0.344</text>
+      <text x="443" y="92" text-anchor="middle" font-size="11.5" opacity="0.75">&#8220;so he knows it?&#8221;</text>
+      <text x="443" y="76" text-anchor="middle" font-size="10.5" opacity="0.6">&#8212; and it is the WRONG chunk.</text>
+      <text x="443" y="60" text-anchor="middle" font-size="10.5" opacity="0.6">MongoDB is not in the top 5 at all.</text>
+    </g>
+
+    <g>
+      <line x1="751" y1="122" x2="751" y2="160" stroke="var(--fig-accent, #2B4FD4)" stroke-width="2.5"/>
+      <circle cx="751" cy="150" r="7" fill="var(--fig-accent, #2B4FD4)"/>
+      <text x="751" y="112" text-anchor="middle" font-size="16" font-weight="700" fill="var(--fig-accent, #2B4FD4)">0.620</text>
+      <text x="751" y="92" text-anchor="middle" font-size="11.5" fill="var(--fig-accent, #2B4FD4)" opacity="0.85">&#8220;does he know MongoDB?&#8221;</text>
+      <text x="751" y="76" text-anchor="middle" font-size="10.5" fill="var(--fig-accent, #2B4FD4)" opacity="0.7">the right chunk, rank 1</text>
+    </g>
+
+    <text x="40" y="224" font-size="11.5" opacity="0.6">Drop one keyword and the search lands nearer to</text>
+    <text x="40" y="240" font-size="11.5" opacity="0.6">random noise than to the answer.</text>
+  </g>
+</svg>
+```
+
+---
+
+## Figure 7 — What query rewriting changes (v2 article)
+
+**Caption:** The same follow-up down two pipelines. The user types four identical words either way; one extra call before retrieval decides whether the system can answer at all.
+
+```html
+<svg viewBox="0 0 980 300" role="img" aria-label="Two paths for the same follow-up question. Without the rewriter, the search misses and the bot says it lacks context. With the rewriter, the question is rewritten to name MongoDB, the search hits, and the answer is correct.">
+  <defs><marker id="ra" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/></marker></defs>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="currentColor">
+    <text x="20" y="26" font-size="12" opacity="0.6">THE SAME FOLLOW-UP, TWO PIPELINES</text>
+
+    <text x="20" y="70" font-size="11" opacity="0.5">WITHOUT THE REWRITER</text>
+    <rect x="20" y="82" width="200" height="52" rx="3" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
+    <text x="120" y="106" text-anchor="middle" font-size="12.5">&#8220;so he knows it?&#8221;</text>
+    <text x="120" y="123" text-anchor="middle" font-size="10" opacity="0.6">no keyword to embed</text>
+    <rect x="290" y="82" width="200" height="52" rx="3" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
+    <text x="390" y="106" text-anchor="middle" font-size="12.5">search</text>
+    <text x="390" y="123" text-anchor="middle" font-size="10" opacity="0.6">MongoDB chunk absent</text>
+    <rect x="560" y="82" width="400" height="52" rx="3" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
+    <text x="580" y="106" font-size="12">&#8220;I don&#8217;t have enough context to answer</text>
+    <text x="580" y="123" font-size="12">what &#8216;it&#8217; refers to.&#8221;</text>
+    <g stroke="currentColor" stroke-width="1.5" opacity="0.45" color="currentColor">
+      <line x1="222" y1="108" x2="286" y2="108" marker-end="url(#ra)"/>
+      <line x1="492" y1="108" x2="556" y2="108" marker-end="url(#ra)"/>
+    </g>
+
+    <line x1="20" y1="164" x2="960" y2="164" stroke="currentColor" stroke-width="1" opacity="0.18"/>
+
+    <text x="20" y="196" font-size="11" fill="var(--fig-accent, #2B4FD4)" opacity="0.8">WITH THE REWRITER</text>
+    <rect x="20" y="208" width="200" height="52" rx="3" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
+    <text x="120" y="232" text-anchor="middle" font-size="12.5">&#8220;so he knows it?&#8221;</text>
+    <text x="120" y="249" text-anchor="middle" font-size="10" opacity="0.6">identical question</text>
+    <rect x="290" y="208" width="270" height="52" rx="3" fill="var(--fig-accent, #2B4FD4)" fill-opacity="0.1" stroke="var(--fig-accent, #2B4FD4)" stroke-width="2.5"/>
+    <text x="425" y="230" text-anchor="middle" font-size="12" font-weight="700" fill="var(--fig-accent, #2B4FD4)">&#8220;Does Hemavardhan have</text>
+    <text x="425" y="247" text-anchor="middle" font-size="12" font-weight="700" fill="var(--fig-accent, #2B4FD4)">knowledge of MongoDB?&#8221;</text>
+    <rect x="630" y="208" width="150" height="52" rx="3" fill="none" stroke="currentColor" stroke-width="1.5"/>
+    <text x="705" y="232" text-anchor="middle" font-size="12.5">search</text>
+    <text x="705" y="249" text-anchor="middle" font-size="10" opacity="0.6">right chunk, rank 1</text>
+    <rect x="810" y="208" width="150" height="52" rx="3" fill="none" stroke="currentColor" stroke-width="1.5"/>
+    <text x="885" y="232" text-anchor="middle" font-size="12.5">correct answer</text>
+    <text x="885" y="249" text-anchor="middle" font-size="10" opacity="0.6">+ [boundaries.txt]</text>
+    <g stroke="currentColor" stroke-width="1.5" color="currentColor">
+      <line x1="222" y1="234" x2="286" y2="234" marker-end="url(#ra)"/>
+      <line x1="562" y1="234" x2="626" y2="234" marker-end="url(#ra)"/>
+      <line x1="782" y1="234" x2="806" y2="234" marker-end="url(#ra)"/>
+    </g>
+    <text x="20" y="288" font-size="11.5" opacity="0.6">One extra call, before retrieval. The user types the same four words either way.</text>
+  </g>
+</svg>
+```

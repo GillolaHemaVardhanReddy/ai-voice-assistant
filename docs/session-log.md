@@ -4,6 +4,21 @@ One short entry per session, newest on top. Acharya appends this at session end 
 
 ---
 
+## 2026-08-08 — Session 15: v2's retrieval work, finished and PROVEN 🏆
+
+- **No warm-up** — S14 ran one the same morning and he was mid-atom; skipped by agreement, straight to the resume point. Right call, momentum was worth more.
+- **P1.7.1 PROVEN.** `noise_floor.py` (same q ×3: facts + `[boundaries.txt]` identical, only wording moved) → `memory_test.py`, **and he redesigned my spec into something better** — a full two-turn conversation per arm instead of two isolated calls. **Arm A: *"I don't have enough context to answer what 'it' refers to."* Arm B: answers MongoDB.** Content, not wording. Demo-grade.
+- **P1.7.2 ✅** `blind_retriever.py`, no LLM, deterministic: MongoDB chunk **absent** from `"so he knows it?"` (0.344 vs 0.620, floor 0.186) — yet **top-k still returns 5 confident junk chunks; it cannot return 0.** 🕵️ Forensic catch: Arm B's *"ask him directly"* tail was **chunk #1 of that junk** — the seam was visible in his own output.
+- **P1.7.3 ✅** `rewrite.py`, blank file, 4 debug rounds. **The lesson: you cannot fix a structural problem with more adjectives.** Three prompt rewrites lost to one `HISTORY:` / `QUESTION:` heading — the same labelling trick he'd already written in `rag_v2.py:14`.
+- **P1.7.4 ✅ — his design beat mine.** He proposed a `@timed` **decorator** over the real code path instead of my throwaway script. First draft had no inner function (would have rebound `answer` to a `str`); fixed by translating the JS HOF shape he writes daily. **Result: rewrite ~1.8s, `0.0000s` when the guard hits, and `answer` alone swings 2.76→11.24s — so the noise hides the effect and subtraction can never find it. His instrument is the only reason there's a trustworthy number.**
+- **⚠️ TWO errors of mine, both the same one, both owned in-chat:** I quoted "3.85s for the rewrite" off a single pair of timings, then later built a live-API probe that couldn't distinguish whether the rewriter was deployed. **Two-sample subtraction, on the very day we built `noise_floor.py` to prevent it.** Also: my first check-question was undefined (*"did your change work"*) and he called it — *"i have to imagine what worked means here."* Fair. Define the success criterion before asking.
+- **🔴 HE AUDITED THE PLAN AND WAS RIGHT.** *"i dont trust you that you didnt keep all the topics... you also forgot the main objective ai voice assistant."* Both true: my first roadmap artifact showed **query-time RAG only** (no index half, chunking misfiled) and framed one component as the project. Grep proved three foundations had **no atom at all** → **F18 production retrieval engineering (2.10–2.14), F19 tokenization (7.6a), F20 inference optimisation (10.1a–c)**. Audit table now lives in `foundations-map.md`. **Take the lesson: when he says a plan feels incomplete, go grep — don't reassure.**
+- **Shipped:** 4 commits pushed · `docs/prompts/portfolio-v2-integration.md` (v2 memory + v1/v2 toggle + the mobile keyboard bug) · a roadmap artifact, revised twice under his challenges. **v2 verified live on Render** (`/v2/ask` 422s correctly, pronoun follow-up resolves).
+- **Student state: his best session.** Wrote every line, predicted in writing when pushed, caught the *"in production"* contamination himself, proposed the decorator, and challenged me three times on substance — winning all three. Delete-first bug: not sighted, **5th session clean**. Still calls me **"kira"**.
+- **🗓️ TODAY (Sun 9 Aug) is the solo RAG rebuild.** He is deploying the portfolio v2 UI first. Offer the checklist-only scaffold before he starts; do **not** hand him code.
+
+---
+
 ## 2026-08-08 — Session 14: short one — warm-up, one picture, then a device switch 🔌
 
 - **Warm-up 2/3.** `with` + exception ✅✅ both halves, unprompted · Pydantic ✗ **third session wrong on the same half** (said extras are *rejected*; they're **silently dropped**) · two `ask` handlers ✗ **third miss** — *"routes are namespaces like C++"*.

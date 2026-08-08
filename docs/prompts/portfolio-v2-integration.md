@@ -6,9 +6,9 @@ Paste everything below the line into a Claude Code session opened in the **portf
 ---
 
 I have a chat widget ("Spidy") on my portfolio site that talks to a FastAPI backend I wrote.
-I need two things done: **(1) upgrade it to the v2 API with conversation memory**, and
-**(2) fix a mobile layout bug.** Please investigate the existing widget code first and tell me
-your plan before changing anything.
+I need three things done: **(1) add conversation memory via the v2 API**, **(2) make v1 and v2
+user-selectable**, and **(3) fix a mobile layout bug.** Please investigate the existing widget
+code first and tell me your plan before changing anything.
 
 ## Task 1 — move the widget from `/ask` to `/v2/ask` (conversation memory)
 
@@ -70,7 +70,30 @@ Content-Type: application/json
 - If the widget already pings `GET /health` to warm the backend, keep that. If it doesn't, add it
   on first open of the chat — it turns a cold 11s first answer into a warm one.
 
-## Task 2 — mobile bug: the header scrolls off-screen when the keyboard opens
+## Task 2 — make v1 and v2 user-selectable
+
+The widget must support **both** versions, switchable by the visitor. There is already a version
+selector base in the widget — wire it up properly rather than replacing v1:
+
+- **v2 is the default** — always default to the newest version, without the user choosing.
+- **v1** = `POST /ask` with body `{ "question": "..." }` **only**. No `history` key at all; this
+  endpoint's Pydantic model does not accept one. Response is `{ "answer": "..." }` with **no**
+  `version` field.
+- **v2** = `POST /v2/ask` as specified above. Response is `{ "answer": "...", "version": "v2" }`.
+- Keep the two request shapes in **separate functions** — do not build one function with
+  `if version === 'v1'` sprinkled through the body. The endpoints have genuinely different
+  contracts and will diverge further.
+- When the user switches version mid-conversation, **keep the messages on screen** but make it
+  obvious that v1 will not use them. v1 answers each question from scratch no matter what is
+  displayed above it.
+- Label them for a non-technical visitor — something like `v1 · no memory` and
+  `v2 · remembers the conversation`. Recruiters are the audience, not developers.
+
+This toggle is the demo: ask *"does he know MongoDB?"*, then *"so he knows it?"* — on v1 the
+second question fails ("I don't know what 'it' refers to"), on v2 it answers correctly. That
+contrast is the point of the feature, so make it easy to perform.
+
+## Task 3 — mobile bug: the header scrolls off-screen when the keyboard opens
 
 **Symptom:** on a real mobile browser, tapping the chat input opens the on-screen keyboard, and
 the entire chat header goes off the top of the screen. The layout is not usable while typing —
@@ -101,6 +124,6 @@ resize before you change any CSS, and tell me what you find.
 ## How I'd like you to work
 
 - Read the existing widget code and show me your plan before editing.
-- Do the two tasks as **separate commits** so I can revert one without the other.
+- Do the three tasks as **separate commits** so I can revert one without the others.
 - I want to understand the changes, not just receive them — explain the reasoning for the CSS
   fix in particular, since I need to not write this bug again.

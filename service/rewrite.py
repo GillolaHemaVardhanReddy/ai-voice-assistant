@@ -19,6 +19,7 @@ def rewrite(question, history = None):
     final_question = f"HISTORY:\n{final_question}\n\nQUESTION:\n{question}"
     r = client.chat.completions.create(
         model="anthropic/claude-haiku-4.5",
+        temperature=0,
         messages=[
             {"role": "system", "content": SYSTEM},
             {"role": "user", "content": final_question}

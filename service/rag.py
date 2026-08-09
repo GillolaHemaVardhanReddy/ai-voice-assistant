@@ -31,6 +31,7 @@ def answer(question, k = 5):
         context = "\n\n".join(f"[{src}] {chunk}" for score, chunk, src in hits)
         r = client.chat.completions.create(
             model = "anthropic/claude-haiku-4.5",
+            temperature = 0.2,
             stream = True,
             messages=[
                 {"role": "system", "content": SYSTEM},

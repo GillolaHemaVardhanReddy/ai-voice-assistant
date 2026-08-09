@@ -16,6 +16,7 @@ def answer(question, history=None, k=5):
     })
     r = client.chat.completions.create(
         model="anthropic/claude-haiku-4.5",
+        temperature=0.2,
         messages=messages,
     )
     return r.choices[0].message.content

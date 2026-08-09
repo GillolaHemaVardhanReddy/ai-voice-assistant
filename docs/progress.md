@@ -38,7 +38,17 @@ The experiment we ran (`"and what about SQL?"`, with vs. without history) produc
 
 **🎯 His stated goal: v2 complete by EOD next session.** Realistic path: P1.7.1 proof → 7.2 → 7.3 → 7.4 in the morning, tool-calling (7.5/7.6) after. Say up front if 7.5–7.7 won't fit; don't silently drop them.
 
-**🗓️ SUNDAY 9 AUG 2026 — his own commitment: rewrite the ENTIRE RAG project from scratch, solo, blank folder.** *"so its better as making it my own."* Protect this. Everything taught before then should be aimed at making that rebuild possible from understanding, not memory. Offer a checklist-only (no code) scaffold if he wants one.
+**🗓️ ~~SUNDAY 9 AUG 2026 — solo rebuild from scratch~~ → ❌ CANCELLED 9 Aug 2026, his call.** Replaced by a **full v1+v2 mock exam** (18 questions, 6 sections) that found the gaps directly. **His words: *"i dont want to rebuild everything from scratch but i can sit tight and relearn the topics i lack the depth — remove the thought of rebuilding which would cost us more time."*** Agreed without hedging: the exam proved he already owns the RAG core, so a rebuild would be a day of re-typing what he can already derive. **Do not re-offer the rebuild.** Depth-patching the named gaps is strictly better value.
+
+**📊 EXAM RESULT (9 Aug 2026) — 10.5/18, graded on *mechanism* not outcome. See `docs/notes/exam-v1-v2-9aug.md` for the full map.**
+- 🟢 **Strong:** retrieval math (normalize→unit→dot=cosine) · ranking-beats-absolute (**volunteered the S5 centering experiment unprompted — best answer of the exam**) · index-time vs query-time as an axis (S13 gap now *repaired*, outcome AND mechanism) · v2 memory design (call counts incl. the embedding call, mutable-default all 3 parts) · streaming dies inside the server.
+- 🟡 **Shaky:** which guardrail does the work (SYSTEM=always vs `boundaries.txt`=only if retrieved) · blended-chunk failure mode · `git add service/index.npz` in the deploy sequence · softmax is **per-vocabulary-token** and **monotonic** · temperature default is 1.0 · snowball cost (**and v2 sends history TWICE — to `rewrite()` and to `answer()`**).
+- 🔴 **Missing (all in one place — the service shell):** CORS is a *browser* policy + JSON POSTs preflight + curl hides it · Docker shell-vs-exec form and SIGTERM · `max_retries=2` = **3 attempts = 90s** · keep-warm cron · **prefill** (not cache) is why input is cheap.
+- 🩺 **THE HEADLINE DIAGNOSIS — his failure mode is MERGE, not blankness.** 3× he answered with an *adjacent fact from the same lesson*: `{section}:` swallowed both the `[src]` question **and** the chunking question · `--host 0.0.0.0` swallowed the Docker CMD question · "cache" swallowed "prefill". **He is not forgetting — neighbouring facts collapse into one slot and the best-learned one wins.** ⇒ **Re-teaching will NOT fix this. Contrast drills will:** put the two confusable facts side by side and force a choice, then make him RUN it (the S14 `phonebook` method that fixed a 3-session miss in 60 seconds).
+- 🩺 **Second diagnosis — the RAG core is deep, the service shell is thin, and that's Acharya's gap not his.** Every ❌ was service, not AI. RAG got atoms + math sub-atoms + experiments; `main.py`/`Dockerfile` got built fast under ship pressure. Teach the service properly (see P1.5.7 below).
+- 🩺 **Third — concepts strong, codebase geography weak.** Recalled centering from 12 sessions back, couldn't say which prefix lives in which file.
+
+**🔧 SHIPPED THE SAME SESSION (4 fixes, smoke-tested):** `temperature=0.2` in `rag.py` + `rag_v2.py` (was running a citation-bound factual bot at the **1.0 default** — never set) · `temperature=0` in `rewrite.py` (a rewriter should be deterministic) · Dockerfile **exec form** `CMD ["sh","-c","exec uvicorn ..."]` so uvicorn is PID 1 and gets SIGTERM, while `${PORT:-8000}` still expands (verified) · **measured** `embedder.py:19`: OpenRouter returns norms of `1.0004` / `0.9998`, so the division is **not** a no-op — it's a ~0.04% correction. **Keep it as a contract enforcer**, not for the 0.04%.
 
 ### 🔀 DECIDED 9 Aug 2026 — **GO DEEP (B). Finish RAG before adding ears.**
 
@@ -48,7 +58,7 @@ He first chose "wide" (ears → mouth → loop), then reversed it within the hou
 
 | # | Atom | Why it is in this position |
 |---|---|---|
-| **0** | 🗓️ **Solo RAG rebuild** — blank folder, no help | His own commitment for 9 Aug. Consolidates 80 atoms before any new material. Checklist only from Acharya — **no code.** |
+| **0** | ~~🗓️ Solo RAG rebuild~~ | ❌ **CANCELLED 9 Aug, his call** — the exam replaced it and did the job faster. Do not re-offer. |
 | **1** | **2.10 golden question set** | 🔴 **Non-negotiably first.** 20 real questions + the file that should answer each. Without a score, 2.11–2.14 are guesses — and "both arms passed" is exactly how the memory A/B test failed. This atom is what makes every atom after it *provable*. |
 | **2** | **2.11 reranking** | Retrieve 50, cross-encoder reorders to 5. Usually the single biggest quality jump in RAG. First thing 2.10 gets pointed at. |
 | **3** | **2.12 hybrid search (BM25)** | Embeddings blur exact tokens — `ClickHouse`, `Cashfree`, version numbers. Keyword index beside the vectors, scores merged. |

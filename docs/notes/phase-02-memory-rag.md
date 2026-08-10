@@ -599,6 +599,31 @@ Same idea as Express `app.get('/ask', handler)` — hand your function to the fr
 
 ---
 
+## 2.10a — The golden question set *(started, not finished)*
+
+💡 **Idea:** it's a **test suite for `search()`**. You've written Jest tests for Node code and **zero** tests for the retriever — every judgement about it so far has been "read the output, looks right." A test needs an expected value; for retrieval, the expected value is **which file should have answered this**.
+
+💻 The whole thing is data, no code:
+```python
+# rule: a question PASSES only if EVERY file listed appears in the retrieved sources
+questions = [
+    {"question": "does he know kubernetes?", "file": ["skills.txt", "boundaries.txt"]},
+]
+```
+
+🏆 **His improvement on the spec:** I specced *one* filename per question; he wrote a **list**. He's right — Kubernetes needs `skills.txt` (what he does know) *and* `boundaries.txt` (that Kubernetes isn't in it). A single-filename label would score a correct retrieval as a miss.
+
+🔬 **Label at the FILE level, never the chunk level.** Atom 2.13 re-chunks everything — a label pinned to a chunk dies the moment you change the thing you're trying to measure. Filenames survive it.
+
+⚠️ **"Every one" costs you something.** Under the strict rule, each extra file in a label makes the test harder to pass. List a file that wasn't really needed and you invent a failure — then at 2.11 you "fix" a retriever that was already fine. **Label only what's genuinely required; when in doubt, list fewer.**
+
+⚠️ **A test suite that always passes is not a test suite.** A golden set made only of easy keyword questions scores 100% on day one and tells you nothing forever. Include the ones you already know are broken.
+
+❓ **Self-test:** his run of `"does he know kubernetes?"` returned `boundaries.txt ×3 · projects.txt · skills.txt` — in that order. Under his own rule, is this a pass at `k=5`? At `k=3`?
+<details><summary>answer</summary>k=5 → <strong>PASS</strong> (both labelled files present). k=3 → <strong>FAIL</strong>: only <code>boundaries.txt</code> made it, <code>skills.txt</code> scraped in at rank 5. Same retriever, same question, opposite verdicts — which is exactly why the pass rule has to be decided before scoring, not after.</details>
+
+---
+
 ## ⬜ Coming next
 - ⬜ **owed:** follow-up questions — conversation history without re-sending CONTEXT every turn (the 1.6 snowball)
 - **2.9c/2.10** — LLM-based semantic chunking, when the data is messy enough to need it

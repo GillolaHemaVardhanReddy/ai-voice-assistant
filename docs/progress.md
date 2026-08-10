@@ -17,12 +17,26 @@ Tick each atom as you finish (`[ ]` → `[x]`). Acharya resumes from here each s
 
 **Exception:** one-line boilerplate he's never seen (an import, a decorator's exact spelling) — not worth blank-page time.
 
-### ▶️ START NEXT SESSION HERE
+### ▶️ START NEXT SESSION HERE — updated 10 Aug 2026 (S17)
+
+**🔴 RESUME AT: Atom 2.10 — the golden question set. `learn/phase2/golden.py` exists with 2 entries; finish it to 6.**
+
+Done in S17: the picture that landed was **"it's a test suite for `search()` — you've written Jest tests for Node and zero for the retriever"** (the first framing, about baselines and measurement, lost him completely — see the session log). The **pass rule is decided: EVERY file in a question's label must appear in the retrieved sources.** Record it as a comment at the top of `golden.py`.
+
+**The unfinished ask:** grow to 6 entries; one MUST be `"what does he do at his current job?"` (the Session-6 vocabulary-mismatch question that retrieved zero payments chunks) labelled with the file that *should* answer it. Then **he writes down a prediction — how many of the 6 will pass — before anything is scored.** Then 2.10.2 builds the scorer.
+
+⚠️ **He said "i didnt understand well" twice this atom. Go slower than feels necessary: one picture, one action, one check, and no design rationale until after the thing runs.**
+
+⏰ **Time-sensitive, carried from S16:** the LinkedIn article draft still needs the **cover image + Next → Publish**, target **Tue 11 Aug 9–10 AM IST**, share post separately with the article link in the FIRST comment. Re-check the scheduled-posts list is empty.
+
+---
+
+### 📁 (historical, S14–S15 — all completed)
 
 💻 **Device switch again (S14).** On any machine: `git pull` · venv · `pip install -r requirements.txt` · **recreate `.env`** (gitignored) · no bare `python` on Ubuntu, activate first.
 ⚠️ **Leftover on the office Ubuntu box:** an untracked 71-byte `learn/noise_floor.py` (wrong path — the spec says `learn/phase2/noise_floor.py`). Delete it if it gets in the way; it also blocked a `git pull` once.
 
-**🔴 1. RESUME EXACTLY HERE — `learn/phase2/noise_floor.py`, specced in S14, not a line typed.**
+**~~🔴 1. RESUME EXACTLY HERE — `learn/phase2/noise_floor.py`, specced in S14, not a line typed.~~ ✅ DONE S15.**
 Spec as given: import `answer` from `service.rag_v2` · ask **`"does he know MongoDB?"` three times**, same question, **no history** · print each numbered · run `python -m learn.phase2.noise_floor` from the repo root. **He owes a prediction first** (identical / slightly different / completely different). This is Trap 1 made physical.
 
 **Trap 1's picture already landed (8 Aug), reuse it:** *timing a car at 8.2s, fitting a new spring, timing 8.0s — and never checking how much two runs vary with nothing changed at all.* **Before you can measure a change you must know your noise floor.** Trap 2 is still untaught — hold it until the noise floor is on screen; one picture at a time is his documented recovery pattern.
@@ -174,6 +188,13 @@ He first chose "wide" (ears → mouth → loop), then reversed it within the hou
   - Confirmed gaps: **no Java/Spring, no Kubernetes/Docker orchestration, no Kafka, no GraphQL; MongoDB college/side-projects only** (so "MERN dev" in CLAUDE.md overstates his Mongo experience — production DBs are MySQL/ClickHouse/Redis). Languages: English + Telugu strong; Hindi understands, struggles to speak.
   - ⬜ **`story.txt` NOT written — deliberately.** Behavioural material must be in his own words; 6 questions given (why backend · hardest build/debug · proudest · what went wrong · why AI now · a disagreement). **He asked to build it next session, before finishing 2.9.**
 - [x] 2.10a 🐍 ✅ **Decorators landed** (29 Jul 2026, his call — *"I still didn't wrap my head around it"*). `learn/phase2/decorator_play.py`: wrote `loud` manually → `greet = loud(greet)` → then swapped in `@loud` and saw it was identical. **His own summary was correct and complete:** *"since we redefined the same function name to wrapper, the old pointer is gone and it now points to wrapper — but internally the wrapper has the function object we created prev."* Closure proved with `greet.__closure__[0].cell_contents`; JS bridge `const old = greet; greet = () => old().toUpperCase()`. Decorator **factory** taught (`@app.get("/ask")` ≡ `ask = app.get("/ask")(ask)`) — his guess "maybe a decorator takes multiple inputs" corrected: `@` always takes exactly one thing. **Told him honestly FastAPI would never force him to write one**, which is why it needed doing deliberately.
+- [ ] **2.10 golden question set** *(started 10 Aug, S17 — 2 of 6 entries written)*. ⚠️ **Numbering clash: the `2.10a` above is the decorators atom. The golden set is `2.10` with steps `2.10.1` (write the set) and `2.10.2` (score it).**
+  - ✅ **The framing that worked: a test suite for `search()`.** He's written Jest tests for Node and zero tests for the retriever — every judgement so far was "read the output, looks right." The expected value for a retrieval test is **which file should have answered this**.
+  - ✅ **His improvement on the spec:** I said one filename per question, he wrote a **list** — correct, since Kubernetes needs `skills.txt` *and* `boundaries.txt`, and a single-file label would score a correct retrieval as a miss.
+  - ✅ **Pass rule DECIDED (his call): "every one"** — a question passes only if *every* file in its label appears in the retrieved sources. Cost named: each extra file listed makes the test harder, so label only what's genuinely required or you'll invent failures and "fix" a retriever that was fine.
+  - 🔬 **Label at file level, not chunk level** — 2.13 re-chunks everything, and a label pinned to a chunk dies the moment you change the thing you're measuring.
+  - 📏 **Live proof the rule matters:** `"does he know kubernetes?"` → `boundaries.txt ×3 · projects.txt · skills.txt`. Both labelled files present at k=5 ⇒ **pass**; at k=3 only `boundaries.txt` ⇒ **fail**. Same retriever, opposite verdicts.
+  - ⬜ **OWED:** grow to 6 entries incl. `"what does he do at his current job?"` · the rule as a comment in the file · **his written prediction of how many pass** before scoring · then 2.10.2 the scorer.
 - ⚠️ Housekeeping owed (1 min): `cosine.py` has no `if __name__ == "__main__":` guard, so its `puppy vs retriever` demo prints on every import — flagged, Atom 2.0c callback, not yet fixed.
 
 ## P1.5 — Recruiter Bot service (FastAPI) 🛠️

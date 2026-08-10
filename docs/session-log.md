@@ -4,6 +4,18 @@ One short entry per session, newest on top. Acharya appends this at session end 
 
 ---
 
+## 2026-08-10 — Session 17: short session — warm-up, then the golden set half-built 🧪
+
+- **Warm-up 2/3 + the contrast drill repaired.** ✅ temperature (*"rewrite needs the same words even if we run 10 times, no creativity"* — right, sharpened to **a rewriter is infrastructure, an answerer is prose**). ❌ generators — he said *"type casting"*; the property is **one-shot**, `list(g)` twice → `[0,1,4]` then `[]`. Third repeat of this gap (P1.6.3, P1.6.4-redo) — next time make him RUN it, not read it.
+- **🩺 The contrast drill worked, and it needed rewriting first.** My drill bundled two questions and he called it: *"its soo general and vague."* Fair. Rewritten as a **forced binary** (does `{section}:` change *chunking* or *which chunk is found*?) plus one command to settle it — he ran it, saw the chunk come back **with no heading on it**, and picked B himself. **The merge fact is now split by line:** `text.split("\n\n")` = chunking · `f"{section}: {block}"` = retrieval. **Forced choice + run it > explain it again.**
+- **Atom 2.10 (golden set) started, 2 of 6 entries.** `learn/phase2/golden.py` exists. 🏆 **He improved my spec** — I said one filename per question, he wrote a **list**, correctly (Kubernetes needs `skills.txt` AND `boundaries.txt`). **Pass rule decided by him: "every one."** Proof it matters, from his own run: both files present at k=5 ⇒ pass, at k=3 only `boundaries.txt` ⇒ fail.
+- **⚠️ TEACHING FAILURE, mine, twice in one atom.** First spec opened with baselines + a design rationale + a trap warning + 3 question kinds → *"i didnt understand a bit of what you said."* Recovery that worked (4th time now): **throw it away, ONE picture — "it's a test suite for `search()`, you've written Jest tests for Node and zero for the retriever" — one action, one check.** Then I did it AGAIN with unglossed jargon (*"any or all?"* → *"what any and what all?"*). **He stopped the session on the second one.** Both times the fix was the same and it always is.
+- **⏰ Carried, time-sensitive:** the LinkedIn article draft still needs cover + Publish, target **Tue 11 Aug 9–10 AM IST**; re-check the scheduled-posts list is empty.
+- **Student state:** low bandwidth, not disengaged — he ran every command, made the one real design call of the atom, and stopped cleanly rather than nodding along. Delete-first bug: not sighted, **7th session clean**. Still calls me **"kira"**.
+- **▶️ RESUME AT: `golden.py` → 6 entries** (one must be `"what does he do at his current job?"`), the rule as a comment, **his written prediction of how many pass**, then 2.10.2 the scorer. **Go slower than feels necessary.**
+
+---
+
 ## 2026-08-09 — Session 16: he sat an exam instead of rebuilding, and it found the real gap 📝
 
 - **He cancelled the solo rebuild himself and asked for a mock exam instead** — *"so that you can evaluate where i lack and what i am strong at."* Better call than the rebuild: an exam aims the work, a rebuild would have been a day re-typing the half he already owns. **18 questions, 6 sections, 10.5/18 graded on mechanism not outcome.** Full map + warm-up bank: `docs/notes/exam-v1-v2-9aug.md`. **Do not re-offer the rebuild.**

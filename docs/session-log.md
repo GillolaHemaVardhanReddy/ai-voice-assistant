@@ -4,6 +4,19 @@ One short entry per session, newest on top. Acharya appends this at session end 
 
 ---
 
+## 2026-08-11 — Session 18: the golden set's answer key, verified instead of remembered 🔑
+
+- **Warm-up 1/1 ✅ — the generator gap finally closed, 4th attempt.** He predicted the second `list(g)` as `[]` **with the mechanism**: *"first prints and moves to the end, and end is empty."* Not "type casting" this time. Word given: **exhausted**. What worked: make him predict a 3-line run, not read an explanation.
+- **⚠️ I lost him again, same failure, and he named it: *"i still dont understand the bigger picture... i don't know why grep."*** I went into `grep -il` mechanics before he knew what a golden set was FOR. **Recovery (5th time, always the same fix): throw it all away, ONE picture — `golden.py` is a Jest suite for `search()`, question = input, file list = expected value, score = a number instead of a feeling; and a wrong expected value is the Jest typo that fails good code forever.** He was fine from that sentence onward. **Give the picture BEFORE the command. Every time.**
+- **Atom 2.10 questions ✅ + `"match"` key = his design.** 5 rows, all 6 notes files covered (he added `preferences.txt` himself). Then he spotted the real distinction unprompted: *"some questions require all of them and some require any one"* — notice period is stored twice (either file answers) vs Kubernetes needing two halves. → per-row `"match": "all" | "any"`.
+- **🔑 THE ATOM'S REAL LESSON — the answer key was guessed, and two rows were wrong.** `skills.txt` was demanded for Kubernetes and **never contains the word** ⇒ a row rigged to fail forever while the retriever was innocent. Salary row was missing `faq.txt`. Both found by `grep -il "<term>" service/notes/*.txt`. **And he correctly rejected a grep hit** — `boundaries.txt` matches "side projects" but does not answer *"what projects did he do?"*. Rule he now owns: **grep tells you which files contain a WORD; only you decide which contain the ANSWER.**
+- **Good question worth keeping:** *"at a million docs do we read every file to build this?"* → no: **pooling** (judge only the top-k the retrievers return, per query) and **reverse generation** (doc → LLM writes the question ⇒ key correct by construction); golden sets stay 50–200 questions from real logs. Feeds F18.
+- **Forced-binary drills worked 3× in a row** (grep hit or not · `all` vs `any` on row 3 · A/B on boundaries.txt). Keep using them — S16's merge failure mode responds to forced choice, not re-explanation.
+- **Student state:** low bandwidth, stopped cleanly at the 1-hour mark to switch machines; said *"write the comment for me"* — I wrote the header but deliberately left the prediction line blank, it has to be his number. Delete-first bug: not sighted, **8th session clean**. Still calls me **"kira"**.
+- **▶️ RESUME AT:** he fills `golden.py:10` — `PREDICTION __ / 5 + why`, **before the scorer exists** — then **2.10.2 the scorer**. ⚠️ All 5 rows are `"any"`, so the `"all"` branch ships untested — raise it there. 📰 **Article publishes TODAY 9–10 AM IST.**
+
+---
+
 ## 2026-08-10 — Session 17: short session — warm-up, then the golden set half-built 🧪
 
 - **Warm-up 2/3 + the contrast drill repaired.** ✅ temperature (*"rewrite needs the same words even if we run 10 times, no creativity"* — right, sharpened to **a rewriter is infrastructure, an answerer is prose**). ❌ generators — he said *"type casting"*; the property is **one-shot**, `list(g)` twice → `[0,1,4]` then `[]`. Third repeat of this gap (P1.6.3, P1.6.4-redo) — next time make him RUN it, not read it.

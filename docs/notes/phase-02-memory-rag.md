@@ -624,6 +624,45 @@ questions = [
 
 ---
 
+## 2.10.2 — the scorer, and the bug the data could never find 🐛
+
+> ⚠️ **Correction to the card above:** that example labelled Kubernetes as `["skills.txt", "boundaries.txt"]`. Verified later with `grep -il kubernetes service/notes/*.txt` — **`skills.txt` never contains the word.** The real key is `["boundaries.txt"]`. A guessed answer key is a test rigged to fail forever.
+
+💡 **Idea:** the golden set is data; the scorer is the runner. `learn/phase2/score.py` walks every row, calls `search(q, k=5)`, keeps **only the filenames**, and judges with the row's own `"match"` key. Output is a verdict per row **plus what actually came back** — the grade tells you *that* it broke, the payload tells you *where*.
+
+💻 The two branches are Python built-ins — `.some()` and `.every()` with different spelling:
+```python
+check = [f in results for f in q["file"]]      # walk EXPECTED, ask "did it come back?"
+ok = all(check) if q["match"] == "all" else any(check)
+```
+
+🐛 **THE HEADLINE — he wrote the two lists in the wrong slots, and nothing could detect it.**
+`check = [f in q["file"] for f in results]` walks **results** instead. That asks *"is everything that came back expected?"* — a **purity** check. The correct line asks *"did every expected file come back?"* — a **coverage** check.
+
+**Why five rows sailed past it:** for `"any"` the two directions are *logically identical* — both just mean "the lists overlap". The direction only matters for `"all"`, and every row was `"any"`. ⇒ **Untested branches aren't neutral. They're bugs you haven't met yet.**
+
+**The row that exposed it,** built by him after rejecting a non-discriminating one:
+```
+"what databases has he worked with?"  →  ["skills.txt", "boundaries.txt"], match "all"
+got:  ['boundaries.txt', 'skills.txt', 'skills.txt', 'about.txt', 'skills.txt']
+```
+Both expected files present ⇒ honest verdict **PASS**. His line said **FAIL**, because `about.txt` tagged along. **One extra file, and a perfect retrieval is graded as a miss.** Same disease as a bad answer key — last time in the *data*, this time in the *runner*.
+
+🔬 **Trap 2, met again unprompted.** He first flipped the *notice period* row to `"all"` and it passed. But its results were `[faq, preferences, faq, faq, faq]` — **every returned file was already expected**, so a correct scorer and a broken one both say PASS. **No discriminating power** — the exact shape of the Session-15 memory A/B failure. He needed a row where a *non-expected* file comes back.
+
+⚠️ **`python file.py` vs `python -m package.module`.** The launch decides `sys.path`: running the file puts *its own folder* on the path (`service` invisible); `-m` from the repo root puts **the repo root** on it (both `learn/` and `service/` visible). Second appearance of the P1.5.2a lesson.
+
+⚠️ **`np.str_` again — a value's type comes from what made it.** `sources` lives in numpy, so `sources[i]` is `np.str_`, and `print()` hid it all through Phase 2. Fixed with `str(...)`. **Unlike `np.float32`, this one is a `str` subclass**, so the `in` checks genuinely worked — cosmetic, not fatal. Same smell, different severity.
+
+🐍 **Syntax patched:** `any(f in got for f in wanted)` has the word `in` doing **two different jobs** — membership (`got.includes(f)`) and iteration (the loop). No `&&` because they don't combine: the loop is a **factory** producing one boolean per pass, and `any`/`all` read the stream. JS: `wanted.map(f => got.includes(f))` then `.some()` / `.every()`.
+
+🏆 **Prediction 5/5 → scored 5/5.** Row 3 is the Session-6 vocabulary-mismatch question (`"what does he do at his current job?"`) that once retrieved **zero** payments chunks — now `about.txt ×5`. The 2.8a fix, re-proven by a script instead of an eyeball, thirteen sessions later.
+
+❓ **Self-test:** a row is `{"file": ["a.txt"], "match": "any"}`. You flip it to `"all"`. The verdict changes. What does that prove?
+<details><summary>answer</summary>The <strong>runner</strong> is broken, not the retriever. With exactly one file in the label, "at least one of one" and "every one of one" are the same sentence — the two branches <em>must</em> agree. Any disagreement is a bug in the scorer, and no interpretation of the data can rescue it.</details>
+
+---
+
 ## ⬜ Coming next
 - ⬜ **owed:** follow-up questions — conversation history without re-sending CONTEXT every turn (the 1.6 snowball)
 - **2.9c/2.10** — LLM-based semantic chunking, when the data is messy enough to need it

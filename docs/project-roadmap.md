@@ -10,6 +10,37 @@ The portfolio path (hemavardhanreddy.vercel.app): **4 projects**, each build-whi
 
 ---
 
+## 🏛️ DECIDED 13 Aug 2026 (S20, his call) — **the voice agent splits off as its own project**
+
+**His words:** *"the voice agent will be my new project itself but at one point i want to give my rag the voice and ears too."*
+
+- **Spidy stays the RAG product** — text today, and later grows ears + a mouth so a recruiter can *talk* to it.
+- **The real-time voice loop becomes its own repo/project** — Phases 3–5 are built there, properly, not bolted onto Spidy.
+- **The seam:** the voice project exposes reusable `listen()` / `say()` modules; **Spidy becomes their first consumer** — exactly the API-first shape Phase 9 already commits to. No throwaway work either way.
+- ⇒ Phases 3–5 stop being "a detour from Spidy" and become a product in their own right. Update the syllabus framing when we arrive at 3.0.
+
+## 💰 DECIDED 13 Aug 2026 (S20) — **local models are for LEARNING, so they run on his Mac. Hosting stays ₹0.**
+
+**His answers:** goal for local models = *"just i want to see how they work"* · budget = **₹800/month total, OpenRouter included.**
+
+**The rule that keeps it free: no model weights ever enter the production container.** That is the whole reason 63 MB fits Render's 512 MB.
+
+| | where it runs | cost |
+|---|---|---|
+| React widget | Vercel | ₹0 |
+| FastAPI + `index.npz` | Render free (63 MB RSS, zero models) | ₹0 |
+| Embeddings + LLM | OpenRouter | **~₹45/mo** at current traffic |
+| **Whisper · Piper · Ollama** | **his MacBook**, exposed on demand via **Cloudflare Tunnel** | ₹0 |
+
+- **Three weight classes, not one problem** — sorting them is what made ₹0 possible. **Reranker** ~90 MB → **~25 MB quantized ONNX** = the *only* candidate that could ever ship (the `fastembed`/`onnxruntime` road he already walked at P1.6, minus the sympy bloat he diagnosed). **Whisper** 150 MB–1.5 GB and **local LLM** 2–8 GB = never on a free tier; Mac only. **Piper** ~60 MB — revisit at Phase 4.
+- **If a local model ever earns production, it crosses as a quantized ONNX file, not as PyTorch.**
+- ⚠️ **The risk is a runaway, not the monthly bill.** A hammered public endpoint turns ₹45 into ₹4,500. Defenses already built (CORS, per-IP rate limit, spend cap) — **keep the cap set below ₹800.**
+- **Rejected, and why:** Oracle Always Free (24 GB, but ARM + capacity roulette) · Hetzner ~€4/mo · Fly.io ~$6–11/mo · Cloud Run pay-per-request. All real options, none needed *while the goal is learning*. Revisit only if a local model must be always-on.
+- **Image techniques still unused when we need them:** multi-stage build · ONNX int8 quantization · weights on a volume · distroless base. ⚠️ Verify Render/OpenRouter pricing before relying on any figure above.
+- 🗺️ **Drawn:** `docs/pipeline-map.html` — the pipeline as data flow + build-vs-run + the ₹0 plan.
+
+---
+
 ## P1 — AI Voice Assistant *(CURRENT — in progress)*
 **The product:** API-first voice assistant (STT → LLM → TTS), sold cheap. **Business use:** the sellable product itself.
 

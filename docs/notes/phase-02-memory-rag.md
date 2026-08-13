@@ -663,6 +663,39 @@ Both expected files present ⇒ honest verdict **PASS**. His line said **FAIL**,
 
 ---
 
+## Atom 2.11.0 — reranking (scoped S20, not built)
+
+💡 **Idea:** cosine search is a **bi-encoder** — it embeds the question and each chunk **separately**, so the chunk never actually reads the question. Fast (one matmul over all 132), and slightly dumb. A **cross-encoder** takes `(question, chunk)` as **one input** and returns a single relevance number. Far more accurate, far too slow for the whole store. So:
+
+```
+search(q, k=20)   →  20 candidates      (cheap, one matmul)
+rerank(q, those)  →  20 relevance scores (a small local model)
+sort → keep 3     →  the LLM
+```
+
+⚠️ **Retrieve WIDE, not the same k.** Reranking the top 5 can only re-sort the 5 cosine already liked. **The gain comes from rank 9 and rank 14** — chunks cosine ranked too low to send, that the cross-encoder promotes into the top 3. Wide net, strict filter. *(MERN: an indexed Mongo query is `search` — fast, dumb, gets a candidate set. The `.filter()` you run in Node over those docs is the reranker — slow, smart, and you'd never run it over the whole collection.)*
+
+⚠️ **It is NOT an LLM** — his read, corrected. `cross-encoder/ms-marco-MiniLM-L-6-v2` is ~22M params, same MiniLM family as the embedder. **No generation, no tokens, no API.**
+
+| | embedder (bi-encoder) | reranker (cross-encoder) | the brain (LLM) |
+|---|---|---|---|
+| input | one text | question **+** chunk together | full prompt |
+| output | 384-dim vector | one score | generated text |
+| can build an index? | ✅ | ❌ *(this is why it can't replace search)* | ❌ |
+| cost | free, local | free, local | ₹ per token |
+| runs over | all 132 chunks | ~20 candidates | 1 call |
+
+🐳 **HIS CATCH, and he was right — *"did you forget the docker free limit?"*** Verified: `requirements.txt` = **fastapi · uvicorn · pydantic · slowapi · openai · dotenv · numpy**. **No torch. No sentence-transformers.** `service/embedder.py` calls OpenRouter's `text-embedding-3-small` over HTTP and `index.npz` is 972 KB of precomputed vectors — **that is why Spidy fits Render free and why the cold start isn't 30 seconds.** `pip install sentence-transformers` drags **torch** into a **512 MB** instance ⇒ **OOM, not slowness.** ⇒ **"free and local" is a property of the machine, not the model.** Free on his Mac ≠ free on the box that ships.
+
+📌 **Decided (option A): measure first, ship later.** `learn/` is in `.dockerignore`, so cross-encoder experiments never touch the image. Get the number, *then* choose a door: **B** hosted rerank API (no weights, +200–400ms) · **C** LLM-as-reranker (reuses `openai`, costs tokens) · **D** MMR/keyword heuristics (pure numpy, free).
+
+🎯 **And the reason the scorer comes first:** **reranking changes ORDER, not MEMBERSHIP.** His line 11 — `[f in results for f in q["file"]]` — is **set membership**: position 1 and position 5 are the same to it. **A perfect reranker would still print 6/6.** ⇒ **a saturated benchmark measures nothing**, and every ship-door above is unfalsifiable until `top1` exists. Same family as 2.10's lesson: there an *untested branch* hid a bug; here a *maxed-out score* hides a gain.
+
+❓ **Self-test:** you swap in a flawless reranker and `score.py` prints `6/6`, exactly as before. Name the two different things that could mean, and the one change to the scorer that tells them apart.
+<details><summary>answer</summary>Either (a) the reranker did nothing, or (b) it moved the right chunks from rank 4 to rank 1 and the metric can't see it. <code>f in results</code> is membership-only, so both look identical. The fix: record each expected file's <strong>1-based position</strong> and add a strict <code>top1</code> tally — then (b) shows as <code>top1</code> rising while <code>score</code> stays 6/6. Dropping to <code>k=3</code> adds headroom on top.</details>
+
+---
+
 ## ⬜ Coming next
 - ⬜ **owed:** follow-up questions — conversation history without re-sending CONTEXT every turn (the 1.6 snowball)
 - **2.9c/2.10** — LLM-based semantic chunking, when the data is messy enough to need it

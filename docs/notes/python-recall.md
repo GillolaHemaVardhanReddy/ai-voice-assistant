@@ -14,7 +14,7 @@ Warm-up question 3 each session comes from the sweep list below.
 | `week1` basics (types, loops, f-strings) | `week1/` | ⬜ not swept |
 | OOP — class / `__init__` / `self` | `week2/4.class_objects`, `5.inheritance`, `6.oops` | ✅ swept (Atom 2.0a–e, Session 3) |
 | Iterators & generators | `week2/7.itergendecorator` | ✅ swept (Session 10 — `list(g)` one-shot) |
-| Decorators (incl. factories) | `week2/7.itergendecorator` | ✅ swept (Atom 2.10a S8, factory recalled clean S9) |
+| Decorators (incl. factories) | `week2/7.itergendecorator` | 🔻 **swept 3× — S8 taught, S9 clean, S20 BLANK.** Re-cued S20 via `cors()`; he then wrote a 3-layer factory correct first try from a blank file. **Shape retained, name→shape path decays. Cue, never re-teach.** Re-ask ~S23. |
 | **Context managers — `with`** | `week2/7.itergendecorator` (`@open_file`) | ✅ **swept (S11 the guarantee; S12 recalled clean — closes AND still raises).** `__enter__`/`__exit__` still untaught — teach only when we *write* one. |
 | **Default arguments / mutability** | (new — not from the old repo) | ✅ swept S12 — `bag=[]` leaks across calls; see the card below |
 | NumPy / Pandas | `week3/1.numpypandas`, repo `datascience` | 🟡 **half swept (S13)** — `list*2` vs `array*2`, `*` is `__mul__` on the type, `@` = dot product (`140`), `vecs @ q` → 127 scores. **Pandas untouched**, and NumPy indexing/slicing/`argsort`/broadcasting-with-shapes still owed. |
@@ -128,4 +128,36 @@ He predicted **v2 / v1** correctly. Bridge: `@app.post("/v2/ask")` ≡ `ask = ap
 | 11 | two kinds of "not 1" ✅ | per-attempt timeout ✗ | `with` / context managers ✗ → taught | 1/3 |
 | 12 | two `ask` handlers ✗ *(had the FastAPI half, missed names-vs-objects)* | Pydantic ✗ **backwards** — said missing fields are dropped; it's **422 at the door** | `with` + exception ✅ **both halves** — S11's park closed | 1.5/3 |
 | 13 | Pydantic **half** — has the bouncer now, posted him at the wrong door (said *both* bodies 422; extra fields are silently dropped, only the missing one bounces) | index staleness — **outcome ✅, mechanism ✗** (didn't have *`store.py` loads `index.npz`, never the `.txt`*) | **NumPy ✗** — had the types (`list`/`array`), not the values → taught as a sub-atom, `@` landed | 1/3 |
+| 20 | swapped lists / why `"any"` hid it ✅ crisp — *"any means one is enough, so reversing makes no difference"* | `blind_retriever.py` 🟡 **half** — gave the **memory test's** evidence (*"I don't have enough context"*) for a **retriever**-layer question (the missing chunk, **0.344 vs 0.620**). Right experiment family, wrong layer | **decorator factories ✗ BLANK — 3rd exposure**, clean in S8 *and* S9. Cued with `cors()`, then wrote it correct first try ⇒ shape retained, access path decayed | 2/3 |
 | 14 | two `ask` handlers ✗ **3rd miss** — *"routes are namespaces like C++"*. Fixed with a **6-line phonebook proof he ran himself** (see card below) | Pydantic ✗ **3rd session wrong, same half** — said extras are rejected; **extras are silently dropped**. Stop asking it and make him *watch* a 422 instead | `with` + exception ✅✅ crisp, unprompted | 2/3 |
+
+---
+
+## Session 20 — `@repeat(3)` needs three layers, and `cors()` is why
+
+💡 **Idea:** a decorator that **takes an argument** isn't a decorator — it's a **factory that builds one**. He already knows the shape from Express: `app.use(cors({origin:'*'}))` — `cors` isn't the middleware, `cors(options)` *returns* the middleware.
+
+**Count the call brackets, that's the layer count:**
+
+| written | what Python actually runs | layers |
+|---|---|---|
+| `@time_it` | `f = time_it(f)` | **2** — takes fn, returns wrapper |
+| `@repeat(3)` | `f = repeat(3)(f)` | **3** — takes arg → takes fn → takes call args |
+
+💻 **His code, blank file, correct on the first try** (`learn/phase2/deco_recall.py`):
+```python
+def repeat(n):                       # 1. catches the argument
+    def decorator(func):             # 2. catches the function
+        def wrapper(*args, **kwargs):# 3. catches the call
+            for _ in range(n):
+                func(*args, **kwargs)
+        return wrapper
+    return decorator
+```
+
+⚠️ **Nothing printed — he'd defined it but never called it.** The useful accident: **decorating is rewiring, not running.** At import, `repeat(3)` runs *immediately* and evaluates to the `decorator` object with `n=3` closed over; then `say_hello = decorator(say_hello)` → `say_hello` **is** `wrapper`. Zero output until something calls it.
+
+⚠️ **The bug still sitting in his file (open it and fix):** `wrapper` calls `func(...)` and **throws the result away**, and ends without a `return` ⇒ Python hands back `None`. So `@repeat(3)` on a function that *computes* something makes it run correctly and report nothing. **No crash, no warning, no traceback** — same species as the S6 `rag.py` bug (user message appended *after* the API call). Fix: capture the result each pass, `return` it after the loop.
+
+❓ **Self-test:** `@repeat(3)` decorates `add(a, b)` which returns `a+b`. The body prints on every call. You see three prints and `got: None`. Which of the three layers is broken, and how do you know it isn't layer 3's `*args`?
+<details><summary>answer</summary><strong>Layer 3, the wrapper's return</strong> — not its arguments. The three prints prove <code>*args, **kwargs</code> delivered <code>a</code> and <code>b</code> correctly three times, because <code>add</code> couldn't have run at all without them. The values came back and the wrapper discarded them. Layers 1 and 2 are fine too — <code>n=3</code> was honoured.</details>

@@ -4,6 +4,19 @@ One short entry per session, newest on top. Acharya appends this at session end 
 
 ---
 
+## 2026-08-14 — Session 21: I re-taught a finished atom from a stale clone 🔁
+
+- **❌ MY FAILURE, and it cost him a session.** I read `progress.md` + `session-log.md` from a clone that was **4 commits behind** and never fetched — so S19 and S20 didn't exist as far as I knew, and I re-taught **2.10** from the S18 marker. He caught it himself: *"i think i did double time this exercise can you get pull and see."* **Standing fix now in `.claude/CLAUDE.md`: `git fetch` before reading any doc, every session. He works across two machines; local docs are never the source of truth.**
+- **Salvaged 3 genuinely new things, merged onto his committed files** (his `score.py` kept — his code, his history): 🛡️ **on-disk guard** in `score.py` — he typed `"project.txt"` (no `s`) into a key, which would fail silently forever while the retriever took the blame. ⚠️ **`k >= N` for `"all"` rows**, now in `golden.py`'s header — at k=1 the 2-file row was *arithmetically* unpassable; he diagnosed that himself (*"so issue is in test case itself"*). 🟢 **New vocabulary-mismatch row `"can he start immediately?"`** — the word *immediately* is in **none** of the 6 notes (grepped), `faq.txt` still ranks **1**, passes at k=1. Meaning over spelling, measured. **`score is: 7/7` at k=5.**
+- **🔁 The pattern he now owns — 4× the culprit was the TEST, not the retriever**: word-absent key (S18) · word-present-answer-absent key (S21) · `"all"` at k=1 (S21) · the swapped-lists scorer bug (S19). **His retriever has not been wrong once.**
+- **Warm-up 2.5/3.** ✅ rewrite-before-search with the mechanism (*"correct keywords but not a self-contained question"*) · ✅ decorator wrapper runs at **call** time · Q1 he refused as vague — **and he was right, it was.** Reframed and he answered it fine. Good calibration, not avoidance.
+- **⚠️ Repeat of the merge failure mode:** asked *"what did grep verify — that the key is right, or that `search()` returns those files?"* he chose the wrong one twice. **Fixed by running two commands side by side** (grep vs `search()`), and he named it himself: *"1's came from file and 2's came from similarity match."* Explanation failed, running it worked. **Same lesson as S16/S17 — forced choice + run it.**
+- **📰 Article: shipped 11 Aug ~10 AM, low reach, closed as an item** (from the S19 log — I had it open as an unknown all session because of the stale clone).
+- **Student state:** low bandwidth, on voice/remote for part of it, and **pushed back correctly twice** — once on a vague warm-up question, once on hand-keying golden rows (*"too much manual work… if its millions of docs this is useless"*). Both were right. Delete-first bug: not sighted, **10th session clean.** Still calls me **"kira"**.
+- **▶️ RESUME AT: 2.10.3, the rank-aware scorer — unchanged from S20.** He owes `top1 = ?/6` **before** writing it, plus the 30-second `deco_recall.py` return fix. ⚠️ **Fetch first.**
+
+---
+
 ## 2026-08-13 — Session 20 (short): reranking scoped, and he defended the deploy 🐳
 
 - **Warm-up 2 / 3.** Q1 (the swapped lists) ✅ in one sentence — *"any means one is enough, so reversing makes no difference"*. Q2 🟡 **half** — he gave the **memory test's** evidence (*"I don't have enough context"*, answer layer) for a question about **`blind_retriever.py`** (retriever layer: MongoDB chunk **absent**, top score **0.344 vs 0.620**). Worth keeping apart — it's his own rule, *bad answer → check the retriever first*. Q3 ❌ blank.

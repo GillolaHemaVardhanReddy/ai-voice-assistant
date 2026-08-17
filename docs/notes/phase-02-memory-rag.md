@@ -663,6 +663,27 @@ Both expected files present ⇒ honest verdict **PASS**. His line said **FAIL**,
 
 ---
 
+## 2.10.2b — two guards the golden set earned the hard way 🛡️
+
+💡 **Idea:** two failures that look identical on screen (`FAIL`) and have nothing to do with the retriever.
+
+🛡️ **Guard 1 — a filename that doesn't exist never matches, silently.** He typed `"project.txt"` (no `s`) into a key. No error, no warning; that row would just fail every run forever while the retriever took the blame. `score.py` now checks every key filename against `service/notes/` on disk and raises before scoring anything.
+
+```python
+on_disk = {p.name for p in NOTES.glob("*.txt")}   # bare names, not paths
+```
+
+⚠️ **Guard 2 — an `"all"` row listing N files needs `k >= N`.** At `k=1` exactly one chunk comes back, so **one** file is the maximum possible; a 2-file `"all"` row is arithmetically unpassable. Measured: at k=1 the frontend row failed while `search()` had done nothing wrong. **Check `k >= N` before you ever blame the ranking.**
+
+🟢 **The measured win — meaning beat spelling, on a real recruiter question.** New row `"can he start immediately?"` — the word *immediately* appears in **none** of the 6 notes files (grepped) — and `faq.txt` (*"notice period: 2 months"*) comes back at **rank 1**, passing even at `k=1`. Keyword search returns nothing here. This is 2.5's `cat/kitten 0.788` cashing out as a passing test.
+
+🔁 **The pattern across S18–S21: three times the culprit was the TEST, not the code.** (1) `skills.txt` demanded for Kubernetes — word not in the file. (2) `projects.txt` demanded for *"lead a team"* — word present, answer absent. (3) an `"all"` row run at `k=1`. **Add the S19 scorer bug and it's four.** *"The test is broken"* is a real diagnosis; most people never reach for it.
+
+❓ **Self-test:** a row expects `["skills.txt", "projects.txt"]` with `"all"` and fails. What's the first thing you check — the ranking, the key, or `k`?
+<details><summary>answer</summary><strong>k</strong>, then the key, then the ranking. <code>k &lt; 2</code> makes the row impossible; a key naming a file that doesn't answer the question makes it impossible too. Only once both are ruled out is a FAIL actually about retrieval.</details>
+
+---
+
 ## Atom 2.11.0 — reranking (scoped S20, not built)
 
 💡 **Idea:** cosine search is a **bi-encoder** — it embeds the question and each chunk **separately**, so the chunk never actually reads the question. Fast (one matmul over all 132), and slightly dumb. A **cross-encoder** takes `(question, chunk)` as **one input** and returns a single relevance number. Far more accurate, far too slow for the whole store. So:

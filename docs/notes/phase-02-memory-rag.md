@@ -684,6 +684,47 @@ on_disk = {p.name for p in NOTES.glob("*.txt")}   # bare names, not paths
 
 ---
 
+## 2.10.3 — a score that can see *position* (MRR + top1) 📊
+
+💡 **Idea:** hit-rate is **binary** — "is the answer anywhere in the top k?" Reranking's entire job is moving a correct chunk from rank 4 to rank 1, which a binary metric scores **identically**. A perfect reranker would have printed the same 7/7. ⇒ **upgrade the instrument before the atom that needs it.** (His objection, S19. His atom.)
+
+🧮 **Mean Reciprocal Rank, read backwards:** **rank** = position of the first correct file → **reciprocal** = flip it, `1/rank` → **mean** = average over all questions.
+
+```
+        (1/rank1) + (1/rank2) + ... + (1/rankN)
+MRR =  ------------------------------------------
+                        N
+```
+rank 1 → `1.00` · rank 2 → `0.50` · rank 3 → `0.33` · not found → `0`. Ceiling **1.0**, floor **0**.
+**Σ is a `for` loop that adds** — in JS: `scores.reduce((a,b) => a+b, 0) / scores.length`. That *is* the formula, different alphabet.
+
+💻 **The lines that matter** (`learn/phase2/score.py`):
+```python
+ranks[f] = results.index(f) + 1 if f in results else None   # .index gives the FIRST hit
+if 1 in ranks.values():        top1 += 1                     # a question about the ROW, not each file
+u = [i for i in ranks.values() if i is not None]             # min() can't compare None to int
+if len(u) > 0:                 MRR += 1 / min(u)             # best rank in the row
+print(..., round(MRR / len(questions), 2))                   # the 1/N half — he shipped 6.5 without it
+```
+
+📊 **BASELINE, pre-rerank** (`learn/phase2/baseline.md`): `k=5` → **7/7 · top1 6/7 · MRR 0.93** · `k=3` → identical · `k=1` → **4/7 · top1 6/7 · MRR 0.86**.
+
+🔑 **The three metrics answer three different questions:**
+| metric | asks | changes with k? |
+|---|---|---|
+| hit-rate | is it **anywhere** in the top k? | **very** |
+| MRR | **how high** is the best correct file? | only if the best falls off the end |
+| top1 | is **rank 1** correct? | **never** — position 1 is position 1 |
+
+⚠️ **Headroom is +0.07 and that's the corpus, not the harness.** Only row 2 is imperfect (`projects.txt` at rank 2). 6 files on distinct topics is an easy retrieval problem; reranking earns its name on hundreds of confusable chunks. **Know this before 2.11 so a small gain doesn't read as failure.**
+
+🐛 **Three bugs he wrote and fixed, all worth keeping:** (1) `ranks[f] = i` from `enumerate(results)` — the **last** duplicate won, and `.index()` fixed it for free by returning the first; (2) the `top1` check **inside** the per-file loop → one row counted twice, a percentage over 100%; (3) `u.size` — a numpy reflex on a plain dict. *An object's API comes from what created it* — 4th appearance.
+
+❓ **Self-test:** you drop k from 5 to 3 and `top1` doesn't move. Bug or expected?
+<details><summary>answer</summary><strong>Expected, always.</strong> Shrinking k truncates the tail, never the head — rank 1 is rank 1 at every k. If <code>top1</code> ever <em>did</em> move with k, the scorer would be broken.</details>
+
+---
+
 ## Atom 2.11.0 — reranking (scoped S20, not built)
 
 💡 **Idea:** cosine search is a **bi-encoder** — it embeds the question and each chunk **separately**, so the chunk never actually reads the question. Fast (one matmul over all 132), and slightly dumb. A **cross-encoder** takes `(question, chunk)` as **one input** and returns a single relevance number. Far more accurate, far too slow for the whole store. So:

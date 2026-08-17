@@ -34,6 +34,7 @@ The student learns by doing, one tiny piece at a time, and is easily stalled by 
 ## 🧮 The MATH SUB-ATOM rule (standing order, added 27 Jul 2026)
 Student's instruction: *"any time we get a mathematical term, automatically analyse the topic in maths and teach it in the best possible way as a sub-atom, cleanly."*
 
+- **⚠️ NO LaTeX, EVER. He reads in a terminal, which renders none of it.** `$$\frac{1}{N}\sum...$$` arrives as literal backslashes and braces — his words, 14 Aug 2026: *"its all brackets and frac something not even readable."* Write every formula as **plain text or inside a code block**, using `/` for division, `*` for multiply, and a spelled-out sum (`1/rank1 + 1/rank2 + ...`) instead of a sigma. If a formula needs a fraction bar, draw it with dashes on three lines.
 - **Never link out instead of teaching.** Do NOT hand him a 3Blue1Brown/textbook link in place of an explanation. Mine those sources for the *insight*, then teach it here, by doing. Links are optional dessert at the END of a landed concept, never the meal.
 - **Auto-detect.** The moment a mathematical term appears in an atom (norm, projection, gradient, variance, rank, entropy…), stop and teach it as its own numbered **math sub-atom** (`2.4a`, `7.3b`, marked 🧮) before the code uses it.
 - **Every math sub-atom has 4 beats, IN THIS ORDER — order is the lesson:**

@@ -725,6 +725,31 @@ print(..., round(MRR / len(questions), 2))                   # the 1/N half — 
 
 ---
 
+## 2.11.1 — the first rerank call, and the score that doesn't lie 🎯
+
+💡 **Idea:** the bi-encoder's chunk vector was computed **without any knowledge of the question** — whatever you end up asking, that summary is already frozen. The cross-encoder builds a representation **of the pair**, so it can weigh *"immediately"* against *"2 months"* directly. **Not stale vs fresh — blind vs informed.** Cost of that: nothing can be precomputed, so it runs once **per document**, at question time. Hence: cheap search retrieves **wide**, reranker reorders and keeps **3**.
+
+🏆 **HIS CALL, and I was about to get it wrong.** I specced a local `CrossEncoder` (~90 MB of torch); he pushed back — *"we should use a model from openrouter... that also stops us from hosting cost >512mb."* **Verified: OpenRouter shipped a `/api/v1/rerank` endpoint.** Same key, zero bytes in the Docker image, and it unblocks shipping reranking to Render free — the exact constraint that had reranking parked in `learn/` since S20.
+
+💻 **The call** (`learn/phase2/rerank.py`):
+```python
+requests.post("https://openrouter.ai/api/v1/rerank",
+    headers={"Authorization": f"Bearer {KEY}"},
+    json={"model": "cohere/rerank-v3.5", "query": q, "documents": [...], "top_n": 3})
+# → results: [{index, relevance_score, document}], usage: {search_units, cost}
+```
+`index` points back into **your** documents list. **Both his predictions were right:** index 0 first, score bounded 0–1.
+
+📊 **The numbers that matter:** notice-period doc **0.411** · Kubernetes doc **0.036**. ~11× apart.
+
+🔑 **Why that gap is the headline.** His S5 measurement: five unrelated words, and the lowest cosine he could produce was **0.186** — the anisotropy cone means nothing ever reaches 0. Rule he wrote then: *absolute cosine lies, ranking tells the truth — top-k, never a threshold.* **The reranker gave an irrelevant document 0.036.** It isn't squashed into a cone; it's trained toward an actual relevance probability. ⇒ **a reranker score may support the threshold that cosine never could** — the basis for "I don't know" on off-topic questions.
+
+💰 **Cost, from the response itself:** `usage: {search_units: 1, cost: 0.001}` — $0.001/search, so the 7-question suite ≈ **₹0.06**, and 1000 real questions ≈ **₹90/month**. A free NVIDIA Nemotron reranker also exists on OpenRouter (slug unverified).
+
+❓ **Self-test (open — answer it at the top of the next session):** the standing rule is *never threshold, always top-k*. Does it still hold for **reranker** scores, or does 0.411-vs-0.036 buy you something cosine couldn't? *(Think: a recruiter asks the bot "what's the weather in Delhi?")*
+
+---
+
 ## Atom 2.11.0 — reranking (scoped S20, not built)
 
 💡 **Idea:** cosine search is a **bi-encoder** — it embeds the question and each chunk **separately**, so the chunk never actually reads the question. Fast (one matmul over all 132), and slightly dumb. A **cross-encoder** takes `(question, chunk)` as **one input** and returns a single relevance number. Far more accurate, far too slow for the whole store. So:

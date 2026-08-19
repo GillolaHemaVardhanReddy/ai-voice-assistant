@@ -45,11 +45,22 @@ End your answer with the sources you used, on the same line, like this: [about.t
 Before you send: is it under 30 words? If not, cut it down. Long answers are the one thing
 that makes this stop feeling like a conversation."""
 
-# Returned without an LLM call when nothing survives the relevance cutoff.
-NOT_IN_NOTES = (
-    "That one's not in my notes — and I'd rather say so than make something up. "
-    "For anything the notes don't cover, ask the boss himself: gillolahemavardhanreddy@gmail.com."
-)
+# Nothing survived the cutoff. That is the right answer for a FACT the notes don't
+# hold — and the wrong answer for "hi". So instead of a canned string, Spidy replies
+# with no context at all and a hard rule against stating any fact about the boss.
+NO_CONTEXT = """The search found nothing in the notes for this message. That means ONE of two things,
+and you decide which:
+
+1. It is small talk, a greeting, a thank-you, or a question about YOU (who you are, what you can do,
+   who your boss is). Answer it yourself, in character, in one short line. Stay warm. Move them
+   towards asking something about Hemavardhan's work.
+2. It asks for a FACT about Hemavardhan that your notes do not cover. Then say exactly this and
+   nothing more: "That one's not in my notes — and I'd rather say so than make something up. For
+   anything the notes don't cover, ask the boss himself: gillolahemavardhanreddy@gmail.com."
+
+ABSOLUTE RULE: you have NO notes in front of you right now, so you must not state a single fact
+about Hemavardhan — not his job, his skills, his salary, his notice period, nothing. You know who
+you are and who he is to you; that is all. Never cite a source file in this reply."""
 
 
 # Fired once, deterministically, instead of hoping the model counts turns itself.
@@ -71,7 +82,14 @@ def answer(question, history=None, k=5):
     messages += history
     hits = search_reranked(rewrite(question, history))
     if(not len(hits)):
-        return NOT_IN_NOTES
+        messages.append({"role": "system", "content": NO_CONTEXT})
+        messages.append({"role": "user", "content": question})
+        r = client.chat.completions.create(
+            model="anthropic/claude-haiku-4.5",
+            temperature=0.4,
+            messages=messages,
+        )
+        return r.choices[0].message.content
     context = "\n\n".join(f"[{src}] {chunk}" for score, chunk, src in hits)
     messages.append({
         "role": "user",

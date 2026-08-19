@@ -7,6 +7,7 @@ from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from typing import Literal
 from .rag_v2 import answer as answer_v2
+from .rag_v3 import answer as answer_v3
 
 app = FastAPI()
 limiter = Limiter(key_func=get_remote_address)
@@ -55,3 +56,15 @@ def ask_v2(request: Request, body: AskV2Request):
     except Exception:
         raise HTTPException(status_code=502, detail="Upstream model unavailable. Try again.")
     return {"answer": result, "version": "v2"}
+
+
+
+@app.post("/v3/ask")
+@limiter.limit("20/minute")
+def ask_v3(request: Request, body: AskV2Request):
+    history = [t.model_dump() for t in body.history]
+    try:
+        result = answer_v3(body.question, history)
+    except Exception:
+        raise HTTPException(status_code=502, detail="Upstream model unavailable. Try again.")
+    return {"answer": result, "version": "v3"}

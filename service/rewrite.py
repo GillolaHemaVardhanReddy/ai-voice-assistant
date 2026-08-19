@@ -1,4 +1,4 @@
-from .rag_v2 import client
+from .rag import client
 from .timing import timed
 
 SYSTEM = """

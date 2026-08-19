@@ -1,0 +1,25 @@
+# Payment gateways he has integrated, Cashfree and XPay
+
+He has integrated two payment gateways in production on Vedamandir: Cashfree for Indian payments and XPay for international payments.
+
+Cashfree handles pay-now payments and pay-later EMI mandate payments in Indian rupees. Cashfree international is used when an Indian customer chooses to pay in US dollars instead of rupees.
+
+XPay handles payments from customers outside India.
+
+# Why Cashfree was chosen as the payment gateway
+
+Cashfree was not his choice. The company had already selected Cashfree before he took ownership of the payments system, so he worked within that decision rather than evaluating gateways himself.
+
+# How a payment is routed to the right gateway by country
+
+The gateway is chosen automatically by the customer's country, not by the customer selecting one. AWS CloudFront and Cloudflare detect the country of the incoming request, and the payment flow branches on it.
+
+If the country is India, the payment goes to Cashfree in Indian rupees. If the country is outside India, the payment goes to XPay. If an Indian customer wants to pay in US dollars, the payment goes to Cashfree international instead.
+
+This means the routing decision is made server-side from geo data at the edge, so a customer never has to pick a gateway or a currency provider themselves.
+
+# What surprised him about the Cashfree API
+
+The thing that surprised him most about Cashfree was that it provides fully separate sandbox and production modes. The sandbox let him test every payment path end to end, including failure and edge cases, before any real money was involved.
+
+That separation is what made it possible to verify the idempotency and webhook handling properly before going live.

@@ -4,6 +4,20 @@ One short entry per session, newest on top. Acharya appends this at session end 
 
 ---
 
+## 2026-08-19 — Session 22: Atom 2.11 reranking SHIPPED 🔥
+
+- **Did:** answered the open 2.11.1 self-test (right conclusion, wrong reason — *calibration*, not ranking, is what unlocks a threshold). Then built the whole thing: `service/reranker.py` (pure `(query, texts) → scores`, 3-assert `__main__`), `search_reranked` in `store.py` (retrieve 20 → rerank → cutoff → keep 3), `service/rag_v3.py` with the **empty-result short-circuit** — the first time Spidy can return nothing and say so without an LLM call.
+- **📏 Calibration, the atom's real lesson:** his lab cutoff of **0.05** (from `cat is sitting on the mat`) failed instantly on the real corpus — junk climbed to **0.158** because every chunk is *about him*. Re-derived on real data: window `0.158 < cutoff <= 0.204`, set to **0.18** with provenance in `reranker.py`.
+- **📊 Golden set: MRR 0.93 → 0.93, no gain** — predicted (+0.07 headroom, 6 distinct-topic files). Reranking earned its keep on **abstention**, not ranking.
+- **🏆 THEN HE OPENED LIVE SPIDY and broke it:** *"which company does he work for right now?"* → **v1 and v2 both said "I don't have that information"** though `Way2News` is in the notes **5×**. Cosine matched "company" → *"company stages"*. `search_reranked` fixes it (0.569). **First golden row harvested from a real failure**, now in `golden.py` with a comment.
+- **🐛 Two bugs caught by tooling, not by reading:** the score map keyed by document *text* deduped identical chunks (2 scores for 3 docs) — caught by the `__main__` asserts; and a **latent circular import** `rewrite → rag_v2 → rewrite` that only fired when `rag_v3` became the entry point (fixed: import `client` from `rag`).
+- **💰 Ship cost measured:** +0.9s/question (0.73 → 1.64s) and **$0.001/query**, priced per search not per document.
+- **📌 HIS CALL — the plan changed:** wants to **find a freelance client** (paid or free) and build their chatbot. Before that, **expand his own corpus**. Asked for 100+ interview questions → **`docs/corpus-interview.md`, 112 questions in 18 sections** with a format guide built from today's findings. Pushed back on his "10k chunks" target with arithmetic (10k chunks = 300k words; realistic = ~495). **He answered Q1 only, then stopped — "this is too much."** `service/notes/payments.txt` written (283 words, Cashfree + XPay + country routing).
+- **▶️ RESUME AT:** (1) rebuild `index.npz` + re-verify the answer key once the corpus grows; (2) **2.12 hybrid search / BM25** — will actually move the numbers, exact tokens (`ClickHouse`, `PM2`, `Cashfree`) are his live failure mode; (3) `main.py` still points at `rag_v2` — v3 is **built and tested but not wired**. Still owed: `deco_recall.py` return fix.
+- **Student state:** long session, strong instincts (spotted the `zip(ranks, query)` bug himself, ran an unprompted heading experiment that **refuted my explanation**), but **lost twice when I dumped tables** — he said *"i didnt understand what just is happening"*. Both recoveries came from **one picture, one number line, no tables**. Tired by the interview questions. Keep turns short.
+
+---
+
 ## 2026-08-14 — Session 21: I re-taught a finished atom from a stale clone 🔁
 
 - **❌ MY FAILURE, and it cost him a session.** I read `progress.md` + `session-log.md` from a clone that was **4 commits behind** and never fetched — so S19 and S20 didn't exist as far as I knew, and I re-taught **2.10** from the S18 marker. He caught it himself: *"i think i did double time this exercise can you get pull and see."* **Standing fix now in `.claude/CLAUDE.md`: `git fetch` before reading any doc, every session. He works across two machines; local docs are never the source of truth.**

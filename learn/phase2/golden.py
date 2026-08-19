@@ -22,4 +22,9 @@ questions = [
     # vocabulary mismatch: the word "immediately" appears in NONE of the notes (grepped).
     # The answer is "notice period: 2 months". Pure test of meaning-over-spelling. Passes at k=1.
     {"question": "can he start immediately?", "file": ["faq.txt", "preferences.txt"], "match": "any"},
+    # HARVESTED FROM A LIVE FAILURE (19 Aug 2026, S22) — the deployed v1/v2 answered
+    # "I don't have that information" although Way2News is in the notes 5 times.
+    # Cosine matched the word "company" to "company stages" / "product company" in
+    # preferences.txt. Fails on plain search, passes on search_reranked.
+    {"question": "which company does he work for right now?", "file": ["about.txt", "faq.txt"], "match": "any"},
 ]

@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from .golden import questions
-from service.store import search
+from service.store import search, search_reranked
 
 # --- guard: every filename in the key must be a real file on disk ---
 # A typo'd filename ("project.txt", no s) never matches — silently, forever.
@@ -16,10 +16,21 @@ for q in questions:
 ans = 0
 MRR = 0
 top1 = 0
+needed = []   # per row: the rerank score that MUST survive the cutoff
 for q in questions:
     print(f"Question: ",q["question"])
-    results = [str(i[2]) for i in search(q["question"], k=1)]
-    print("got:", results)
+    hits = search_reranked(q["question"])
+    results = [str(i[2]) for i in hits]
+    scored = [(str(i[2]), round(float(i[0]), 3)) for i in hits]
+    # best score for each expected file (a file can have several chunks returned)
+    per_file = {}
+    for src_, s in scored:
+        if src_ in q["file"]:
+            per_file[src_] = max(per_file.get(src_, 0), s)
+    # "all" rows need every expected file, so the weakest one sets the bar
+    if per_file:
+        needed.append(min(per_file.values()) if q["match"] == "all" else max(per_file.values()))
+    print("got:", scored)
     print("expected:", q["file"])
     check = [f in results for f in q["file"]]
     ranks = {}
@@ -44,3 +55,8 @@ for q in questions:
         else:
             print("FAIL")
 print("score is:", ans, "/" , len(questions), "\ntop1 of the expected set is: ", top1, "\n MRR (mean reciprocal rank) is: ", round(MRR / len(questions),2))
+print("\n--- threshold data ---")
+print("per-row score that must survive:", sorted(needed))
+print("LOWEST of those               :", min(needed))
+print("highest junk measured          : 0.158   (unanswerable queries, service.store)")
+print("safe cutoff window             : 0.158  <  cutoff  <=", min(needed))

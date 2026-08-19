@@ -783,6 +783,43 @@ sort → keep 3     →  the LLM
 
 ---
 
+## 🔥 2.11 — Reranking, and the rule that finally flipped *(19 Aug 2026, S22)*
+
+💡 **A cross-encoder reads `(query, chunk)` together and scores relevance directly — and unlike cosine, that number means something on its own.** That is what buys a threshold.
+
+💻 The whole product change, `service/rag_v3.py`:
+```python
+hits = search_reranked(rewrite(question, history))
+if not hits:                      # <-- IMPOSSIBLE before today
+    return "…not present with me… contact the person via Email"
+```
+
+📏 **His own measured scales, side by side:**
+
+| | floor (junk) | a real answer |
+|---|---|---|
+| cosine (2.6a) | **0.186** on maximally unrelated words | 0.620 |
+| rerank, lab docs (cat/mat, sky) | **0.015 – 0.021** | 0.411 |
+| rerank, **real corpus** | **0.158** ("is he married?") | 0.204 – 0.799 |
+
+⚠️ **The calibration trap he walked into and out of.** He set the cutoff at **0.05** from lab docs (`cat is sitting on the mat`). It failed instantly on the real corpus — *"what is his favourite movie?"* returned 3 chunks at 0.058–0.065. **Why:** every chunk in the notes is *about him*, so any question containing "his/he" lifts the whole corpus ~3× above the absurd-text floor. **Calibrate a threshold on the corpus you will actually run against, using queries that actually fail.** Final: `RELEVANCE_CUTOFF = 0.18`, window `0.158 < cutoff <= 0.204`, provenance written into `reranker.py`.
+
+📊 **Result on the golden set: MRR 0.93 → 0.93, top1 6/7 → 6/7. Zero gain.** Predicted — headroom was only +0.07 on 6 distinct-topic files. **Reranking earned its keep on abstention, not ranking.**
+
+🏆 **…and then the golden set was proven too easy.** He opened live Spidy and asked *"which company does he work for right now?"* — **v1 and v2 both answered "I don't have that information"** although `Way2News` is in the notes **five times**. Cosine matched the word **"company"** to *"company stages"* / *"product company"* in `preferences.txt`. `search_reranked` returns the right chunk at **0.569**. **First golden row harvested from a real failure** (the 2.15 lesson, arriving early).
+
+🐛 **The bug the self-test caught:** keying the score map by document *text* (`{i:0 for i in docs}`) silently **deduped two identical chunks** → 2 scores for 3 docs. Fixed by using the API's `index` field. The 3-assert `__main__` block found it in one run.
+
+🔁 **Circular import, latent for weeks:** `rewrite → rag_v2 → rewrite`. `rag_v2` worked *only because it was always imported first* and `client` landed before the cycle closed; importing `rag_v3` first blew it up. Fix: `rewrite.py` imports `client` from **`rag`**, not `rag_v2`. **A circular import breaks or survives depending on the entry point.**
+
+💰 **Cost of shipping it:** +0.9s per question (0.73s → 1.64s retrieval) and **$0.001/query** — priced per *search*, not per document, so `k_wide=20` costs the same as `k_wide=2`.
+
+❓ **Self-test:** you have rerank scores and want a cutoff without hardcoding one. Someone suggests the "elbow" method — sort descending, cut at the biggest gap. On his data the scores were `0.411, 0.073, 0.036, 0.030, 0.024, 0.021`. Where does the elbow cut, why is that wrong, and what flaw do *all* adaptive rules share?
+<details><summary>answer</summary>Biggest drop is <code>0.411 → 0.073</code>, so the elbow cuts there and throws away <code>good_2</code> — a chunk that <em>genuinely answers the question</em>. Gap size is irrelevant; what matters is what sits on either side, and the only gap worth using is the one between "answers it" and "doesn't". <strong>The deeper flaw:</strong> elbow, <code>alpha * top_score</code>, and <code>mean + k*std</code> all define the boundary <em>in terms of the candidates present</em> — so something is always above the line. <strong>None of them can ever return zero results</strong>, which is top-k's flaw wearing a maths costume. Only an absolute cutoff can abstain, and only a <em>calibrated</em> score justifies an absolute cutoff.</details>
+
+
+---
+
 ## ⬜ Coming next
 - ⬜ **owed:** follow-up questions — conversation history without re-sending CONTEXT every turn (the 1.6 snowball)
 - **2.9c/2.10** — LLM-based semantic chunking, when the data is messy enough to need it

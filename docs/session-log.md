@@ -4,6 +4,19 @@ One short entry per session, newest on top. Acharya appends this at session end 
 
 ---
 
+## 2026-08-19 (night) — Session 23: Spidy got a personality, and a cost audit 🎭
+
+- **Shipped to the portfolio:** `/spidy/v2` and `/spidy/v3` both live with full write-ups (v2 had none before). Source: `docs/prompts/spidy-v2-v3-articles.md` + `portfolio-v3-integration.md`, both written from the notes/session logs with every number traced. Widget defaults to v3. **Article #2 at 9 AM has somewhere real to send people.**
+- **🗣️ Persona, forked into `rag_v3.py` only** (v1/v2 frozen — the version pages exist to show what changed). **HIS correction improved it: Spidy calls HEMAVARDHAN "the boss", never the visitor.** 30-word ceiling: narrow answers 19–23 words, broad ones stick at 40–44 whatever the prompt says. `temperature` 0.4 in v3. `spidy.txt` added because **"who are you?" abstained** — third appearance of vocabulary mismatch (`"what is spidy?"` 0.815 vs `"who are you?"` **0.114**, no chunk contains *you*). Fixed in data, not code.
+- **🪪 Name capture: ask, don't gate — his call.** Deterministic nudge at `len(history) == 4`, fires once, never withholds. He wanted a hard gate before the first message; I argued it's fake enforcement in a prompt, lands on the worst possible morning, and costs the failure-harvest. **He took the soft ask + real `/session` gate later, with Telegram AND email, one notification per conversation (P1.8).**
+- **📦 The deployed index was stale — 127 chunks, `payments.txt` was never in it.** Rebuilt to **144 over 8 files**. **Measured after everything: 8/8, top1 7/8, MRR 0.94, lowest surviving 0.204 vs junk 0.158 — 0.18 still holds.**
+- **💰 Cost, from the real dashboard + API:** 19 Aug = **$0.0761 total, rerank $0.066 (87%)**, lifetime **$0.234 of $5**. His ratio instinct was right; the absolute number is 7.6 cents, and most of it is *lab* runs. **`k_wide` is not a lever — Cohere prices per search.** ⚠️ **He still owes the hard credit limit on the key**, which is the only real protection tomorrow.
+- **🔬 The embedder A/B, and my mistake twice over.** I ran the swap myself; **he stopped me: *"do not leave me out i have to do this not you so that next time i know how to swap model."* Spec-first, and I broke it.** Reverted, spec handed over. **Finding worth keeping: scoring through `search_reranked` showed MRR 0.94 either way — the reranker repairs the order and hides the embedder.** On plain `search()`: small **top1 6/8, MRR 0.854** vs large-3072 **top1 7/8, MRR 0.917**. *Measure the layer you changed.* Also: the free Liquid embedder caps at 128 inputs/call ⇒ needs batching.
+- **Student state:** tired, wrapping up, but sharp on the two things that mattered — he pulled me back into spec-first, and he corrected the persona ("boss" is *him*, not the visitor), which is the better design. Asked to be shown every change before it lands; do that by default from now on.
+- **▶️ RESUME AT: (1) spend cap on the key. (2) his `embed_ab.py`. (3) P1.8 session + logging + leads. (4) 2.12 hybrid/BM25.**
+
+---
+
 ## 2026-08-19 — Session 22: Atom 2.11 reranking SHIPPED 🔥
 
 - **Did:** answered the open 2.11.1 self-test (right conclusion, wrong reason — *calibration*, not ranking, is what unlocks a threshold). Then built the whole thing: `service/reranker.py` (pure `(query, texts) → scores`, 3-assert `__main__`), `search_reranked` in `store.py` (retrieve 20 → rerank → cutoff → keep 3), `service/rag_v3.py` with the **empty-result short-circuit** — the first time Spidy can return nothing and say so without an LLM call.

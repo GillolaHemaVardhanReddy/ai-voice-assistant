@@ -4,6 +4,18 @@ One short entry per session, newest on top. Acharya appends this at session end 
 
 ---
 
+## 2026-08-20 — Session 24: hunting the first client 🎯
+
+- **Built `docs/outreach/` (6 files)** — strategy README, LinkedIn post (2 variants), cold-email + DM templates, `target-list.md` pipeline, `scope-one-pager.md`. No Spidy code touched.
+- **🔑 The rule the whole kit hangs on: AUDIT FIRST, THEN SEND.** Never send a message that *asks* for the work — send one that already contains it (*"your search answered 6 of 20, mine answered 17"*). ~2 hrs per target, which is the feature: it makes spam impossible and caps him at 3-5 sends/week.
+- **🧭 HIS CALL — go big, including non-technical corpora.** That kills the old "a domain he knows" filter, replaced by **fact-lookup vs judgment**: gradeable = the answer is locatable in the document (clause, limit, date, rate), same `grep`+read method as `golden.py`. **Medical advice and legal interpretation refused.**
+- **✅ He ran the widget check on 6 targets himself.** ClearTax / Quicko / Ditto / Plum = no bot. **Keka 🟡** has AI over employee data, no docs bot (parked — they'd build it themselves). **Onsurity ❌ RULED OUT** — WhatsApp assistant that takes actions, a bigger build than this. **Target: ClearTax #1, Quicko #2, audited off ONE question set** (same domain ⇒ second audit ~30 min). Rule to reuse: pick target #2 from target #1's domain.
+- **⚠️ MY FAILURE, mid-session:** dumped strategy + tables + a check question and got *"what are u even speaking idiot i dont understand anything."* **Recovery: 4 plain lines, no tables.** Third time — when he's lost it is density, every time. Keep turns short and tableless from the start, not after he says so.
+- **▶️ RESUME AT: ATOM C1.1, spec given, not written** — `learn/audit/count_urls.py`: sitemap URL in, print total `<loc>` count + first 10 URLs, **must not fetch any page**. Sitemap-index gotcha pre-warned; `requests` + `ET` handed over as boilerplate. Check `cleartax.in/robots.txt` first.
+- **Student state:** frustrated by density once, then fully re-engaged and asked the three right questions (do we build before emailing? where's the corpus? is the company big enough?). Reconfirmed spec-first unprompted: *"i want to hand write every line of code soo."* Moving to the MacBook, starting fresh tomorrow.
+
+---
+
 ## 2026-08-19 (night) — Session 23: Spidy got a personality, and a cost audit 🎭
 
 - **Shipped to the portfolio:** `/spidy/v2` and `/spidy/v3` both live with full write-ups (v2 had none before). Source: `docs/prompts/spidy-v2-v3-articles.md` + `portfolio-v3-integration.md`, both written from the notes/session logs with every number traced. Widget defaults to v3. **Article #2 at 9 AM has somewhere real to send people.**
